@@ -5,6 +5,7 @@ import newState from '@/factories/stateFactory'
 import types from '@/store/types'
 import store from '@/store'
 import api from '@/api'
+import axios from 'axios'
 
 const projectActions = {
 /**
@@ -84,11 +85,159 @@ const projectActions = {
     commit(types._toggleLoadingStatus, true)
 
     const parsedRepoName = state.project.title.replace(/[^a-zA-Z0-9-_]+/g, '-')
-    const projectB64 = btoa(JSON.stringify(state.project))
-    download(projectB64, parsedRepoName + '.gg', 'appliction/json')
+
+    // customer
+    console.log(JSON.stringify(state.project))
+
+    // const projectB64 = btoa(JSON.stringify(state.project))
+    // download(projectB64, parsedRepoName + '.ewd', 'appliction/json')
+
+    var dataElectrode = ''
+    dataElectrode = dataElectrode + 'contactpad circle r 750\n'
+    dataElectrode = dataElectrode + 'square path M0 100 L0 1900 L100 2000 L1900 2000 L2000 1900 L2000 100 L1900 0 L100 0 Z\n'
+    dataElectrode = dataElectrode + 'reservoir_top_1 path M0 100 L0 3905 L100 4005 L1900 4005 L2000 3905 L2000 2000 L4005 2000 L4005 3905 L4105 4005 L5905 4005 L6005 3905 L6005 100 L5905 0 L100 0 Z\n'
+    dataElectrode = dataElectrode + 'reservoir_top_2 path M0 100 L0 7905 L100 8005 L5905 8005 L6005 7905 L6005 100 L5905 0 L100 0 Z\n'
+    dataElectrode = dataElectrode + 'reservoir_left_1 path M0 100 L0 5910 L100 6010 L3905 6010 L4005 5910 L4005 4110 L3905 4010 L2000 4010 L2000 2000 L3905 2000 L4005 1900 L4005 100 L3905 0 L100 0 Z\n'
+    dataElectrode = dataElectrode + 'reservoir_left_2 path M0 100 L0 5910 L100 6010 L7905 6010 L8005 5910 L8005 100 L7905 0 L100 0 Z\n'
+    dataElectrode = dataElectrode + 'wastepool path M0 100 L0 9920 L100 10020 L5910 10020 L6010 9920 L6010 100 L5910 0 L100 0 Z\n'
+    dataElectrode = dataElectrode + 'longelectrode path M0 100 L0 5910 L100 6010 L1900 6010 L2000 5910 L2000 100 L1900 0 L100 0 Z\n'
+    dataElectrode = dataElectrode + 'Referenceelectrode path M0 0 L0 10000 L10000 10000 L10000 0 Z\n'
+    // dataElectrode = dataElectrode + "square path M0 100 L0 1900 L100 2000 L1900 2000 L2000 1900 L2000 100 L1900 0 L100 0 Z\n";
+    dataElectrode = dataElectrode + '#ENDOFDEFINITION#\n'
+    var tx = 0
+    var ty = 0
+    for (var i = 0; i < 8; i++) {
+        tx = 0
+        for (var j = 0; j < 32; j++) {
+            dataElectrode = dataElectrode + 'contactpad ' + tx + ' ' + ty + '\n'
+            tx = tx + 2540
+        }
+        if (ty === 7620) {
+          ty = 56896
+        } else {
+          ty = ty + 2540
+        }
+    }
+
+    var electrods = state.project.pages[0].children
+
+    electrods.forEach(getPos)
+
+    function getPos (item, index) {
+      dataElectrode = dataElectrode + 'square ' + (parseFloat(item.left) * parseFloat(80000 / 800) + parseFloat(-50)) + ' ' + (parseFloat(item.top) * parseFloat(40000 / 400) + parseFloat(12255)) + '\n'
+    }
+
+    dataElectrode = dataElectrode + 'Referenceelectrode -14835 13689\n'
+    dataElectrode = dataElectrode + '#ENDOFLAYOUT#\n'
+    dataElectrode = dataElectrode + '0,0,0,0,0,0,0,0;100\n'
+    dataElectrode = dataElectrode + '#ENDOFSEQUENCE#'
+
+    console.log(dataElectrode)
+
+    // const projectB64 = btoa(data)
+    download(dataElectrode, parsedRepoName + '.ewd')
 
     commit(types._toggleLoadingStatus, false)
   },
+
+/**
+ * Downloads the current vuegg project definition as a .gg (base64 json) file
+ *
+ * @return {download} : [project-name].gg file containing the vuegg project definition
+ */
+[types.downloadProject2]: async function ({ state, dispatch, commit }) {
+  commit(types._toggleLoadingStatus, true)
+
+  const parsedRepoName = state.project.title.replace(/[^a-zA-Z0-9-_]+/g, '-')
+
+  // customer
+
+  const projectB64 = btoa(JSON.stringify(state.project))
+  download(projectB64, parsedRepoName + '.gg', 'appliction/json')
+  commit(types._toggleLoadingStatus, false)
+},
+
+/**
+ * Downloads the current vuegg project definition as a .gg (base64 json) file
+ *
+ * @return {download} : [project-name].gg file containing the vuegg project definition
+ */
+[types.downloadProject3]: async function ({ state, dispatch, commit }) {
+  commit(types._toggleLoadingStatus, true)
+
+  const parsedRepoName = state.project.title.replace(/[^a-zA-Z0-9-_]+/g, '-')
+
+  // axios.get('http://localhost:3000/api/todo', {
+  // })
+  // .then(function (response) {
+  //   console.log(response)
+  // })
+  // .catch(function (error) {
+  //   console.log(error)
+  // })
+  var dataElectrode = ''
+  dataElectrode = dataElectrode + 'contactpad circle r 750\n'
+  dataElectrode = dataElectrode + 'square path M0 100 L0 1900 L100 2000 L1900 2000 L2000 1900 L2000 100 L1900 0 L100 0 Z\n'
+  dataElectrode = dataElectrode + 'reservoir_top_1 path M0 100 L0 3905 L100 4005 L1900 4005 L2000 3905 L2000 2000 L4005 2000 L4005 3905 L4105 4005 L5905 4005 L6005 3905 L6005 100 L5905 0 L100 0 Z\n'
+  dataElectrode = dataElectrode + 'reservoir_top_2 path M0 100 L0 7905 L100 8005 L5905 8005 L6005 7905 L6005 100 L5905 0 L100 0 Z\n'
+  dataElectrode = dataElectrode + 'reservoir_left_1 path M0 100 L0 5910 L100 6010 L3905 6010 L4005 5910 L4005 4110 L3905 4010 L2000 4010 L2000 2000 L3905 2000 L4005 1900 L4005 100 L3905 0 L100 0 Z\n'
+  dataElectrode = dataElectrode + 'reservoir_left_2 path M0 100 L0 5910 L100 6010 L7905 6010 L8005 5910 L8005 100 L7905 0 L100 0 Z\n'
+  dataElectrode = dataElectrode + 'wastepool path M0 100 L0 9920 L100 10020 L5910 10020 L6010 9920 L6010 100 L5910 0 L100 0 Z\n'
+  dataElectrode = dataElectrode + 'longelectrode path M0 100 L0 5910 L100 6010 L1900 6010 L2000 5910 L2000 100 L1900 0 L100 0 Z\n'
+  dataElectrode = dataElectrode + 'Referenceelectrode path M0 0 L0 10000 L10000 10000 L10000 0 Z\n'
+  // dataElectrode = dataElectrode + "square path M0 100 L0 1900 L100 2000 L1900 2000 L2000 1900 L2000 100 L1900 0 L100 0 Z\n";
+  dataElectrode = dataElectrode + '#ENDOFDEFINITION#\n'
+
+  var dataContactPad = ''
+  var tx = 0
+  var ty = 0
+  for (var i = 0; i < 8; i++) {
+      tx = 0
+      for (var j = 0; j < 32; j++) {
+        dataContactPad = dataContactPad + 'contactpad ' + tx + ' ' + ty + '\n'
+          tx = tx + 2540
+      }
+      if (ty === 7620) {
+        ty = 56896
+      } else {
+        ty = ty + 2540
+      }
+  }
+
+  var dataElectrodePos = ''
+  var electrods = state.project.pages[0].children
+
+  electrods.forEach(getPos)
+
+  function getPos (item, index) {
+    dataElectrodePos = dataElectrodePos + 'square ' + (parseFloat(item.left) * parseFloat(80000 / 960) + parseFloat(-650)) + ' ' + (parseFloat(item.top) * parseFloat(40000 / 480) + parseFloat(12255)) + '\n'
+  }
+
+  dataElectrodePos = dataElectrodePos + 'Referenceelectrode -14835 13689\n'
+  dataElectrodePos = dataElectrodePos + '#ENDOFLAYOUT#\n'
+  dataElectrodePos = dataElectrodePos + '0,0,0,0,0,0,0,0;100\n'
+  dataElectrodePos = dataElectrodePos + '#ENDOFSEQUENCE#'
+
+  const ewd = {
+    ewd1: dataElectrode,
+    ewd2: dataContactPad,
+    ewd3: dataElectrodePos,
+    name: parsedRepoName
+  }
+
+  axios.post('http://localhost:3000/api/path/dwg', ewd)
+  .then(function (response) {
+    // console.log(response.request.response)
+    download(response.request.response, parsedRepoName + '.dwg')
+
+    commit(types._toggleLoadingStatus, false)
+  })
+  .catch(function (error) {
+    console.log(error)
+
+    commit(types._toggleLoadingStatus, false)
+  })
+},
 
 /**
  * Downloads the current vuegg project definition as a .zip file with the vuejs sources

@@ -53,8 +53,9 @@ export default {
 
 <style scoped>
 .mainegg {
-  margin: 0 57px;
-  height: 100%;
+  margin: 57px 0px; 
+  height: 90%;
+  width: 100%;
 }
 
 .zoom-menu {

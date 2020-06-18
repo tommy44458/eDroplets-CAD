@@ -235,66 +235,93 @@ const materialComponents = [
     'type': 'mdc-card',
     'dependencies': [
       {
-        'name': 'vue-mdc-adapter',
-        'version': '^0.15.3',
-        'imports': [
-          ['VueMDCAdapter', 'vue-mdc-adapter'],
-          'https://unpkg.com/vue-mdc-adapter@^0.15.3/dist/vue-mdc-adapter.min.css'
-        ]
+        // 'name': 'vue-mdc-adapter',
+        // 'version': '^0.15.3',
+        // 'imports': [
+        //   ['VueMDCAdapter', 'vue-mdc-adapter'],
+        //   'https://unpkg.com/vue-mdc-adapter@^0.15.3/dist/vue-mdc-adapter.min.css'
+        // ]
       }
     ],
-    'external': true,
-    'componegg': true,
-    'egglement': true,
+    'external': false,
+    'componegg': false,
+    'egglement': false,
     'height': 310,
     'minHeight': 230,
     'width': 300,
     'minWidth': 150,
-    'attrs': {},
+    'attrs': {
+    },
     'styles': {
-      'background-color': '#fff'
+      // 'background-color': '#fff'
     },
     'classes': {},
     'children': [
       {
-        'type': 'mdc-card-media',
+        'name': 'square',
+        'type': 'img',
+        'egglement': true,
+        'width': 24,
+        'height': 24,
+        'top': 30,
+        'bottom': 200,
         'attrs': {
-          'height': 160,
-          'src': 'https://material-components-web.appspot.com/images/16-9.jpg'
+            'src': '/static/electrode/square.svg'
         },
         'styles': {},
-        'classes': {},
-        'children': []
-      }, {
-        'type': 'mdc-card-header',
+        'classes': {}
+      },
+      {
+        'name': 'square',
+        'type': 'img',
+        'egglement': true,
+        'width': 24,
+        'height': 24,
         'attrs': {
-          'title': 'Title',
-          'subtitle': 'Subtitle'
+            'src': '/static/electrode/square.svg'
         },
         'styles': {},
-        'classes': {},
-        'children': []
-      }, {
-        'type': 'mdc-card-actions',
-        'attrs': {},
-        'styles': {},
-        'classes': {},
-        'children': [
-          {
-            'type': 'mdc-card-action-button',
-            'text': 'Action 1',
-            'attrs': {},
-            'styles': {},
-            'classes': {}
-          }, {
-            'type': 'mdc-card-action-button',
-            'text': 'Action 2',
-            'attrs': {},
-            'styles': {},
-            'classes': {}
-          }
-        ]
+        'classes': {}
       }
+      // {
+      //   'type': 'mdc-card-media',
+      //   'attrs': {
+      //     'height': 160,
+      //     'src': 'https://material-components-web.appspot.com/images/16-9.jpg'
+      //   },
+      //   'styles': {},
+      //   'classes': {},
+      //   'children': []
+      // }, {
+      //   'type': 'mdc-card-header',
+      //   'attrs': {
+      //     'title': 'Title',
+      //     'subtitle': 'Subtitle'
+      //   },
+      //   'styles': {},
+      //   'classes': {},
+      //   'children': []
+      // }, {
+      //   'type': 'mdc-card-actions',
+      //   'attrs': {},
+      //   'styles': {},
+      //   'classes': {},
+      //   'children': [
+      //     {
+      //       'type': 'mdc-card-action-button',
+      //       'text': 'Action 1',
+      //       'attrs': {},
+      //       'styles': {},
+      //       'classes': {}
+      //     }, {
+      //       'type': 'mdc-card-action-button',
+      //       'text': 'Action 2',
+      //       'attrs': {},
+      //       'styles': {},
+      //       'classes': {}
+      //     }
+      //   ]
+      // }
     ]
   },
 

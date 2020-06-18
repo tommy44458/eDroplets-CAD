@@ -40,7 +40,7 @@
           <input type="file" ref="inputOpenLocal" @change="openLocalFile" :value="fileValue" accept=".gg"/>
           Computer
         </mdc-menu-item>
-        <mdc-menu-item>GitHub</mdc-menu-item>
+        <!-- <mdc-menu-item>GitHub</mdc-menu-item> -->
       </mdc-menu>
     </mdc-menu-anchor>
 
@@ -51,12 +51,14 @@
       <mdc-menu ref="downloadMenu" @select="onSelectDownload">
         <mdc-menu-item disabled>Download:</mdc-menu-item>
         <mdc-menu-divider></mdc-menu-divider>
-        <mdc-menu-item>Vuegg project (.gg)</mdc-menu-item>
-        <mdc-menu-item>Vue sources (.zip)</mdc-menu-item>
+        <mdc-menu-item>Ewd file (.ewd)</mdc-menu-item>
+        <mdc-menu-item>Theta Project (.gg)</mdc-menu-item>
+        <mdc-menu-item>Dwg file(.dwg)</mdc-menu-item>
+        <!-- <mdc-menu-item>Vue sources (.zip)</mdc-menu-item> -->
       </mdc-menu>
     </mdc-menu-anchor>
 
-    <button v-tooltip="saveBtnTitle" class="action-btn" @click="$root.$emit('open-upload-dialog')"
+    <!-- <button v-tooltip="saveBtnTitle" class="action-btn" @click="$root.$emit('open-upload-dialog')"
       :disabled="!isLoggedIn || !hasChanges || (isLoggedIn && isLoading)"
     >
       <svgicon icon="system/actions/cloud_off" v-if="!isLoggedIn"
@@ -68,16 +70,16 @@
       <svgicon icon="system/actions/cloud_done" v-else
         width="24" height="24" color="rgba(0,0,0,.38)">
       </svgicon>
-    </button>
+    </button> -->
 
-    <div class="separator"></div>
+    <!-- <div class="separator"></div> -->
   </div>
 </template>
 
 
 <script>
 import { mapState, mapActions } from 'vuex'
-import { downloadProject, downloadVueSources, loadVueggProject } from '@/store/types'
+import { downloadProject, downloadProject2, downloadProject3, downloadVueSources, loadVueggProject } from '@/store/types'
 
 import '@/assets/icons/system/actions'
 
@@ -113,11 +115,15 @@ export default {
     },
     onSelectDownload (selected) {
       const PROJECT = 1
-      const SOURCES = 2
+      const PROJECT2 = 2
+      const PROJECT3 = 3
+      // const SOURCES = 2
 
       switch (selected.index) {
         case PROJECT: this.downloadProject(); break
-        case SOURCES: this.downloadVueSources(); break
+        case PROJECT2: this.downloadProject2(); break
+        case PROJECT3: this.downloadProject3(); break
+        // case SOURCES: this.downloadVueSources(); break
       }
     },
 
@@ -146,7 +152,7 @@ export default {
       reader.readAsText(file)
     },
 
-    ...mapActions([downloadProject, downloadVueSources, loadVueggProject])
+    ...mapActions([downloadProject, downloadProject2, downloadProject3, downloadVueSources, loadVueggProject])
   }
 }
 </script>

@@ -6,7 +6,7 @@ function newProject (title) {
     id: shortid.generate(),
     title: title,
     components: [],
-    pages: [newPage('Home', '/')]
+    pages: [newPage('Layer1', '/')]
   }
 }
 

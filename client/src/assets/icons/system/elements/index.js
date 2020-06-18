@@ -28,3 +28,5 @@ require('./radio')
 require('./select')
 require('./table')
 require('./text')
+
+require('./electrode/square')

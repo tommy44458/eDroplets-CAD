@@ -1,6 +1,6 @@
 <template>
   <div class="menus-wrapper">
-    <menu-toggle menuHeader="Basic">
+    <menu-toggle menuHeader="Electrode">
       <div class="el-menu">
         <div class="el-menu__el" :key="element.name"
           v-for="element in elements"
@@ -11,6 +11,21 @@
         >
           <svgicon :icon="'system/elements/'+element.name" width="24" height="24" color="rgba(0,0,0,.87)"></svgicon>
           <span>{{element.displayName || element.name}}</span>
+        </div>
+      </div>
+    </menu-toggle>
+
+    <menu-toggle menuHeader="Others">
+      <div class="el-menu">
+        <div class="el-menu__el" :key="others.name"
+          v-for="others in others"
+          :title="others.name"
+          draggable="true"
+          @dragstart="e => dragstartHandler(e, others)"
+          @click="e => addItemToStage(e, others)"
+        >
+          <svgicon :icon="'system/elements/'+others.name" width="24" height="24" color="rgba(0,0,0,.87)"></svgicon>
+          <span>{{others.displayName || others.name}}</span>
         </div>
       </div>
     </menu-toggle>
@@ -54,6 +69,7 @@ import { mapState, mapActions } from 'vuex'
 import { registerElement } from '@/store/types'
 
 import basicElements from '@/assets/BasicElements'
+import otherElements from '@/assets/otherElements'
 import materialComponents from '@/assets/MaterialComponents'
 // import mockComponents from '@/assets/MockComponents'
 import MenuToggle from '@/components/editor/common/MenuToggle'
@@ -66,6 +82,7 @@ export default {
   data: function () {
     return {
       elements: basicElements,
+      others: otherElements,
       mdComponents: materialComponents
       // components: mockComponents
     }

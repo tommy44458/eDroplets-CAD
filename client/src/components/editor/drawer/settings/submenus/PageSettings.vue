@@ -56,8 +56,8 @@ export default {
     }
   },
   watch: {
-    'height' (val) { this.h = val.toString() },
-    'width' (val) { this.w = val.toString() },
+    'height' (val) { this.h = '4000mm' },
+    'width' (val) { this.w = '8000mm' },
     'styles' (val) { this.sty = cloneDeep(val) }
   },
   methods: {

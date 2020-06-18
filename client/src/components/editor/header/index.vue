@@ -1,6 +1,6 @@
 <template>
   <div class="headegg mdc-theme--background" :class="{'not-scrolled': scroll0}">
-    <a class="home-btn" href="https://vuegg.github.io/" target="_blank">
+    <a class="home-btn" href="https://www.nthu.edu.tw" target="_blank">
       <svgicon icon="product/vuegg" width="40" height="40" :original="true"></svgicon>
     </a>
 
@@ -9,7 +9,7 @@
 
     <div class="spacer"></div>
     <action-bar></action-bar>
-    <user-menu></user-menu>
+    <!-- <user-menu></user-menu> -->
   </div>
 </template>
 
@@ -22,6 +22,7 @@ import UserMenu from './UserMenu'
 import ActionBar from './ActionBar'
 
 import '@/assets/icons/product/vuegg'
+// import '@/assets/icons/system/elements/electrod/standard'
 
 export default {
   name: 'headegg',

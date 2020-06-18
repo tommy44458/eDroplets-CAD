@@ -25,6 +25,10 @@ export const logOut = 'logOut'
 export const checkAuth = 'checkAuth'
 
 export const downloadProject = 'downloadProject'
+// customer
+export const downloadProject2 = 'downloadProject2'
+export const downloadProject3 = 'downloadProject3'
+
 export const uploadProjectToGH = 'uploadProjectToGH'
 export const downloadVueSources = 'downloadVueSources'
 export const uploadVueSourcesToGH = 'uploadVueSourcesToGH'
@@ -105,6 +109,9 @@ const types = {
 
   downloadVueSources,
   downloadProject,
+  // customer
+  downloadProject2,
+  downloadProject3,
   uploadVueSourcesToGH,
   uploadProjectToGH,
   checkLastSaved,

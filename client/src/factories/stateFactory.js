@@ -21,7 +21,7 @@ function newState (project) {
       isAuthorized: false,
       authenticatedUser: null
     },
-    project: project || newProject('my vuegg project')
+    project: project || newProject('ewod chip project')
   }
 }
 

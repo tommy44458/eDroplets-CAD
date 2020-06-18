@@ -90,10 +90,13 @@ export default {
       this.$el.focus()
       mainContainer.scrollTop = currentScroll
 
-      if (this.initialAbsPos !== this.currentAbsPos) {
-        if (this.resizing) this.$emit('resizestop', this.resizeStopData())
-        else if (this.moving) this.$emit('movestop', this.moveStopData())
-        else if (this.selecting) this.$emit('selectstop', this.selectStopData())
+      // if (this.initialAbsPos !== this.currentAbsPos) {
+      if (this.resizing) {
+      this.$emit('resizestop', this.resizeStopData())
+      } else if (this.moving) {
+        this.$emit('movestop', this.moveStopData())
+      } else if (this.selecting) {
+        this.$emit('selectstop', this.selectStopData())
       }
 
       this.moving = false
@@ -108,12 +111,25 @@ export default {
     mouseMoveHandler (e) {
       const lastAbsX = this.currentAbsPos.x
       const lastAbsY = this.currentAbsPos.y
+      let offX = 0
+      let offY = 0
+      if (Math.abs(lastAbsX - this.getMouseAbsPoint(e).x) >= 6) {
+        offX = 6
+        if (this.getMouseAbsPoint(e).x - this.currentAbsPos.x < 0) {
+          offX = offX * -1
+        }
+        this.currentAbsPos.x = this.getMouseAbsPoint(e).x
+        this.currentRelPos.x = this.getMouseRelPoint(e).x
+      }
 
-      this.currentAbsPos = this.getMouseAbsPoint(e)
-      this.currentRelPos = this.getMouseRelPoint(e)
-
-      let offX = this.currentAbsPos.x - lastAbsX
-      let offY = this.currentAbsPos.y - lastAbsY
+      if (Math.abs(lastAbsY - this.getMouseAbsPoint(e).y) >= 6) {
+        offY = 6
+        if (this.getMouseAbsPoint(e).y - this.currentAbsPos.y < 0) {
+          offY = offY * -1
+        }
+        this.currentAbsPos.y = this.getMouseAbsPoint(e).y
+        this.currentRelPos.y = this.getMouseRelPoint(e).y
+      }
 
       if (this.resizing) {
         this.mrElements.map(mrEl => {
@@ -124,6 +140,8 @@ export default {
         this.mrElements.map(mrEl => this.moveElementBy(mrEl, offX, offY))
         this.$emit('moving', this.currentAbsPos.x, this.currentAbsPos.y)
       } else {
+        this.currentAbsPos = this.getMouseAbsPoint(e)
+        this.currentRelPos = this.getMouseRelPoint(e)
         this.renderSelectionArea(this.initialRelPos, this.currentRelPos)
         // this.$emit('selecting')
       }

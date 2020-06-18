@@ -21,7 +21,11 @@ export default {
       return {
         ...this.page.styles,
         height: (typeof this.page.height === 'string') ? this.page.height : (this.page.height + 'px'),
-        width: (typeof this.page.width === 'string') ? this.page.width : (this.page.width + 'px')
+        width: (typeof this.page.width === 'string') ? this.page.width : (this.page.width + 'px'),
+
+        // customer
+        'background-image': '',
+        'margin': '100px auto'
       }
     }
   }
