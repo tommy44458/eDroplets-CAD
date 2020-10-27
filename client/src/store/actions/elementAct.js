@@ -341,32 +341,32 @@ const elementActions = {
     //   }
     // })
 
-    let path = ''
-    let iNow = 0
-    let jNow = 0
+    // let path = ''
+    // let iNow = 0
+    // let jNow = 0
 
-    let way = 0 // 0: top, 1: right, 2: down, 3: left 上右下左遍歷 上卡住畫水平向右線 右卡住畫向下線
-    while (1) {
-      if (matrix[iNow][jNow] != 0) {
-        if (path.length == 0) {
-          path = 'M' + ((jNow * 20)) + ' ' + ((iNow * 20) + 1) + ' '
-        }
-        switch (way) {
-          case 0:
-            if (iNow > 0 && matrix[iNow - 1] != null && matrix[iNow - 1][jNow] == 1) {
-              path = path + 'L' + ((jNow * 20)) + ' ' + ((iNow * 20) - 20) + ' '
-              jNow++
-            } else {
-              path = path + 'L' + ((jNow * 20) + 1) + ' ' + (iNow * 20) + ' '
-            }
-            break
-        }
-      } else {
-        if (path.length > 0) {
-          way++
-        }
-      }
-    }
+    // let way = 0 // 0: top, 1: right, 2: down, 3: left 上右下左遍歷 上卡住畫水平向右線 右卡住畫向下線
+    // while (1) {
+    //   if (matrix[iNow][jNow] != 0) {
+    //     if (path.length == 0) {
+    //       path = 'M' + ((jNow * 20)) + ' ' + ((iNow * 20) + 1) + ' '
+    //     }
+    //     switch (way) {
+    //       case 0:
+    //         if (iNow > 0 && matrix[iNow - 1] != null && matrix[iNow - 1][jNow] == 1) {
+    //           path = path + 'L' + ((jNow * 20)) + ' ' + ((iNow * 20) - 20) + ' '
+    //           jNow++
+    //         } else {
+    //           path = path + 'L' + ((jNow * 20) + 1) + ' ' + (iNow * 20) + ' '
+    //         }
+    //         break
+    //     }
+    //   } else {
+    //     if (path.length > 0) {
+    //       way++
+    //     }
+    //   }
+    // }
 
     // let topNow = -1
     // let leftNow = -1

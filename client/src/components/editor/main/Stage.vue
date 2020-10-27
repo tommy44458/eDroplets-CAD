@@ -53,6 +53,9 @@ export default {
   name: 'stage',
   components: { StageEl, MrContainer },
   props: ['page', 'zoom'],
+  created: function () {
+    this.$root.$on('paint-electrodes', this.paintElectrodes)
+  },
   data: function () {
     return {
       clipboard: [],
@@ -80,6 +83,10 @@ export default {
     })
   },
   methods: {
+    paintElectrodes () {
+      console.log('***')
+    },
+
     margeSelectedElementsHandler () {
       this.margeSelectedElements()
       // console.log(this.selectedElements)

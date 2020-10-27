@@ -24,6 +24,20 @@
 
     <div class="separator"></div>
 
+    <button v-tooltip="'Paint Electrodes'" class="action-btn" :disabled="false" @click="$root.$emit('paint-electrodes')">
+      <svgicon icon="system/actions/pencil" width="20" height="20"
+        :color="'#2b6a73'">
+      </svgicon>
+    </button>
+
+    <button v-tooltip="'Combine Electrodes'" class="action-btn" :disabled="false" @click="$root.$emit('combine-electrodes')">
+      <svgicon icon="system/actions/combine" width="20" height="20"
+        :color="'#2b6a73'">
+      </svgicon>
+    </button>
+
+    <div class="separator"></div>
+
     <button v-tooltip="'Clear project'" class="action-btn"
       :disabled="isLoading" @click="$root.$emit('open-confirm-dialog')">
       <svgicon icon="system/actions/delete" width="24" height="24" color="#2b6a73"></svgicon>
