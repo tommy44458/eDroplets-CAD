@@ -5,6 +5,7 @@
     :style="pageStyles"
     :class="[page.classes, {stage: true}]"
     :activeElements="selectedElements"
+    @marge="margeSelectedElementsHandler"
     @arrows="arrowsHandler"
     @moving="movingHandler"
     @movestop="moveStopHandler"
@@ -37,7 +38,7 @@ import { getComputedProp, fixElementToParentBounds } from '@/helpers/positionDim
 
 import { mapState, mapActions, mapMutations } from 'vuex'
 import { _clearSelectedElements, _addSelectedElements, registerElement,
-        removeElement, resizeElement, moveElement, rebaseSelectedElements } from '@/store/types'
+        removeElement, resizeElement, moveElement, rebaseSelectedElements, margeSelectedElements } from '@/store/types'
 
 import MrContainer from '@/components/editor/common/mr-vue/MrContainer'
 import StageEl from './StageEl'
@@ -79,6 +80,16 @@ export default {
     })
   },
   methods: {
+    margeSelectedElementsHandler () {
+      this.margeSelectedElements()
+      // console.log(this.selectedElements)
+      // this.margeSelectedElements()
+      // this.selectedElements.map(el => {
+      //   el.width = 21
+      //   el.height = 21
+      // })
+    },
+
     clearSelectionHandler () {
       if (this.selectedElements.length > 0) this._clearSelectedElements()
     },
@@ -120,8 +131,11 @@ export default {
 
       let height = getComputedProp('height', element, this.page)
       let width = getComputedProp('width', element, this.page)
-      let top = e.pageY + mainContainer.scrollTop - mainContainer.offsetTop - this.$el.offsetTop - (height / 2)
-      let left = e.pageX + mainContainer.scrollLeft - mainContainer.offsetLeft - this.$el.offsetLeft - (width / 2)
+      const unit = Math.round(21 * this.zoom)
+      const unitY = Math.round((e.pageY + mainContainer.scrollTop - mainContainer.offsetTop - this.$el.offsetTop - (height / 2)) / unit)
+      const unitX = Math.round((e.pageX + mainContainer.scrollLeft - mainContainer.offsetLeft - this.$el.offsetLeft - (width / 2)) / unit)
+      let top = unitY * unit
+      let left = unitX * unit
 
       // Correct drop positions based on the editorZoom
       top = Math.round(top / this.zoom)
@@ -254,7 +268,7 @@ export default {
         : document.documentElement.classList.remove('droppable')
     },
 
-    ...mapActions([rebaseSelectedElements, registerElement, removeElement, resizeElement, moveElement]),
+    ...mapActions([rebaseSelectedElements, registerElement, removeElement, resizeElement, moveElement, margeSelectedElements]),
     ...mapMutations([_clearSelectedElements, _addSelectedElements])
   },
   watch: {

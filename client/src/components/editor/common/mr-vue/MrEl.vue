@@ -2,7 +2,7 @@
   <div data-mr-el="true"
     class="mr-el"
     :style="style"
-    @mousedown="e => $emit('activated', e)"
+    @mousedown.exact="e => $emit('activated', e)"
     @mousedown.meta.capture="e => $emit('activated', e)"
     @mousedown.ctrl.capture="e => $emit('activated', e)"
   >
@@ -10,12 +10,14 @@
     <slot></slot>
     <!-- IMPORTANT! KEEP SLOT AS FIRST CHILD -->
 
-    <div data-mr-handle="true"
-      v-if="resizable"
-      v-for="handle in handles"
-      :key="handle"
-      class="handle" :class="handle"
-      :style="{ display: active ? 'block' : 'none'}">
+    <div v-if="resizable">
+      <div 
+        data-mr-handle="true"
+        v-for="handle in handles"
+        :key="handle"
+        class="handle" :class="handle"
+        :style="{ display: active ? 'block' : 'none'}">
+      </div>
     </div>
     <div v-if="!resizable"
       class="selection-box"
@@ -104,7 +106,8 @@ export default {
   },
   computed: {
     resizable () {
-      return ((this.handles !== null) && (this.handles.length > 0))
+      return false
+      // return ((this.handles !== null) && (this.handles.length > 0))
     },
 
     style () {

@@ -100,6 +100,8 @@ export default {
     activatedHandler (e) {
       e.stopPropagation()
       e.preventDefault()
+      // ###
+      console.log(e)
 
       if (e.shiftKey && !this.isActive) {
         this._addSelectedElement(this.elem)

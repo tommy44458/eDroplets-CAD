@@ -1,7 +1,59 @@
+/* eslint-disable eqeqeq */
 import types from '@/store/types'
 import componentFactory from '@/factories/componentFactory'
 import { setElId, getChildNode, calcRelativePoint } from '@/helpers/recursiveMethods'
 import { fixElementToParentBounds, getComputedProp } from '@/helpers/positionDimension'
+
+// const mergeElementsGroups = []
+
+// const refreshMergeElements = function (state, commit) {
+//   mergeElementsGroups.forEach(group => {
+//     group.forEach(el => {
+//       commit(types.updateEgglement, {
+//         egglement: el,
+//         height: 21,
+//         width: 21
+//       })
+
+//       let tMax = true
+//       let lMax = true
+
+//       group.forEach(el2 => {
+//         if (el2.left === el.left && el2.top > el.top) {
+//           tMax = false
+//         }
+//         if (el2.top === el.top && el2.left > el.left) {
+//           lMax = false
+//         }
+//       })
+
+//       if (tMax) {
+//         commit(types.updateEgglement, {
+//           egglement: el,
+//           height: 20
+//         })
+//       }
+//       if (lMax) {
+//         commit(types.updateEgglement, {
+//           egglement: el,
+//           width: 20
+//         })
+//       }
+//     })
+//   })
+// }
+
+// const isExistMergeGroup = function (_el) {
+//   let isExist = false
+//   mergeElementsGroups.forEach(group => {
+//     group.forEach(el => {
+//       if (el.id == _el.id) {
+//         isExist = true
+//       }
+//     })
+//   })
+//   return isExist
+// }
 
 const elementActions = {
 /**
@@ -203,6 +255,142 @@ const elementActions = {
       bottom: 'auto',
       right: 'auto'
     })
+  },
+
+  [types.margeSelectedElements]: function ({ getters, commit, state }) {
+    commit(types.sortSelectedElement)
+
+    // const newSelectedElements = []
+    // state.app.selectedElements.forEach(el => {
+    //   let haveNeighbor = false
+    //   state.app.selectedElements.forEach(el2 => {
+    //     if (el2.id != el.id) {
+    //       if (Math.abs(el2.top - el.top) <= 21 && Math.abs(el2.left - el.left) <= 21) {
+    //         haveNeighbor = true
+    //       }
+    //     }
+    //   })
+    //   if (haveNeighbor) {
+    //     newSelectedElements.push(el)
+    //   }
+    // })
+
+    // console.log(newSelectedElements)
+
+    let topMax = -1
+    let leftMax = -1
+    let topMin = 9999
+    let leftMin = 9999
+
+    state.app.selectedElements.forEach(el => {
+      topMin = el.top < topMin ? el.top : topMin
+      leftMin = el.left < leftMin ? el.left : leftMin
+      topMax = el.top > topMax ? el.top : topMax
+      leftMax = el.left > leftMax ? el.left : leftMax
+    })
+
+    const rowNumber = ((leftMax - leftMin) / 21) + 1
+    const colNumber = ((topMax - topMin) / 21) + 1
+
+    const matrix = []
+
+    for (let i = 0; i < colNumber; i++) {
+      const row = []
+      for (let j = 0; j < rowNumber; j++) {
+        row.push(0)
+      }
+      matrix.push(row)
+    }
+
+    state.app.selectedElements.forEach(el => {
+      const rowIndex = (el.left - leftMin) / 21
+      const colIndex = (el.top - topMin) / 21
+      matrix[colIndex][rowIndex] = 1
+    })
+
+    console.log(matrix)
+
+    // matrix.forEach((row, i) => {
+    //   if (row.every(function (value) { return (value == 0) ? 1 : 0 })) {
+    //     console.log('row', row)
+    //   }
+    //   if (i == 0) {
+    //     row.forEach((item, j) => {
+    //       const col = []
+    //       const trl = []
+    //       const trr = []
+    //       let num = 0
+    //       while (matrix[i + num] != null) {
+    //         col.push(matrix[i + num][j])
+    //         num++
+    //       }
+    //       num = 0
+    //       while (matrix[i + num] != null && matrix[i + num][j - num] != null) {
+    //         trl.push(matrix[i + num][j - num])
+    //         num++
+    //       }
+    //       num = 0
+    //       while (matrix[i + num] != null && matrix[i + num][j + num] != null) {
+    //         trr.push(matrix[i + num][j + num])
+    //         num++
+    //       }
+    //       console.log('col', col)
+    //       console.log('trl', trl)
+    //       console.log('trr', trr)
+    //     })
+    //   }
+    // })
+
+    let path = ''
+    let iNow = 0
+    let jNow = 0
+
+    let way = 0 // 0: top, 1: right, 2: down, 3: left 上右下左遍歷 上卡住畫水平向右線 右卡住畫向下線
+    while (1) {
+      if (matrix[iNow][jNow] != 0) {
+        if (path.length == 0) {
+          path = 'M' + ((jNow * 20)) + ' ' + ((iNow * 20) + 1) + ' '
+        }
+        switch (way) {
+          case 0:
+            if (iNow > 0 && matrix[iNow - 1] != null && matrix[iNow - 1][jNow] == 1) {
+              path = path + 'L' + ((jNow * 20)) + ' ' + ((iNow * 20) - 20) + ' '
+              jNow++
+            } else {
+              path = path + 'L' + ((jNow * 20) + 1) + ' ' + (iNow * 20) + ' '
+            }
+            break
+        }
+      } else {
+        if (path.length > 0) {
+          way++
+        }
+      }
+    }
+
+    // let topNow = -1
+    // let leftNow = -1
+
+    // state.app.selectedElements.forEach(el => {
+    //   if (topNow < 0) {
+    //     topNow = el.top
+    //   }
+
+    //   const row = []
+
+    //   if (el.top) {
+
+    //   }
+
+    // })
+
+    // state.app.selectedElements.map(el => {
+    //   commit(types.updateEgglement, {
+    //     egglement: el,
+    //     height: 20,
+    //     width: 20
+    //   })
+    // })
   },
 
 /**

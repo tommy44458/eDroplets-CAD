@@ -46,6 +46,7 @@ export const resizeElement = 'resizeElement'
 export const moveElement = 'moveElement'
 export const changeElementParent = 'changeElementParent'
 export const removeElement = 'removeElement'
+export const margeSelectedElements = 'margeSelectedElements'
 export const rebaseSelectedElements = 'rebaseSelectedElements'
 
 // MUTATIONS
@@ -60,6 +61,8 @@ export const deletePage = 'deletePage'
 export const createEgglement = 'createEgglement'
 export const updateEgglement = 'updateEgglement'
 export const deleteEgglement = 'deleteEgglement'
+
+export const sortSelectedElement = 'sortSelectedElement'
 
 // INTERNAL-MUTATIONS
 export const _toggleAuthorizationStatus = '_toggleAuthorizationStatus'
@@ -128,6 +131,7 @@ const types = {
   moveElement,
   changeElementParent,
   removeElement,
+  margeSelectedElements,
   rebaseSelectedElements,
 
 // MUTATIONS
@@ -142,6 +146,7 @@ const types = {
   createEgglement,
   updateEgglement,
   deleteEgglement,
+  sortSelectedElement,
 
 // INTERNAL-MUTATIONS
   _toggleAuthorizationStatus,

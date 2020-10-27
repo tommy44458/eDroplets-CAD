@@ -73,6 +73,46 @@ export default {
         this.handle = e.target.classList[1]
         // this.$emit('resizestart')
       } else if (this.getParentMr(e.target)) {
+        // ###
+        // console.log(this.activeElements)
+
+        // let merge = false
+        // this.activeElements.forEach(element => {
+        //   if (element.width === 21 || element.height === 21) {
+        //     merge = true
+        //   }
+        // })
+
+        // if (!merge) {
+        //   this.activeElements.forEach(element => {
+        //     element.width = 21
+        //     element.height = 21
+        //     let tMax = true
+        //     let lMax = true
+        //     this.activeElements.forEach(element2 => {
+        //       if (element2.left === element.left && element2.top > element.top) {
+        //         tMax = false
+        //       }
+        //       if (element2.top === element.top && element2.left > element.left) {
+        //         lMax = false
+        //       }
+        //     })
+        //     if (tMax) {
+        //       element.height = 20
+        //     }
+        //     if (lMax) {
+        //       element.width = 20
+        //     }
+        //   })
+        // } else {
+        //   this.activeElements.forEach(element => {
+        //     element.width = 20
+        //     element.height = 20
+        //   })
+        // }
+
+        this.$emit('marge')
+
         isMrs = this.moving = true
         // this.$emit('movestart')
       }
@@ -113,23 +153,20 @@ export default {
       const lastAbsY = this.currentAbsPos.y
       let offX = 0
       let offY = 0
-      if (Math.abs(lastAbsX - this.getMouseAbsPoint(e).x) >= 6) {
-        offX = 6
-        if (this.getMouseAbsPoint(e).x - this.currentAbsPos.x < 0) {
-          offX = offX * -1
-        }
-        this.currentAbsPos.x = this.getMouseAbsPoint(e).x
-        this.currentRelPos.x = this.getMouseRelPoint(e).x
-      }
+      let posX = 0
+      let posY = 0
 
-      if (Math.abs(lastAbsY - this.getMouseAbsPoint(e).y) >= 6) {
-        offY = 6
-        if (this.getMouseAbsPoint(e).y - this.currentAbsPos.y < 0) {
-          offY = offY * -1
-        }
-        this.currentAbsPos.y = this.getMouseAbsPoint(e).y
-        this.currentRelPos.y = this.getMouseRelPoint(e).y
-      }
+      // const elCompStyle = window.getComputedStyle(mrEl)
+
+      offX = this.getMouseAbsPoint(e).x - lastAbsX
+      this.currentAbsPos.x = this.getMouseAbsPoint(e).x
+      this.currentRelPos.x = this.getMouseRelPoint(e).x
+      posX = this.currentRelPos.x
+
+      offY = this.getMouseAbsPoint(e).y - lastAbsY
+      this.currentAbsPos.y = this.getMouseAbsPoint(e).y
+      this.currentRelPos.y = this.getMouseRelPoint(e).y
+      posY = this.currentRelPos.y
 
       if (this.resizing) {
         this.mrElements.map(mrEl => {
@@ -137,7 +174,8 @@ export default {
         })
         // this.$emit('resizing')
       } else if (this.moving) {
-        this.mrElements.map(mrEl => this.moveElementBy(mrEl, offX, offY))
+        // this.mrElements.map(mrEl => this.moveElementBy(mrEl, offX, offY))
+        this.mrElements.map(mrEl => this.moveElementBy2(mrEl, posX, posY))
         this.$emit('moving', this.currentAbsPos.x, this.currentAbsPos.y)
       } else {
         this.currentAbsPos = this.getMouseAbsPoint(e)
@@ -229,6 +267,38 @@ export default {
         : 'auto'
       el.style.right = (el.style.right !== 'auto')
         ? this.fixPosition(el, parseInt(elCompStyle.right) - Math.round(offX / this.zoom), 'right') + 'px'
+        : 'auto'
+    },
+
+    moveElementBy2 (el, posX, posY) {
+      // ###
+      // const elCompStyle = window.getComputedStyle(el)
+
+      // Re-set height and width on move to preserve dimensions (due addition of bottom/right props)
+      el.style.height = el.style.height
+      el.style.width = el.style.width
+
+      const elH = parseInt(el.style.height.split('px')[0])
+      const elW = parseInt(el.style.width.split('px')[0])
+
+      const unit = Math.round(21 * this.zoom)
+
+      const unitX = parseInt(posX / unit)
+      const unitY = parseInt(posY / unit)
+
+      // console.log(unitX, unitY, unit, this.zoom)
+
+      el.style.top = (el.style.top !== 'auto')
+        ? this.fixPosition(el, Math.round(unitY * unit / this.zoom), 'top') + 'px'
+        : 'auto'
+      el.style.left = (el.style.left !== 'auto')
+        ? this.fixPosition(el, Math.round(unitX * unit / this.zoom), 'left') + 'px'
+        : 'auto'
+      el.style.bottom = (el.style.bottom !== 'auto')
+        ? this.fixPosition(el, Math.round((unitY * unit + elH) / this.zoom), 'bottom') + 'px'
+        : 'auto'
+      el.style.right = (el.style.right !== 'auto')
+        ? this.fixPosition(el, Math.round((unitX * unit + elW) / this.zoom), 'right') + 'px'
         : 'auto'
     },
 

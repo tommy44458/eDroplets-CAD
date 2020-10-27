@@ -89,6 +89,22 @@ const internalElementMutations = {
  */
   [types._removeSelectedElement]: function (state, elemIndex) {
     state.app.selectedElements.splice(elemIndex, 1)
+  },
+
+  [types.sortSelectedElement]: function (state) {
+    state.app.selectedElements.sort(function (a, b) {
+      if (a.top > b.top) {
+        return 1
+      } else if (a.top === b.top) {
+        if (a.left > b.left) {
+          return 1
+        } else {
+          return -1
+        }
+      } else {
+        return -1
+      }
+    })
   }
 }
 

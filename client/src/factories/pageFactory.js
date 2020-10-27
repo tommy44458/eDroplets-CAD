@@ -5,8 +5,8 @@ function newPage (name, path, height, width) {
     id: shortid.generate(),
     name: name,
     path: path,
-    width: '960px', // width || '100%', 800*1.2
-    height: '480px', // height || '70%', 400*1.2
+    width: '800px', // width || '100%', 800*1.2
+    height: '400px', // height || '70%', 400*1.2
 
     styles: {
       '--mdc-theme-primary': '#673ab7',
@@ -20,7 +20,7 @@ function newPage (name, path, height, width) {
         'linear-gradient(90deg, rgba(0,0,0,.1) 1px, transparent 0),' +
         'linear-gradient(rgba(0,0,0,.15) 1px, transparent 0),' +
         'linear-gradient(90deg, rgba(0,0,0,.15) 1px, transparent 0)',
-      'background-size': '6px 6px, 6px 6px, 60px 60px, 60px 60px',
+      'background-size': '21px 21px, 21px 21px, 42px 42px, 42px 42px',
       'overflow': 'scroll' // 'hidden',
     },
     classes: [],

@@ -389,18 +389,26 @@
 // ]
 
 const basicElements = [
-    // IMAGE
     {
         'name': 'square',
-        'type': 'img',
+        'type': 'svg',
         'egglement': true,
+        'wrappegg': true,
         'width': 20,
         'height': 20,
-        'attrs': {
-            'src': '/static/electrode/square.svg'
+        'attrs': {},
+        'styles': {
         },
-        'styles': {},
-        'classes': {}
+        'classes': {},
+        'children': [
+            {
+                'name': 'path',
+                'type': 'path',
+                'attrs': {
+                    'd': 'M0 1 L0 19 L1 20 L19 20 L20 19 L20 1 L19 0 L1 0 Z'
+                }
+            }
+        ]
     }
 ]
 
