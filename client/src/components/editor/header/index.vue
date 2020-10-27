@@ -1,7 +1,8 @@
 <template>
   <div class="headegg mdc-theme--background" :class="{'not-scrolled': scroll0}">
     <a class="home-btn" href="https://www.nthu.edu.tw" target="_blank">
-      <svgicon icon="product/vuegg" width="40" height="40" :original="true"></svgicon>
+      <!-- <svgicon icon="product/vuegg" width="40" height="40" :original="true"></svgicon> -->
+      <img src="/static/Edrop.png" height="40"/>
     </a>
 
     <input class="title-input" v-model="tmpProjectTitle" @blur="onTitleBlur"

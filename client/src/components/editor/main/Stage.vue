@@ -55,6 +55,7 @@ export default {
   props: ['page', 'zoom'],
   created: function () {
     this.$root.$on('paint-electrodes', this.paintElectrodes)
+    this.$root.$on('combine-electrodes', this.combineElectrodes)
   },
   data: function () {
     return {
@@ -84,7 +85,11 @@ export default {
   },
   methods: {
     paintElectrodes () {
-      console.log('***')
+      console.log('paintElectrodes')
+    },
+
+    combineElectrodes () {
+      console.log('combineElectrodes')
     },
 
     margeSelectedElementsHandler () {

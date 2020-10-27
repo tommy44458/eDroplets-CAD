@@ -30,7 +30,7 @@
       </div>
     </menu-toggle>
 
-    <menu-toggle menuHeader="Material Design">
+    <!-- <menu-toggle menuHeader="Material Design">
       <div class="el-menu">
         <div class="el-menu__el" :key="mdComp.name"
           v-for="mdComp in mdComponents"
@@ -43,7 +43,7 @@
           <span>{{mdComp.displayName || mdComp.name}}</span>
         </div>
       </div>
-    </menu-toggle>
+    </menu-toggle> -->
 
     <!-- TODO: v-for components (community/personal) retrieved from GH? -->
     <!-- <menu-toggle menuHeader="Community Components" :startClosed="true">
@@ -70,7 +70,7 @@ import { registerElement } from '@/store/types'
 
 import basicElements from '@/assets/BasicElements'
 import otherElements from '@/assets/otherElements'
-import materialComponents from '@/assets/MaterialComponents'
+// import materialComponents from '@/assets/MaterialComponents'
 // import mockComponents from '@/assets/MockComponents'
 import MenuToggle from '@/components/editor/common/MenuToggle'
 
@@ -82,8 +82,8 @@ export default {
   data: function () {
     return {
       elements: basicElements,
-      others: otherElements,
-      mdComponents: materialComponents
+      others: otherElements
+      // mdComponents: materialComponents
       // components: mockComponents
     }
   },

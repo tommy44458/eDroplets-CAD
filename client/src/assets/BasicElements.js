@@ -390,7 +390,7 @@
 
 const basicElements = [
     {
-        'name': 'square',
+        'name': 'base',
         'type': 'svg',
         'egglement': true,
         'wrappegg': true,
@@ -406,6 +406,69 @@ const basicElements = [
                 'type': 'path',
                 'attrs': {
                     'd': 'M0 1 L0 19 L1 20 L19 20 L20 19 L20 1 L19 0 L1 0 Z'
+                }
+            }
+        ]
+    },
+    {
+        'name': 'customer1',
+        'type': 'svg',
+        'egglement': true,
+        'wrappegg': true,
+        'width': 42,
+        'height': 63,
+        'attrs': {},
+        'styles': {
+        },
+        'classes': {},
+        'children': [
+            {
+                'name': 'path',
+                'type': 'path',
+                'attrs': {
+                    'd': 'M0 1 L0 59.1 L1 60.1 L39.05 60.10 L40.05 59.10 L40.05 41.10 L39.05 40.10 L20.00 40.10 L20.00 20.00 L39.05 20.00 L40.05 19.00 L40.05 1.00 L39.05 0 L1.00 0 Z'
+                }
+            }
+        ]
+    },
+    {
+        'name': 'customer2',
+        'type': 'svg',
+        'egglement': true,
+        'wrappegg': true,
+        'width': 63,
+        'height': 42,
+        'attrs': {},
+        'styles': {
+        },
+        'classes': {},
+        'children': [
+            {
+                'name': 'path',
+                'type': 'path',
+                'attrs': {
+                    'd': 'M0 1.00 L0 39.05 L1.00 40.05 L19.00 40.05 L20.00 39.05 L20.00 20.00 L40.05 20.00 L40.05 39.05 L41.05 40.05 L59.05 40.05 L60.05 39.05 L60.05 1.00 L59.05 0 L1.00 0 Z'
+                }
+            }
+        ]
+    },
+    {
+        'name': 'customer3',
+        'type': 'svg',
+        'egglement': true,
+        'wrappegg': true,
+        'width': 63,
+        'height': 105,
+        'attrs': {},
+        'styles': {
+        },
+        'classes': {},
+        'children': [
+            {
+                'name': 'path',
+                'type': 'path',
+                'attrs': {
+                    'd': 'M0 1.00 L0 99.20 L1.00 100.20 L59.10 100.20 L60.10 99.20 L60.10 1.00 L59.10 0 L1.00 0 Z'
                 }
             }
         ]

@@ -29,4 +29,7 @@ require('./select')
 require('./table')
 require('./text')
 
-require('./electrode/square')
+require('./electrode/base')
+require('./electrode/customer1')
+require('./electrode/customer2')
+require('./electrode/customer3')
