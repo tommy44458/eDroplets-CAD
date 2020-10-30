@@ -50,10 +50,30 @@ async function generateVueSources (project) {
   }
 }
 
+async function test () {
+  try {
+    return await axios.get('/api/test')
+  } catch (e) {
+    console.error(e)
+    return false
+  }
+}
+
+async function cad (ewd) {
+  try {
+    return await axios.post('/api/path/dwg', ewd)
+  } catch (e) {
+    console.error(e)
+    return false
+  }
+}
+
 const api = {
   saveVueggProject,
   getVueggProject,
-  generateVueSources
+  generateVueSources,
+  test,
+  cad
 }
 
 export default api

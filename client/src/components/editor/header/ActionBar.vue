@@ -24,13 +24,20 @@
 
     <div class="separator"></div>
 
-    <button v-tooltip="'Paint Electrodes'" class="action-btn" :disabled="false" @click="$root.$emit('paint-electrodes')">
-      <svgicon icon="system/actions/pencil" width="20" height="20"
-        :color="'#2b6a73'">
-      </svgicon>
+    <button v-tooltip="'Paint Electrodes'" class="action-btn" :disabled="isLoading" @click="paint ? $root.$emit('paint-electrodes-disable') : $root.$emit('paint-electrodes')">
+      <div v-if="paint">
+        <svgicon icon="system/actions/pencil" width="20" height="20"
+          :color="'red'">
+        </svgicon>
+      </div>
+      <div v-if="!paint">
+        <svgicon icon="system/actions/pencil" width="20" height="20"
+          :color="'#2b6a73'">
+        </svgicon>
+      </div>
     </button>
 
-    <button v-tooltip="'Combine Electrodes'" class="action-btn" :disabled="false" @click="$root.$emit('combine-electrodes')">
+    <button v-tooltip="'Combine Electrodes'" class="action-btn" :disabled="isLoading" @click="$root.$emit('combine-electrodes')">
       <svgicon icon="system/actions/combine" width="20" height="20"
         :color="'#2b6a73'">
       </svgicon>
@@ -101,9 +108,20 @@ export default {
   name: 'action-bar',
   data: function () {
     return {
-      fileValue: null
+      fileValue: null,
+      paint: false
     }
   },
+  created: function () {
+    this.$root.$on('paint-electrodes', this.paintElectrodes)
+    this.$root.$on('paint-electrodes-disable', this.paintElectrodesDisable)
+  },
+
+  beforeDestroy: function () {
+    this.$root.$on('paint-electrodes', this.paintElectrodes)
+    this.$root.$off('paint-electrodes-disable', this.paintElectrodesDisable)
+  },
+
   computed: {
     saveBtnTitle () {
       return !this.isLoggedIn
@@ -114,6 +132,7 @@ export default {
     },
 
     ...mapState({
+      apiStatus: state => state.app.apiStatus,
       isLoading: state => state.app.isLoading,
       isSyncing: state => state.app.isSyncing,
       hasChanges: state => state.app.hasChanges,
@@ -123,6 +142,14 @@ export default {
     })
   },
   methods: {
+    paintElectrodes () {
+      this.paint = true
+    },
+
+    paintElectrodesDisable () {
+      this.paint = false
+    },
+
     // --- DOWNLOAD MENU METHODS
     showDownloadMenu () {
       this.$refs.downloadMenu.show()
@@ -136,7 +163,9 @@ export default {
       switch (selected.index) {
         case PROJECT: this.downloadProject(); break
         case PROJECT2: this.downloadProject2(); break
-        case PROJECT3: this.downloadProject3(); break
+        case PROJECT3:
+          this.download3Status = this.downloadProject3()
+        break
         // case SOURCES: this.downloadVueSources(); break
       }
     },
@@ -167,6 +196,14 @@ export default {
     },
 
     ...mapActions([downloadProject, downloadProject2, downloadProject3, downloadVueSources, loadVueggProject])
+  },
+  watch: {
+    apiStatus: function (val) {
+      console.log(val)
+      if (!val) {
+        this.$root.$emit('open-api-fail-dialog')
+      }
+    }
   }
 }
 </script>

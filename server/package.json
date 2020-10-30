@@ -16,6 +16,7 @@
   "dependencies": {
     "@octokit/rest": "^14.0.9",
     "archiver": "^2.1.1",
+    "child_process": "^1.0.2",
     "koa": "^2.5.1",
     "koa-body": "^2.5.0",
     "koa-logger": "^3.2.0",

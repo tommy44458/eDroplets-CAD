@@ -11,6 +11,7 @@ const static = require('koa-static')(path.resolve(__dirname, '..', 'client','dis
 const auth = require('./auth')
 const generator = require('./api/generator')
 const github = require('./api/github')
+const cad = require('./api/cad/cad')
 
 const PORT = process.env.PORT || 5000
 const ROOT_DIR = (process.env.NODE_ENV === 'production') ? '/' : __dirname
@@ -21,15 +22,39 @@ const app = new Koa()
 router.post('/get-access-token', getAccessToken)
 router.post('/project', saveVueggProject)
 router.get('/project', getVueggProject)
-router.post('/generate', generate)
+router.get('/generate', generate)
+router.post('/path/dwg', cad.get_path);
+
+router.get('/test', async (ctx, next) => {
+  console.log('ssssss')
+  ctx.body = 'test'
+  next()
+})
+
+
+
+console.log('qwertyui')
 
 // Middleware
+app.use((ctx, next) => {
+  if (ctx.request.header.host.split(':')[0] === 'localhost' || ctx.request.header.host.split(':')[0] === '127.0.0.1') {
+    ctx.set('Access-Control-Allow-Origin', '*')
+  } else {
+    // ctx.set('Access-Control-Allow-Origin', SystemConfig.HTTP_server_host)
+    ctx.set('Access-Control-Allow-Origin', '*')
+  }
+  ctx.set('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization')
+  ctx.set('Access-Control-Allow-Methods', 'PUT, POST, GET, DELETE, OPTIONS')
+  ctx.set('Access-Control-Allow-Credentials', true) // allow cookie
+  return next()
+})
 app.use(body())
 app.use(logger())
 app.use(historyFallback())
 app.use(static)
 app.use(router.routes())
 app.use(router.allowedMethods())
+
 
 // Start server
 app.listen(PORT)
@@ -115,16 +140,18 @@ async function getVueggProject (ctx) {
  * @see {@link http://koajs.com/#context|Koa Context}
  */
 async function generate (ctx) {
-  try {
-    let zipFile = await generator(ctx.request.body, ROOT_DIR)
-    if (zipFile) {
-      console.log('> Download -> ' + zipFile)
-      ctx.response.status = 200
-      ctx.response.type = 'zip'
-      ctx.response.body = fs.createReadStream(zipFile)
-    }
-  } catch (e) {
-    console.error('\n> Could not complete the project generation...\n' + e)
-    process.exit(1)
-  }
+  // try {
+  //   let zipFile = await generator(ctx.request.body, ROOT_DIR)
+  //   if (zipFile) {
+  //     console.log('> Download -> ' + zipFile)
+  //     ctx.response.status = 200
+  //     ctx.response.type = 'zip'
+  //     ctx.response.body = fs.createReadStream(zipFile)
+  //   }
+  // } catch (e) {
+  //   console.error('\n> Could not complete the project generation...\n' + e)
+  //   process.exit(1)
+  // }
+  ctx.response.body = 'qwerty'
+  ctx.body = 'qwertyqweqwer'
 }

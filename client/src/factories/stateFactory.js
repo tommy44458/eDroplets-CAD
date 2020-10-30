@@ -3,6 +3,7 @@ import newProject from './projectFactory'
 function newState (project) {
   return {
     app: {
+      apiStatus: true,
       isLoading: false,
       isBlockLoading: false,
       hasChanges: false,

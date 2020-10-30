@@ -3,6 +3,7 @@
     class="mr-container"
     tabindex="0"
     @mousedown.capture="mouseDownHandler"
+    @mouseup.capture="$root.$emit('paint-electrodes-disable')"
     @keydown.esc.stop.prevent="$emit('clearselection')"
     @keydown.delete.exact.stop.prevent="$emit('delete')"
     @keydown.ctrl.67.exact.stop.prevent="$emit('copy')"
@@ -41,12 +42,24 @@ export default {
       default: 1
     }
   },
+  created: function () {
+    this.$root.$on('paint-electrodes', this.paintElectrodes)
+    this.$root.$on('paint-electrodes-disable', this.paintElectrodesDisable)
+  },
+
+  beforeDestroy: function () {
+    this.$root.$off('paint-electrodes', this.paintElectrodes)
+    this.$root.$off('paint-electrodes-disable', this.paintElectrodesDisable)
+  },
+
   data: function () {
     return {
+      paint: false,
       initialAbsPos: {x: 0, y: 0},
       initialRelPos: {x: 0, y: 0},
       currentAbsPos: {x: 0, y: 0},
       currentRelPos: {x: 0, y: 0},
+      currentRelPosPaint: {x: 0, y: 0},
       selecting: false,
       moving: false,
       resizing: false,
@@ -59,6 +72,14 @@ export default {
     }
   },
   methods: {
+    paintElectrodes () {
+      this.paint = true
+    },
+
+    paintElectrodesDisable () {
+      this.paint = false
+    },
+
     mouseDownHandler (e) {
       let isMrs = false
       this.initialAbsPos = this.currentAbsPos = this.getMouseAbsPoint(e)
@@ -73,46 +94,7 @@ export default {
         this.handle = e.target.classList[1]
         // this.$emit('resizestart')
       } else if (this.getParentMr(e.target)) {
-        // ###
-        // console.log(this.activeElements)
-
-        // let merge = false
-        // this.activeElements.forEach(element => {
-        //   if (element.width === 21 || element.height === 21) {
-        //     merge = true
-        //   }
-        // })
-
-        // if (!merge) {
-        //   this.activeElements.forEach(element => {
-        //     element.width = 21
-        //     element.height = 21
-        //     let tMax = true
-        //     let lMax = true
-        //     this.activeElements.forEach(element2 => {
-        //       if (element2.left === element.left && element2.top > element.top) {
-        //         tMax = false
-        //       }
-        //       if (element2.top === element.top && element2.left > element.left) {
-        //         lMax = false
-        //       }
-        //     })
-        //     if (tMax) {
-        //       element.height = 20
-        //     }
-        //     if (lMax) {
-        //       element.width = 20
-        //     }
-        //   })
-        // } else {
-        //   this.activeElements.forEach(element => {
-        //     element.width = 20
-        //     element.height = 20
-        //   })
-        // }
-
-        this.$emit('marge')
-
+        // this.$emit('combine')
         isMrs = this.moving = true
         // this.$emit('movestart')
       }
@@ -180,7 +162,13 @@ export default {
       } else {
         this.currentAbsPos = this.getMouseAbsPoint(e)
         this.currentRelPos = this.getMouseRelPoint(e)
-        this.renderSelectionArea(this.initialRelPos, this.currentRelPos)
+        if (this.paint && (Math.floor(this.currentRelPosPaint.x / 21) !== Math.floor(this.currentRelPos.x / 21) || Math.floor(this.currentRelPosPaint.y / 21) !== Math.floor(this.currentRelPos.y / 21))) {
+          // console.log(Math.floor(this.currentAbsPosPaint.x / 21), Math.floor(this.currentAbsPos.x / 21))
+          this.currentRelPosPaint = this.getMouseRelPoint(e)
+          this.$emit('add', this.currentRelPosPaint)
+        } else if (!this.paint) {
+          this.renderSelectionArea(this.initialRelPos, this.currentRelPos)
+        }
         // this.$emit('selecting')
       }
     },

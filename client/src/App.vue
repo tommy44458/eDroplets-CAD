@@ -2,7 +2,7 @@
   <div id="app" class="mdc-theme--background">
     <div class="viewport-splash_wrapper">
       <div class="viewport-splash_content">
-        <svgicon icon="product/vuegg" width="180" height="180" :original="true"></svgicon>
+        <img src="/static/Edrop.png" height="140"/>
         <h3>Sorry about that!</h3>
         <p>
           It looks like your screen is too small to use vuegg properly,

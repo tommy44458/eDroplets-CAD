@@ -473,6 +473,27 @@ const basicElements = [
             }
         ]
     }
+    // {
+    //     'name': 'customer4',
+    //     'type': 'svg',
+    //     'egglement': true,
+    //     'wrappegg': true,
+    //     'width': 126,
+    //     'height': 126,
+    //     'attrs': {},
+    //     'styles': {
+    //     },
+    //     'classes': {},
+    //     'children': [
+    //         {
+    //             'name': 'path',
+    //             'type': 'path',
+    //             'attrs': {
+    //                 'd': 'M42 20 L42 1 L43 0 L61 0 L62 1 L62 20 L63 21 L83 21 L84 20 L84 1 L85 0 L103 0 L104 1 L104 20 L104 21 L104 41 L104 42 L104 62 L104 63 L104 82 L103 83 L84 83 L83 84 L83 104 L83 105 L83 124 L82 125 L64 125 L63 124 L63 105 L63 104 L63 84 L62 83 L42 83 L41 84 L41 103 L40 104 L22 104 L21 103 L21 84 L20 83 L1 83 L0 82 L0 64 L1 63 L20 63 L21 63 L41 63 L42 63 L62 63 L63 63 L83 63 L84 62 L84 42 L83 41 L63 41 L62 41 L43 41 L42 40 L42 21 Z'
+    //             }
+    //         }
+    //     ]
+    // }
 ]
 
 export default basicElements

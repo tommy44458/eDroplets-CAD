@@ -257,25 +257,12 @@ const elementActions = {
     })
   },
 
-  [types.margeSelectedElements]: function ({ getters, commit, state }) {
+  [types.margeSelectedElements]: async function ({ getters, commit, state, dispatch }, payload) {
+    if (state.app.selectedElements.length < 2) {
+      return false
+    }
+
     commit(types.sortSelectedElement)
-
-    // const newSelectedElements = []
-    // state.app.selectedElements.forEach(el => {
-    //   let haveNeighbor = false
-    //   state.app.selectedElements.forEach(el2 => {
-    //     if (el2.id != el.id) {
-    //       if (Math.abs(el2.top - el.top) <= 21 && Math.abs(el2.left - el.left) <= 21) {
-    //         haveNeighbor = true
-    //       }
-    //     }
-    //   })
-    //   if (haveNeighbor) {
-    //     newSelectedElements.push(el)
-    //   }
-    // })
-
-    // console.log(newSelectedElements)
 
     let topMax = -1
     let leftMax = -1
@@ -287,6 +274,7 @@ const elementActions = {
       leftMin = el.left < leftMin ? el.left : leftMin
       topMax = el.top > topMax ? el.top : topMax
       leftMax = el.left > leftMax ? el.left : leftMax
+      console.log(el)
     })
 
     const rowNumber = ((leftMax - leftMin) / 21) + 1
@@ -302,95 +290,272 @@ const elementActions = {
       matrix.push(row)
     }
 
-    state.app.selectedElements.forEach(el => {
-      const rowIndex = (el.left - leftMin) / 21
-      const colIndex = (el.top - topMin) / 21
-      matrix[colIndex][rowIndex] = 1
-    })
+    let firstElec = 9999
+
+    const initMatrix = async function () {
+      state.app.selectedElements.forEach(el => {
+        const rowIndex = (el.left - leftMin) / 21
+        const colIndex = (el.top - topMin) / 21
+        matrix[colIndex][rowIndex] = 1
+        if (colIndex == 0) {
+          firstElec = firstElec < rowIndex ? firstElec : rowIndex
+        }
+      })
+    }
+
+    await initMatrix()
 
     console.log(matrix)
 
-    // matrix.forEach((row, i) => {
-    //   if (row.every(function (value) { return (value == 0) ? 1 : 0 })) {
-    //     console.log('row', row)
-    //   }
-    //   if (i == 0) {
-    //     row.forEach((item, j) => {
-    //       const col = []
-    //       const trl = []
-    //       const trr = []
-    //       let num = 0
-    //       while (matrix[i + num] != null) {
-    //         col.push(matrix[i + num][j])
-    //         num++
-    //       }
-    //       num = 0
-    //       while (matrix[i + num] != null && matrix[i + num][j - num] != null) {
-    //         trl.push(matrix[i + num][j - num])
-    //         num++
-    //       }
-    //       num = 0
-    //       while (matrix[i + num] != null && matrix[i + num][j + num] != null) {
-    //         trr.push(matrix[i + num][j + num])
-    //         num++
-    //       }
-    //       console.log('col', col)
-    //       console.log('trl', trl)
-    //       console.log('trr', trr)
-    //     })
-    //   }
-    // })
+    const vertex = []
+    const vArray = []
 
-    // let path = ''
-    // let iNow = 0
-    // let jNow = 0
+    const drewPathTop = async function (i, j, unit, r) {
+      matrix[i][j] = -1
 
-    // let way = 0 // 0: top, 1: right, 2: down, 3: left 上右下左遍歷 上卡住畫水平向右線 右卡住畫向下線
-    // while (1) {
-    //   if (matrix[iNow][jNow] != 0) {
-    //     if (path.length == 0) {
-    //       path = 'M' + ((jNow * 20)) + ' ' + ((iNow * 20) + 1) + ' '
-    //     }
-    //     switch (way) {
-    //       case 0:
-    //         if (iNow > 0 && matrix[iNow - 1] != null && matrix[iNow - 1][jNow] == 1) {
-    //           path = path + 'L' + ((jNow * 20)) + ' ' + ((iNow * 20) - 20) + ' '
-    //           jNow++
-    //         } else {
-    //           path = path + 'L' + ((jNow * 20) + 1) + ' ' + (iNow * 20) + ' '
-    //         }
-    //         break
-    //     }
-    //   } else {
-    //     if (path.length > 0) {
-    //       way++
-    //     }
-    //   }
-    // }
+      if (matrix[i - 1] != null && matrix[i - 1][j] == 1) {
+        await drewPathDown(i - 1, j, unit, r)
+      } if (matrix[i - 1] != null && matrix[i - 1][j] == -1) {
+      } else {
+        vertex.push([((j * unit + 0) + 0), ((i * unit + 0) + r)])
+        vertex.push([((j * unit + 0) + r), ((i * unit + 0) + 0)])
+        vertex.push([((j * unit + unit - 1) - r), ((i * unit + 0) + 0)])
+      }
 
-    // let topNow = -1
-    // let leftNow = -1
+      if (matrix[i][j + 1] != null && matrix[i][j + 1] == 1) {
+        await drewPathLeft(i, j + 1, unit, r)
+      } if (matrix[i][j + 1] != null && matrix[i][j + 1] == -1) {
+      } else {
+        vertex.push([((j * unit + unit - 1) - r), ((i * unit + 0) + 0)])
+        vertex.push([((j * unit + unit - 1) + 0), ((i * unit + 0) + r)])
+        vertex.push([((j * unit + unit - 1) + 0), ((i * unit + unit - 1) - r)])
+      }
 
-    // state.app.selectedElements.forEach(el => {
-    //   if (topNow < 0) {
-    //     topNow = el.top
-    //   }
+      if (matrix[i + 1] != null && matrix[i + 1][j] == 1) {
+        await drewPathTop(i + 1, j, unit, r)
+      } if (matrix[i + 1] != null && matrix[i + 1][j] == -1) {
+      } else {
+        vertex.push([((j * unit + unit - 1) + 0), ((i * unit + unit - 1) - r)])
+        vertex.push([((j * unit + unit - 1) - r), ((i * unit + unit - 1) + 0)])
+        vertex.push([((j * unit + 0) + r), ((i * unit + unit - 1) + 0)])
+      }
 
-    //   const row = []
+      if (matrix[i][j - 1] != null && matrix[i][j - 1] == 1) {
+        await drewPathRight(i, j - 1, unit, r)
+      } if (matrix[i][j - 1] != null && matrix[i][j - 1] == -1) {
+      } else {
+        vertex.push([((j * unit + 0) + r), ((i * unit + unit - 1) + 0)])
+        vertex.push([((j * unit + 0) + 0), ((i * unit + unit - 1) - r)])
+        vertex.push([((j * unit + 0) + 0), ((i * unit + 0) + r)])
+      }
+    }
 
-    //   if (el.top) {
+    const drewPathRight = async function (i, j, unit, r) {
+      matrix[i][j] = -1
 
-    //   }
+      if (matrix[i][j + 1] != null && matrix[i][j + 1] == 1) {
+        await drewPathLeft(i, j + 1, unit, r)
+      } if (matrix[i][j + 1] != null && matrix[i][j + 1] == -1) {
+      } else {
+        vertex.push([((j * unit + unit - 1) - r), ((i * unit + 0) + 0)])
+        vertex.push([((j * unit + unit - 1) + 0), ((i * unit + 0) + r)])
+        vertex.push([((j * unit + unit - 1) + 0), ((i * unit + unit - 1) - r)])
+      }
 
-    // })
+      if (matrix[i + 1] != null && matrix[i + 1][j] == 1) {
+        await drewPathTop(i + 1, j, unit, r)
+      } if (matrix[i + 1] != null && matrix[i + 1][j] == -1) {
+      } else {
+        vertex.push([((j * unit + unit - 1) + 0), ((i * unit + unit - 1) - r)])
+        vertex.push([((j * unit + unit - 1) - r), ((i * unit + unit - 1) + 0)])
+        vertex.push([((j * unit + 0) + r), ((i * unit + unit - 1) + 0)])
+      }
 
-    // state.app.selectedElements.map(el => {
-    //   commit(types.updateEgglement, {
-    //     egglement: el,
-    //     height: 20,
-    //     width: 20
-    //   })
-    // })
+      if (matrix[i][j - 1] != null && matrix[i][j - 1] == 1) {
+        await drewPathRight(i, j - 1, unit, r)
+      } if (matrix[i][j - 1] != null && matrix[i][j - 1] == -1) {
+      } else {
+        vertex.push([((j * unit + 0) + r), ((i * unit + unit - 1) + 0)])
+        vertex.push([((j * unit + 0) + 0), ((i * unit + unit - 1) - r)])
+        vertex.push([((j * unit + 0) + 0), ((i * unit + 0) + r)])
+      }
+
+      if (matrix[i - 1] != null && matrix[i - 1][j] == 1) {
+        await drewPathDown(i - 1, j, unit, r)
+      } if (matrix[i - 1] != null && matrix[i - 1][j] == -1) {
+      } else {
+        vertex.push([((j * unit + 0) + 0), ((i * unit + 0) + r)])
+        vertex.push([((j * unit + 0) + r), ((i * unit + 0) + 0)])
+        vertex.push([((j * unit + unit - 1) - r), ((i * unit + 0) + 0)])
+      }
+    }
+
+    const drewPathDown = async function (i, j, unit, r) {
+      matrix[i][j] = -1
+
+      if (matrix[i + 1] != null && matrix[i + 1][j] == 1) {
+        await drewPathTop(i + 1, j, unit, r)
+      } if (matrix[i + 1] != null && matrix[i + 1][j] == -1) {
+      } else {
+        vertex.push([((j * unit + unit - 1) + 0), ((i * unit + unit - 1) - r)])
+        vertex.push([((j * unit + unit - 1) - r), ((i * unit + unit - 1) + 0)])
+        vertex.push([((j * unit + 0) + r), ((i * unit + unit - 1) + 0)])
+      }
+
+      if (matrix[i][j - 1] != null && matrix[i][j - 1] == 1) {
+        await drewPathRight(i, j - 1, unit, r)
+      } if (matrix[i][j - 1] != null && matrix[i][j - 1] == -1) {
+      } else {
+        vertex.push([((j * unit + 0) + r), ((i * unit + unit - 1) + 0)])
+        vertex.push([((j * unit + 0) + 0), ((i * unit + unit - 1) - r)])
+        vertex.push([((j * unit + 0) + 0), ((i * unit + 0) + r)])
+      }
+
+      if (matrix[i - 1] != null && matrix[i - 1][j] == 1) {
+        await drewPathDown(i - 1, j, unit, r)
+      } if (matrix[i - 1] != null && matrix[i - 1][j] == -1) {
+      } else {
+        vertex.push([((j * unit + 0) + 0), ((i * unit + 0) + r)])
+        vertex.push([((j * unit + 0) + r), ((i * unit + 0) + 0)])
+        vertex.push([((j * unit + unit - 1) - r), ((i * unit + 0) + 0)])
+      }
+
+      if (matrix[i][j + 1] != null && matrix[i][j + 1] == 1) {
+        await drewPathLeft(i, j + 1, unit, r)
+      } if (matrix[i][j + 1] != null && matrix[i][j + 1] == -1) {
+      } else {
+        vertex.push([((j * unit + unit - 1) - r), ((i * unit + 0) + 0)])
+        vertex.push([((j * unit + unit - 1) + 0), ((i * unit + 0) + r)])
+        vertex.push([((j * unit + unit - 1) + 0), ((i * unit + unit - 1) - r)])
+      }
+    }
+
+    const drewPathLeft = async function (i, j, unit, r) {
+      matrix[i][j] = -1
+
+      if (matrix[i][j - 1] != null && matrix[i][j - 1] == 1) {
+        await drewPathRight(i, j - 1, unit, r)
+      } if (matrix[i][j - 1] != null && matrix[i][j - 1] == -1) {
+      } else {
+        vertex.push([((j * unit + 0) + r), ((i * unit + unit - 1) + 0)])
+        vertex.push([((j * unit + 0) + 0), ((i * unit + unit - 1) - r)])
+        vertex.push([((j * unit + 0) + 0), ((i * unit + 0) + r)])
+      }
+
+      if (matrix[i - 1] != null && matrix[i - 1][j] == 1) {
+        await drewPathDown(i - 1, j, unit, r)
+      } if (matrix[i - 1] != null && matrix[i - 1][j] == -1) {
+      } else {
+        vertex.push([((j * unit + 0) + 0), ((i * unit + 0) + r)])
+        vertex.push([((j * unit + 0) + r), ((i * unit + 0) + 0)])
+        vertex.push([((j * unit + unit - 1) - r), ((i * unit + 0) + 0)])
+      }
+
+      if (matrix[i][j + 1] != null && matrix[i][j + 1] == 1) {
+        await drewPathLeft(i, j + 1, unit, r)
+      } if (matrix[i][j + 1] != null && matrix[i][j + 1] == -1) {
+      } else {
+        vertex.push([((j * unit + unit - 1) - r), ((i * unit + 0) + 0)])
+        vertex.push([((j * unit + unit - 1) + 0), ((i * unit + 0) + r)])
+        vertex.push([((j * unit + unit - 1) + 0), ((i * unit + unit - 1) - r)])
+      }
+
+      if (matrix[i + 1] != null && matrix[i + 1][j] == 1) {
+        await drewPathTop(i + 1, j, unit, r)
+      } if (matrix[i + 1] != null && matrix[i + 1][j] == -1) {
+      } else {
+        vertex.push([((j * unit + unit - 1) + 0), ((i * unit + unit - 1) - r)])
+        vertex.push([((j * unit + unit - 1) - r), ((i * unit + unit - 1) + 0)])
+        vertex.push([((j * unit + 0) + r), ((i * unit + unit - 1) + 0)])
+      }
+    }
+
+    await drewPathLeft(0, firstElec, 20, 0)
+
+    let fault = false
+
+    matrix.forEach(r => {
+      r.forEach(i => {
+        if (i == 1) {
+          fault = true
+        }
+      })
+    })
+
+    if (fault) {
+      return false
+    }
+
+    vertex.forEach(v => {
+      let exist = false
+      vArray.forEach(v2 => {
+        if (v.toString() == v2.toString()) {
+          exist = true
+        }
+      })
+      if (!exist) {
+        vArray.push(v)
+      }
+    })
+
+    const dis = function (v1, v2) {
+      const dx = Math.abs(v1[0] - v2[0])
+      const dy = Math.abs(v1[1] - v2[1])
+      return Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2))
+    }
+
+    const dArray = []
+
+    console.log(vArray)
+
+    vArray.forEach((v, index) => {
+      if (dis(v, vArray[(index + 1) % vArray.length]) > 10 && dis(v, vArray[(index + vArray.length - 1) % vArray.length]) > 10) {
+        if (v[0] < vArray[(index + 1) % vArray.length][0] && v[1] == vArray[(index + 1) % vArray.length][1]) {
+          dArray.push([v[0], v[1] + 1])
+          dArray.push([v[0] + 1, v[1]])
+        }
+        if (v[0] == vArray[(index + 1) % vArray.length][0] && v[1] < vArray[(index + 1) % vArray.length][1]) {
+          dArray.push([v[0] - 1, v[1]])
+          dArray.push([v[0], v[1] + 1])
+        }
+        if (v[0] > vArray[(index + 1) % vArray.length][0] && v[1] == vArray[(index + 1) % vArray.length][1]) {
+          dArray.push([v[0], v[1] - 1])
+          dArray.push([v[0] - 1, v[1]])
+        }
+        if (v[0] == vArray[(index + 1) % vArray.length][0] && v[1] > vArray[(index + 1) % vArray.length][1]) {
+          dArray.push([v[0] + 1, v[1]])
+          dArray.push([v[0], v[1] - 1])
+        }
+      } else {
+        dArray.push(v)
+      }
+    })
+
+    let path = 'M' + dArray[0][0] + ' ' + dArray[0][1] + ' '
+    dArray.forEach((v, index) => {
+        path += 'L' + v[0] + ' ' + v[1] + ' '
+    })
+
+    console.log(path)
+    console.log(vertex)
+    console.log(dArray)
+
+    const page = state.app.selectedPage
+
+    const el = state.app.selectedElements[0]
+
+    commit(types.updateEgglement, {
+      egglement: el,
+      name: el.id.split('.')[1],
+      top: topMin,
+      left: leftMin,
+      height: 20 * colNumber,
+      width: 20 * rowNumber,
+      path: path
+    })
+
+    dispatch(types.registerElement, {pageId: page.id, el, global: el.global})
+    return true
   },
 
 /**

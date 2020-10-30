@@ -5,7 +5,7 @@ import newState from '@/factories/stateFactory'
 import types from '@/store/types'
 import store from '@/store'
 import api from '@/api'
-import axios from 'axios'
+// import axios from 'axios'
 
 const projectActions = {
 /**
@@ -86,22 +86,41 @@ const projectActions = {
 
     const parsedRepoName = state.project.title.replace(/[^a-zA-Z0-9-_]+/g, '-')
 
+    // console.log('**************************')
+    // let resp = await api.test()
+    // console.log(resp)
+
     // customer
     console.log(JSON.stringify(state.project))
 
     // const projectB64 = btoa(JSON.stringify(state.project))
     // download(projectB64, parsedRepoName + '.ewd', 'appliction/json')
 
+    var electrods = state.project.pages[0].children
+
     var dataElectrode = ''
     dataElectrode = dataElectrode + 'contactpad circle r 750\n'
-    dataElectrode = dataElectrode + 'square path M0 100 L0 1900 L100 2000 L1900 2000 L2000 1900 L2000 100 L1900 0 L100 0 Z\n'
-    dataElectrode = dataElectrode + 'reservoir_top_1 path M0 100 L0 3905 L100 4005 L1900 4005 L2000 3905 L2000 2000 L4005 2000 L4005 3905 L4105 4005 L5905 4005 L6005 3905 L6005 100 L5905 0 L100 0 Z\n'
-    dataElectrode = dataElectrode + 'reservoir_top_2 path M0 100 L0 7905 L100 8005 L5905 8005 L6005 7905 L6005 100 L5905 0 L100 0 Z\n'
-    dataElectrode = dataElectrode + 'reservoir_left_1 path M0 100 L0 5910 L100 6010 L3905 6010 L4005 5910 L4005 4110 L3905 4010 L2000 4010 L2000 2000 L3905 2000 L4005 1900 L4005 100 L3905 0 L100 0 Z\n'
-    dataElectrode = dataElectrode + 'reservoir_left_2 path M0 100 L0 5910 L100 6010 L7905 6010 L8005 5910 L8005 100 L7905 0 L100 0 Z\n'
-    dataElectrode = dataElectrode + 'wastepool path M0 100 L0 9920 L100 10020 L5910 10020 L6010 9920 L6010 100 L5910 0 L100 0 Z\n'
-    dataElectrode = dataElectrode + 'longelectrode path M0 100 L0 5910 L100 6010 L1900 6010 L2000 5910 L2000 100 L1900 0 L100 0 Z\n'
+    dataElectrode = dataElectrode + 'base path M0 100 L0 1900 L100 2000 L1900 2000 L2000 1900 L2000 100 L1900 0 L100 0 Z\n'
+    dataElectrode = dataElectrode + 'customer2 path M0 100 L0 3905 L100 4005 L1900 4005 L2000 3905 L2000 2000 L4005 2000 L4005 3905 L4105 4005 L5905 4005 L6005 3905 L6005 100 L5905 0 L100 0 Z\n'
+    dataElectrode = dataElectrode + 'customer1 path M0 100 L0 5910 L100 6010 L3905 6010 L4005 5910 L4005 4110 L3905 4010 L2000 4010 L2000 2000 L3905 2000 L4005 1900 L4005 100 L3905 0 L100 0 Z\n'
+    dataElectrode = dataElectrode + 'customer3 path M0 100 L0 9920 L100 10020 L5910 10020 L6010 9920 L6010 100 L5910 0 L100 0 Z\n'
     dataElectrode = dataElectrode + 'Referenceelectrode path M0 0 L0 10000 L10000 10000 L10000 0 Z\n'
+
+    electrods.forEach(el => {
+      console.log(el)
+      if (el.name !== 'base' && el.name !== 'customer1' && el.name !== 'customer2' && el.name !== 'customer3') {
+        let path = ''
+        const pathlist = el.children[0].attrs.d.split(' ')
+        pathlist.forEach(p => {
+          if (p !== '') {
+            path += p + '00 '
+          } else {
+            path += 'Z\n'
+          }
+        })
+        dataElectrode = dataElectrode + el.name + ' path ' + path
+      }
+    })
     // dataElectrode = dataElectrode + "square path M0 100 L0 1900 L100 2000 L1900 2000 L2000 1900 L2000 100 L1900 0 L100 0 Z\n";
     dataElectrode = dataElectrode + '#ENDOFDEFINITION#\n'
     var tx = 0
@@ -119,12 +138,10 @@ const projectActions = {
         }
     }
 
-    var electrods = state.project.pages[0].children
-
     electrods.forEach(getPos)
 
     function getPos (item, index) {
-      dataElectrode = dataElectrode + 'square ' + (parseFloat(item.left) * parseFloat(80000 / 800) + parseFloat(-50)) + ' ' + (parseFloat(item.top) * parseFloat(40000 / 400) + parseFloat(12255)) + '\n'
+      dataElectrode = dataElectrode + item.name + ' ' + (parseFloat(item.left) * parseFloat(80000 / 800) + parseFloat(-50)) + ' ' + (parseFloat(item.top) * parseFloat(40000 / 400) + parseFloat(12255)) + '\n'
     }
 
     dataElectrode = dataElectrode + 'Referenceelectrode -14835 13689\n'
@@ -164,6 +181,7 @@ const projectActions = {
  */
 [types.downloadProject3]: async function ({ state, dispatch, commit }) {
   commit(types._toggleLoadingStatus, true)
+  commit(types._toggleApiStatus, true)
 
   const parsedRepoName = state.project.title.replace(/[^a-zA-Z0-9-_]+/g, '-')
 
@@ -175,18 +193,49 @@ const projectActions = {
   // .catch(function (error) {
   //   console.log(error)
   // })
+
+  var electrods = state.project.pages[0].children
   var dataElectrode = ''
   dataElectrode = dataElectrode + 'contactpad circle r 750\n'
-  dataElectrode = dataElectrode + 'square path M0 100 L0 1900 L100 2000 L1900 2000 L2000 1900 L2000 100 L1900 0 L100 0 Z\n'
-  dataElectrode = dataElectrode + 'reservoir_top_1 path M0 100 L0 3905 L100 4005 L1900 4005 L2000 3905 L2000 2000 L4005 2000 L4005 3905 L4105 4005 L5905 4005 L6005 3905 L6005 100 L5905 0 L100 0 Z\n'
-  dataElectrode = dataElectrode + 'reservoir_top_2 path M0 100 L0 7905 L100 8005 L5905 8005 L6005 7905 L6005 100 L5905 0 L100 0 Z\n'
-  dataElectrode = dataElectrode + 'reservoir_left_1 path M0 100 L0 5910 L100 6010 L3905 6010 L4005 5910 L4005 4110 L3905 4010 L2000 4010 L2000 2000 L3905 2000 L4005 1900 L4005 100 L3905 0 L100 0 Z\n'
-  dataElectrode = dataElectrode + 'reservoir_left_2 path M0 100 L0 5910 L100 6010 L7905 6010 L8005 5910 L8005 100 L7905 0 L100 0 Z\n'
-  dataElectrode = dataElectrode + 'wastepool path M0 100 L0 9920 L100 10020 L5910 10020 L6010 9920 L6010 100 L5910 0 L100 0 Z\n'
-  dataElectrode = dataElectrode + 'longelectrode path M0 100 L0 5910 L100 6010 L1900 6010 L2000 5910 L2000 100 L1900 0 L100 0 Z\n'
+  dataElectrode = dataElectrode + 'base path M0 100 L0 1900 L100 2000 L1900 2000 L2000 1900 L2000 100 L1900 0 L100 0 Z\n'
+  dataElectrode = dataElectrode + 'customer2 path M0 100 L0 3905 L100 4005 L1900 4005 L2000 3905 L2000 2000 L4005 2000 L4005 3905 L4105 4005 L5905 4005 L6005 3905 L6005 100 L5905 0 L100 0 Z\n'
+  dataElectrode = dataElectrode + 'customer1 path M0 100 L0 5910 L100 6010 L3905 6010 L4005 5910 L4005 4110 L3905 4010 L2000 4010 L2000 2000 L3905 2000 L4005 1900 L4005 100 L3905 0 L100 0 Z\n'
+  dataElectrode = dataElectrode + 'customer3 path M0 100 L0 9920 L100 10020 L5910 10020 L6010 9920 L6010 100 L5910 0 L100 0 Z\n'
   dataElectrode = dataElectrode + 'Referenceelectrode path M0 0 L0 10000 L10000 10000 L10000 0 Z\n'
+
+  electrods.forEach(el => {
+    console.log(el)
+    if (el.name !== 'base' && el.name !== 'customer1' && el.name !== 'customer2' && el.name !== 'customer3') {
+      let path = ''
+      const pathlist = el.children[0].attrs.d.split(' ')
+      pathlist.forEach(p => {
+        if (p !== '') {
+          path += p + '00 '
+        } else {
+          path += 'Z\n'
+        }
+      })
+      dataElectrode = dataElectrode + el.name + ' path ' + path
+    }
+  })
   // dataElectrode = dataElectrode + "square path M0 100 L0 1900 L100 2000 L1900 2000 L2000 1900 L2000 100 L1900 0 L100 0 Z\n";
   dataElectrode = dataElectrode + '#ENDOFDEFINITION#\n'
+
+  electrods.forEach(el => {
+      // console.log(el)
+      if (el.name !== 'base' && el.name !== 'customer1' && el.name !== 'customer2' && el.name !== 'customer3') {
+        let path = ''
+        const pathlist = el.children[0].attrs.d.split(' ')
+        pathlist.forEach(p => {
+          if (p !== '') {
+            path += p + '00 '
+          } else {
+            path += 'Z\n'
+          }
+        })
+        dataElectrode = dataElectrode + el.name + ' path ' + path
+      }
+    })
 
   var dataContactPad = ''
   var tx = 0
@@ -205,12 +254,11 @@ const projectActions = {
   }
 
   var dataElectrodePos = ''
-  var electrods = state.project.pages[0].children
 
   electrods.forEach(getPos)
 
   function getPos (item, index) {
-    dataElectrodePos = dataElectrodePos + 'square ' + (parseFloat(item.left) * parseFloat(80000 / 960) + parseFloat(-650)) + ' ' + (parseFloat(item.top) * parseFloat(40000 / 480) + parseFloat(12255)) + '\n'
+    dataElectrodePos = dataElectrodePos + item.name + ' ' + (parseFloat(item.left) * parseFloat(80000 / 800) + parseFloat(-50)) + ' ' + (parseFloat(item.top) * parseFloat(40000 / 400) + parseFloat(12255)) + '\n'
   }
 
   dataElectrodePos = dataElectrodePos + 'Referenceelectrode -14835 13689\n'
@@ -225,18 +273,29 @@ const projectActions = {
     name: parsedRepoName
   }
 
-  axios.post('http://localhost:3000/api/path/dwg', ewd)
-  .then(function (response) {
-    // console.log(response.request.response)
-    download(response.request.response, parsedRepoName + '.dwg')
+  let resp = await api.cad(ewd)
+  // console.log(resp)
 
+  if (resp.status === 200) {
+    download(resp.data, parsedRepoName + '.dwg')
     commit(types._toggleLoadingStatus, false)
-  })
-  .catch(function (error) {
-    console.log(error)
+  } else {
+    commit(types._toggleLoadingStatus, false)
+    commit(types._toggleApiStatus, false)
+  }
 
-    commit(types._toggleLoadingStatus, false)
-  })
+  // axios.post('http://localhost:3000/api/path/dwg', ewd)
+  // .then(function (response) {
+  //   // console.log(response.request.response)
+  //   download(response.request.response, parsedRepoName + '.dwg')
+
+  //   commit(types._toggleLoadingStatus, false)
+  // })
+  // .catch(function (error) {
+  //   console.log(error)
+
+  //   commit(types._toggleLoadingStatus, false)
+  // })
 },
 
 /**

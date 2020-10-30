@@ -1,6 +1,6 @@
 FROM node:9-alpine
 
-LABEL maintainer="vuegger@gmail.com"
+LABEL maintainer="free44458@gmail.com"
 
 # install git
 RUN apk update && apk upgrade && \

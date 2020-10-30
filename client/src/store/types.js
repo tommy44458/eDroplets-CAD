@@ -69,6 +69,7 @@ export const _toggleAuthorizationStatus = '_toggleAuthorizationStatus'
 export const _addAuthenticatedUser = '_addAuthenticatedUser'
 export const _removeAuthenticatedUser = '_removeAuthenticatedUser'
 
+export const _toggleApiStatus = '_toggleApiStatus'
 export const _toggleLoadingStatus = '_toggleLoadingStatus'
 export const _toggleBlockLoadingStatus = '_toggleBlockLoadingStatus'
 export const _toggleHasChanges = '_toggleHasChanges'
@@ -153,6 +154,7 @@ const types = {
   _addAuthenticatedUser,
   _removeAuthenticatedUser,
 
+  _toggleApiStatus,
   _toggleLoadingStatus,
   _toggleBlockLoadingStatus,
   _toggleHasChanges,

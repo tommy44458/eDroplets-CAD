@@ -5,7 +5,6 @@
     :style="pageStyles"
     :class="[page.classes, {stage: true}]"
     :activeElements="selectedElements"
-    @marge="margeSelectedElementsHandler"
     @arrows="arrowsHandler"
     @moving="movingHandler"
     @movestop="moveStopHandler"
@@ -19,6 +18,7 @@
     @drop="dropHandler"
     @undo="$root.$emit('undo')"
     @redo="$root.$emit('redo')"
+    @add="addElement($event)"
   >
 
     <stage-el
@@ -54,9 +54,14 @@ export default {
   components: { StageEl, MrContainer },
   props: ['page', 'zoom'],
   created: function () {
-    this.$root.$on('paint-electrodes', this.paintElectrodes)
+    // this.$root.$on('paint-electrodes', this.paintElectrodes)
     this.$root.$on('combine-electrodes', this.combineElectrodes)
   },
+
+  beforeDestroy: function () {
+    this.$root.$off('combine-electrodes', this.combineElectrodes)
+  },
+
   data: function () {
     return {
       clipboard: [],
@@ -80,26 +85,70 @@ export default {
 
     ...mapState({
       selectedElements: state => state.app.selectedElements || [],
+      allElements: state => state.app.selectedPage.children,
       projectComponents: state => state.project.components
     })
   },
   methods: {
-    paintElectrodes () {
-      console.log('paintElectrodes')
+    addElement (e) {
+      console.log(e.x, e.y)
+      console.log(this.allElements)
+      let canAdd = true
+      this.allElements.forEach(el => {
+        if (e.x > el.left && e.x < (el.left + el.width) && e.y > el.top && e.y < (el.top + el.height)) {
+          canAdd = false
+        }
+      })
+      console.log(canAdd)
+      if (canAdd) {
+        const base = {
+            'name': 'base',
+            'type': 'svg',
+            'egglement': true,
+            'wrappegg': true,
+            'width': 20,
+            'height': 20,
+            'attrs': {},
+            'styles': {
+            },
+            'classes': {},
+            'children': [
+                {
+                    'name': 'path',
+                    'type': 'path',
+                    'attrs': {
+                        'd': 'M0 1 L0 19 L1 20 L19 20 L20 19 L20 1 L19 0 L1 0 Z'
+                    }
+                }
+            ]
+        }
+
+        let element = base
+        console.log(element)
+
+        let height = getComputedProp('height', element, this.page)
+        let width = getComputedProp('width', element, this.page)
+        const unit = Math.round(21 * this.zoom)
+        let top = (Math.floor(e.y / 21)) * unit
+        let left = (Math.floor(e.x / 21)) * unit
+
+        // Correct drop positions based on the editorZoom
+        top = Math.round(top / this.zoom)
+        left = Math.round(left / this.zoom)
+
+        const fixedElement = fixElementToParentBounds({top, left, height, width}, this.page)
+        element = {...element, ...fixedElement}
+
+        this.registerElement({pageId: this.page.id, el: element, global: e.shiftKey})
+      }
     },
 
-    combineElectrodes () {
+    async combineElectrodes () {
+      const combineSuccess = await this.margeSelectedElements()
+      if (combineSuccess) {
+        this.deleteHandler()
+      }
       console.log('combineElectrodes')
-    },
-
-    margeSelectedElementsHandler () {
-      this.margeSelectedElements()
-      // console.log(this.selectedElements)
-      // this.margeSelectedElements()
-      // this.selectedElements.map(el => {
-      //   el.width = 21
-      //   el.height = 21
-      // })
     },
 
     clearSelectionHandler () {
@@ -140,6 +189,7 @@ export default {
     dropHandler (e) {
       const mainContainer = document.getElementById('main')
       let element = JSON.parse(e.dataTransfer.getData('text/plain'))
+      console.log(element)
 
       let height = getComputedProp('height', element, this.page)
       let width = getComputedProp('width', element, this.page)

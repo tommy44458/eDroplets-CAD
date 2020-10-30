@@ -11,6 +11,15 @@ const internalAppMutations = {
   },
 
 /**
+ * Changes the value of "isLoading", to the value passed as payload
+ *
+ * @param {boolean} isLoading : Whether or not the app is loading
+ */
+[types._toggleApiStatus]: function (state, success) {
+  state.app.apiStatus = success
+},
+
+/**
  * Changes the value of "isBlockLoading", to the value passed as payload
  *
  * @param {boolean} isLoading : Whether or not the app is block loading

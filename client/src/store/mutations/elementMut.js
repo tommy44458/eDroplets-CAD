@@ -34,9 +34,13 @@ const commonElementMutations = {
     if ((typeof payload.height !== 'undefined') && (payload.height !== null)) payload.egglement.height = payload.height
     if ((typeof payload.width !== 'undefined') && (payload.width !== null)) payload.egglement.width = payload.width
     if ((typeof payload.text !== 'undefined') && (payload.text !== null)) payload.egglement.text = payload.text
+    if ((typeof payload.name !== 'undefined') && (payload.name !== null)) payload.egglement.name = payload.name
     if (payload.classes) payload.egglement.classes = payload.classes
     if (payload.styles) payload.egglement.styles = payload.styles
     if (payload.attrs) payload.egglement.attrs = payload.attrs
+    if (payload.path !== 'undefined' && payload.egglement.children.length > 0) {
+      if (payload.path) payload.egglement.children[0].attrs.d = payload.path
+    }
   },
 
 /**
