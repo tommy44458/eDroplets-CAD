@@ -25,16 +25,18 @@ This is a website-based design tool for EWOD chips, users can free to draw elect
 
 ### Undo / Redo
 * **Ctrl [or Meta] + Z / click icon**: Undo last action
-* **Ctrl [or Meta] + Shift + Z / click icon**: Redo last action
+* **Ctrl [or Meta] + Shift + Z / Click icon**: Redo last action
 
 ### Paint
-* **click icon**: Start/Stop electrode painting mode (add base electrode in mouse point) 
+* **Click icon**: Start/Stop electrode painting mode (add base electrode in mouse point) 
 
 ### Combine
-* **click icon**: Combine the selected electrodes
+* **Click icon**: Combine the selected electrodes
 
 ### Download
-* **click icon**: Download .ewd, .edp, .dwg(routing result)
+* **Click icon**: Download .ewd, .edp, .dwg(routing result)
+
+<br>
 
 ## Run edrop-design-tool locally
 
