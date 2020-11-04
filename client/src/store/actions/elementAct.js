@@ -310,167 +310,151 @@ const elementActions = {
     const vertex = []
     const vArray = []
 
-    const drewPathTop = async function (i, j, unit, r) {
+    const drewPathTop = async function (i, j, unit) {
       matrix[i][j] = -1
 
       if (matrix[i - 1] != null && matrix[i - 1][j] == 1) {
-        await drewPathDown(i - 1, j, unit, r)
+        await drewPathDown(i - 1, j, unit)
       } if (matrix[i - 1] != null && matrix[i - 1][j] == -1) {
       } else {
-        vertex.push([((j * unit + 0) + 0), ((i * unit + 0) + r)])
-        vertex.push([((j * unit + 0) + r), ((i * unit + 0) + 0)])
-        vertex.push([((j * unit + unit - 1) - r), ((i * unit + 0) + 0)])
+        vertex.push([((j * unit + 0)), ((i * unit + 0))])
+        vertex.push([((j * unit + unit)), ((i * unit + 0))])
       }
 
       if (matrix[i][j + 1] != null && matrix[i][j + 1] == 1) {
-        await drewPathLeft(i, j + 1, unit, r)
+        await drewPathLeft(i, j + 1, unit)
       } if (matrix[i][j + 1] != null && matrix[i][j + 1] == -1) {
       } else {
-        vertex.push([((j * unit + unit - 1) - r), ((i * unit + 0) + 0)])
-        vertex.push([((j * unit + unit - 1) + 0), ((i * unit + 0) + r)])
-        vertex.push([((j * unit + unit - 1) + 0), ((i * unit + unit - 1) - r)])
+        vertex.push([((j * unit + unit)), ((i * unit + 0))])
+        vertex.push([((j * unit + unit)), ((i * unit + unit))])
       }
 
       if (matrix[i + 1] != null && matrix[i + 1][j] == 1) {
-        await drewPathTop(i + 1, j, unit, r)
+        await drewPathTop(i + 1, j, unit)
       } if (matrix[i + 1] != null && matrix[i + 1][j] == -1) {
       } else {
-        vertex.push([((j * unit + unit - 1) + 0), ((i * unit + unit - 1) - r)])
-        vertex.push([((j * unit + unit - 1) - r), ((i * unit + unit - 1) + 0)])
-        vertex.push([((j * unit + 0) + r), ((i * unit + unit - 1) + 0)])
+        vertex.push([((j * unit + unit)), ((i * unit + unit))])
+        vertex.push([((j * unit + 0)), ((i * unit + unit))])
       }
 
       if (matrix[i][j - 1] != null && matrix[i][j - 1] == 1) {
-        await drewPathRight(i, j - 1, unit, r)
+        await drewPathRight(i, j - 1, unit)
       } if (matrix[i][j - 1] != null && matrix[i][j - 1] == -1) {
       } else {
-        vertex.push([((j * unit + 0) + r), ((i * unit + unit - 1) + 0)])
-        vertex.push([((j * unit + 0) + 0), ((i * unit + unit - 1) - r)])
-        vertex.push([((j * unit + 0) + 0), ((i * unit + 0) + r)])
+        vertex.push([((j * unit)), ((i * unit + unit))])
+        vertex.push([((j * unit)), ((i * unit))])
       }
     }
 
-    const drewPathRight = async function (i, j, unit, r) {
+    const drewPathRight = async function (i, j, unit) {
       matrix[i][j] = -1
 
       if (matrix[i][j + 1] != null && matrix[i][j + 1] == 1) {
-        await drewPathLeft(i, j + 1, unit, r)
+        await drewPathLeft(i, j + 1, unit)
       } if (matrix[i][j + 1] != null && matrix[i][j + 1] == -1) {
       } else {
-        vertex.push([((j * unit + unit - 1) - r), ((i * unit + 0) + 0)])
-        vertex.push([((j * unit + unit - 1) + 0), ((i * unit + 0) + r)])
-        vertex.push([((j * unit + unit - 1) + 0), ((i * unit + unit - 1) - r)])
+        vertex.push([((j * unit + unit)), ((i * unit + 0))])
+        vertex.push([((j * unit + unit)), ((i * unit + unit))])
       }
 
       if (matrix[i + 1] != null && matrix[i + 1][j] == 1) {
-        await drewPathTop(i + 1, j, unit, r)
+        await drewPathTop(i + 1, j, unit)
       } if (matrix[i + 1] != null && matrix[i + 1][j] == -1) {
       } else {
-        vertex.push([((j * unit + unit - 1) + 0), ((i * unit + unit - 1) - r)])
-        vertex.push([((j * unit + unit - 1) - r), ((i * unit + unit - 1) + 0)])
-        vertex.push([((j * unit + 0) + r), ((i * unit + unit - 1) + 0)])
+        vertex.push([((j * unit + unit)), ((i * unit + unit))])
+        vertex.push([((j * unit + 0)), ((i * unit + unit))])
       }
 
       if (matrix[i][j - 1] != null && matrix[i][j - 1] == 1) {
-        await drewPathRight(i, j - 1, unit, r)
+        await drewPathRight(i, j - 1, unit)
       } if (matrix[i][j - 1] != null && matrix[i][j - 1] == -1) {
       } else {
-        vertex.push([((j * unit + 0) + r), ((i * unit + unit - 1) + 0)])
-        vertex.push([((j * unit + 0) + 0), ((i * unit + unit - 1) - r)])
-        vertex.push([((j * unit + 0) + 0), ((i * unit + 0) + r)])
+        vertex.push([((j * unit)), ((i * unit + unit))])
+        vertex.push([((j * unit)), ((i * unit))])
       }
 
       if (matrix[i - 1] != null && matrix[i - 1][j] == 1) {
-        await drewPathDown(i - 1, j, unit, r)
+        await drewPathDown(i - 1, j, unit)
       } if (matrix[i - 1] != null && matrix[i - 1][j] == -1) {
       } else {
-        vertex.push([((j * unit + 0) + 0), ((i * unit + 0) + r)])
-        vertex.push([((j * unit + 0) + r), ((i * unit + 0) + 0)])
-        vertex.push([((j * unit + unit - 1) - r), ((i * unit + 0) + 0)])
+        vertex.push([((j * unit + 0)), ((i * unit + 0))])
+        vertex.push([((j * unit + unit)), ((i * unit + 0))])
       }
     }
 
-    const drewPathDown = async function (i, j, unit, r) {
+    const drewPathDown = async function (i, j, unit) {
       matrix[i][j] = -1
 
       if (matrix[i + 1] != null && matrix[i + 1][j] == 1) {
-        await drewPathTop(i + 1, j, unit, r)
+        await drewPathTop(i + 1, j, unit)
       } if (matrix[i + 1] != null && matrix[i + 1][j] == -1) {
       } else {
-        vertex.push([((j * unit + unit - 1) + 0), ((i * unit + unit - 1) - r)])
-        vertex.push([((j * unit + unit - 1) - r), ((i * unit + unit - 1) + 0)])
-        vertex.push([((j * unit + 0) + r), ((i * unit + unit - 1) + 0)])
+        vertex.push([((j * unit + unit)), ((i * unit + unit))])
+        vertex.push([((j * unit + 0)), ((i * unit + unit))])
       }
 
       if (matrix[i][j - 1] != null && matrix[i][j - 1] == 1) {
-        await drewPathRight(i, j - 1, unit, r)
+        await drewPathRight(i, j - 1, unit)
       } if (matrix[i][j - 1] != null && matrix[i][j - 1] == -1) {
       } else {
-        vertex.push([((j * unit + 0) + r), ((i * unit + unit - 1) + 0)])
-        vertex.push([((j * unit + 0) + 0), ((i * unit + unit - 1) - r)])
-        vertex.push([((j * unit + 0) + 0), ((i * unit + 0) + r)])
+        vertex.push([((j * unit)), ((i * unit + unit))])
+        vertex.push([((j * unit)), ((i * unit))])
       }
 
       if (matrix[i - 1] != null && matrix[i - 1][j] == 1) {
-        await drewPathDown(i - 1, j, unit, r)
+        await drewPathDown(i - 1, j, unit)
       } if (matrix[i - 1] != null && matrix[i - 1][j] == -1) {
       } else {
-        vertex.push([((j * unit + 0) + 0), ((i * unit + 0) + r)])
-        vertex.push([((j * unit + 0) + r), ((i * unit + 0) + 0)])
-        vertex.push([((j * unit + unit - 1) - r), ((i * unit + 0) + 0)])
+        vertex.push([((j * unit + 0)), ((i * unit + 0))])
+        vertex.push([((j * unit + unit)), ((i * unit + 0))])
       }
 
       if (matrix[i][j + 1] != null && matrix[i][j + 1] == 1) {
-        await drewPathLeft(i, j + 1, unit, r)
+        await drewPathLeft(i, j + 1, unit)
       } if (matrix[i][j + 1] != null && matrix[i][j + 1] == -1) {
       } else {
-        vertex.push([((j * unit + unit - 1) - r), ((i * unit + 0) + 0)])
-        vertex.push([((j * unit + unit - 1) + 0), ((i * unit + 0) + r)])
-        vertex.push([((j * unit + unit - 1) + 0), ((i * unit + unit - 1) - r)])
+        vertex.push([((j * unit + unit)), ((i * unit + 0))])
+        vertex.push([((j * unit + unit)), ((i * unit + unit))])
       }
     }
 
-    const drewPathLeft = async function (i, j, unit, r) {
+    const drewPathLeft = async function (i, j, unit) {
       matrix[i][j] = -1
 
       if (matrix[i][j - 1] != null && matrix[i][j - 1] == 1) {
-        await drewPathRight(i, j - 1, unit, r)
+        await drewPathRight(i, j - 1, unit)
       } if (matrix[i][j - 1] != null && matrix[i][j - 1] == -1) {
       } else {
-        vertex.push([((j * unit + 0) + r), ((i * unit + unit - 1) + 0)])
-        vertex.push([((j * unit + 0) + 0), ((i * unit + unit - 1) - r)])
-        vertex.push([((j * unit + 0) + 0), ((i * unit + 0) + r)])
+        vertex.push([((j * unit)), ((i * unit + unit))])
+        vertex.push([((j * unit)), ((i * unit))])
       }
 
       if (matrix[i - 1] != null && matrix[i - 1][j] == 1) {
-        await drewPathDown(i - 1, j, unit, r)
+        await drewPathDown(i - 1, j, unit)
       } if (matrix[i - 1] != null && matrix[i - 1][j] == -1) {
       } else {
-        vertex.push([((j * unit + 0) + 0), ((i * unit + 0) + r)])
-        vertex.push([((j * unit + 0) + r), ((i * unit + 0) + 0)])
-        vertex.push([((j * unit + unit - 1) - r), ((i * unit + 0) + 0)])
+        vertex.push([((j * unit + 0)), ((i * unit + 0))])
+        vertex.push([((j * unit + unit)), ((i * unit + 0))])
       }
 
       if (matrix[i][j + 1] != null && matrix[i][j + 1] == 1) {
-        await drewPathLeft(i, j + 1, unit, r)
+        await drewPathLeft(i, j + 1, unit)
       } if (matrix[i][j + 1] != null && matrix[i][j + 1] == -1) {
       } else {
-        vertex.push([((j * unit + unit - 1) - r), ((i * unit + 0) + 0)])
-        vertex.push([((j * unit + unit - 1) + 0), ((i * unit + 0) + r)])
-        vertex.push([((j * unit + unit - 1) + 0), ((i * unit + unit - 1) - r)])
+        vertex.push([((j * unit + unit)), ((i * unit + 0))])
+        vertex.push([((j * unit + unit)), ((i * unit + unit))])
       }
 
       if (matrix[i + 1] != null && matrix[i + 1][j] == 1) {
-        await drewPathTop(i + 1, j, unit, r)
+        await drewPathTop(i + 1, j, unit)
       } if (matrix[i + 1] != null && matrix[i + 1][j] == -1) {
       } else {
-        vertex.push([((j * unit + unit - 1) + 0), ((i * unit + unit - 1) - r)])
-        vertex.push([((j * unit + unit - 1) - r), ((i * unit + unit - 1) + 0)])
-        vertex.push([((j * unit + 0) + r), ((i * unit + unit - 1) + 0)])
+        vertex.push([((j * unit + unit)), ((i * unit + unit))])
+        vertex.push([((j * unit + 0)), ((i * unit + unit))])
       }
     }
 
-    await drewPathLeft(0, firstElec, 20, 0)
+    await drewPathLeft(0, firstElec, 21)
 
     let fault = false
 
@@ -486,48 +470,92 @@ const elementActions = {
       return false
     }
 
-    vertex.forEach(v => {
-      let exist = false
-      vArray.forEach(v2 => {
-        if (v.toString() == v2.toString()) {
-          exist = true
-        }
-      })
-      if (!exist) {
+    vertex.forEach((v, index) => {
+      if (v.toString() != vertex[(index - 1 + vertex.length) % vertex.length].toString()) {
         vArray.push(v)
       }
+      // let exist = false
+      // vArray.forEach(v2 => {
+      //   if (v.toString() == v2.toString()) {
+      //     exist = true
+      //   }
+      // })
+      // if (!exist) {
+      //   vArray.push(v)
+      // }
+      // vArray.push(v)
     })
 
-    const dis = function (v1, v2) {
-      const dx = Math.abs(v1[0] - v2[0])
-      const dy = Math.abs(v1[1] - v2[1])
-      return Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2))
-    }
+    // const dis = function (v1, v2) {
+    //   const dx = Math.abs(v1[0] - v2[0])
+    //   const dy = Math.abs(v1[1] - v2[1])
+    //   return Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2))
+    // }
 
     const dArray = []
 
     console.log(vArray)
 
     vArray.forEach((v, index) => {
-      if (dis(v, vArray[(index + 1) % vArray.length]) > 10 && dis(v, vArray[(index + vArray.length - 1) % vArray.length]) > 10) {
-        if (v[0] < vArray[(index + 1) % vArray.length][0] && v[1] == vArray[(index + 1) % vArray.length][1]) {
-          dArray.push([v[0], v[1] + 1])
-          dArray.push([v[0] + 1, v[1]])
-        }
-        if (v[0] == vArray[(index + 1) % vArray.length][0] && v[1] < vArray[(index + 1) % vArray.length][1]) {
-          dArray.push([v[0] - 1, v[1]])
-          dArray.push([v[0], v[1] + 1])
-        }
-        if (v[0] > vArray[(index + 1) % vArray.length][0] && v[1] == vArray[(index + 1) % vArray.length][1]) {
-          dArray.push([v[0], v[1] - 1])
-          dArray.push([v[0] - 1, v[1]])
-        }
-        if (v[0] == vArray[(index + 1) % vArray.length][0] && v[1] > vArray[(index + 1) % vArray.length][1]) {
-          dArray.push([v[0] + 1, v[1]])
-          dArray.push([v[0], v[1] - 1])
-        }
-      } else {
-        dArray.push(v)
+      // dArray.push([v[0], v[1]])
+      // 外凸
+      // .__
+      // |
+      if ((v[0] < vArray[(index + 1 + vArray.length) % vArray.length][0] && v[1] == vArray[(index + 1 + vArray.length) % vArray.length][1]) &&
+           (v[0] == vArray[(index - 1 + vArray.length) % vArray.length][0]) && v[1] < vArray[(index - 1 + vArray.length) % vArray.length][1]) {
+        dArray.push([v[0] + 0, v[1] + 1])
+        dArray.push([v[0] + 1, v[1] + 0])
+      }
+      //  __.
+      //    |
+      if ((v[0] == vArray[(index + 1 + vArray.length) % vArray.length][0] && v[1] < vArray[(index + 1 + vArray.length) % vArray.length][1]) &&
+           (v[0] > vArray[(index - 1 + vArray.length) % vArray.length][0]) && v[1] == vArray[(index - 1 + vArray.length) % vArray.length][1]) {
+        dArray.push([v[0] - 1 - 1, v[1] + 0])
+        dArray.push([v[0] + 0 - 1, v[1] + 1])
+      }
+      //    |
+      //  --.
+      if ((v[0] > vArray[(index + 1 + vArray.length) % vArray.length][0] && v[1] == vArray[(index + 1 + vArray.length) % vArray.length][1]) &&
+           (v[0] == vArray[(index - 1 + vArray.length) % vArray.length][0]) && v[1] > vArray[(index - 1 + vArray.length) % vArray.length][1]) {
+        dArray.push([v[0] + 0 - 1, v[1] - 1 - 1])
+        dArray.push([v[0] - 1 - 1, v[1] + 0 - 1])
+      }
+      //  |
+      //  .--
+      if ((v[0] == vArray[(index + 1 + vArray.length) % vArray.length][0] && v[1] > vArray[(index + 1 + vArray.length) % vArray.length][1]) &&
+           (v[0] < vArray[(index - 1 + vArray.length) % vArray.length][0]) && v[1] == vArray[(index - 1 + vArray.length) % vArray.length][1]) {
+        dArray.push([v[0] + 1, v[1] + 0 - 1])
+        dArray.push([v[0] + 0, v[1] - 1 - 1])
+      }
+
+      // 內凹
+      // .__
+      // |
+      if ((v[0] == vArray[(index + 1 + vArray.length) % vArray.length][0] && v[1] < vArray[(index + 1 + vArray.length) % vArray.length][1]) &&
+           (v[0] < vArray[(index - 1 + vArray.length) % vArray.length][0]) && v[1] == vArray[(index - 1 + vArray.length) % vArray.length][1]) {
+        dArray.push([v[0] + 1 - 1, v[1] + 0 - 1])
+        dArray.push([v[0] + 0 - 1, v[1] + 1 - 1])
+      }
+      //  __.
+      //    |
+      if ((v[0] > vArray[(index + 1 + vArray.length) % vArray.length][0] && v[1] == vArray[(index + 1 + vArray.length) % vArray.length][1]) &&
+           (v[0] == vArray[(index - 1 + vArray.length) % vArray.length][0]) && v[1] < vArray[(index - 1 + vArray.length) % vArray.length][1]) {
+        dArray.push([v[0] + 0, v[1] + 1 - 1])
+        dArray.push([v[0] - 1, v[1] + 0 - 1])
+      }
+      //    |
+      //  --.
+      if ((v[0] == vArray[(index + 1 + vArray.length) % vArray.length][0] && v[1] > vArray[(index + 1 + vArray.length) % vArray.length][1]) &&
+           (v[0] > vArray[(index - 1 + vArray.length) % vArray.length][0]) && v[1] == vArray[(index - 1 + vArray.length) % vArray.length][1]) {
+        dArray.push([v[0] - 1, v[1] + 0])
+        dArray.push([v[0] + 0, v[1] - 1])
+      }
+      //  |
+      //  .--
+      if ((v[0] < vArray[(index + 1 + vArray.length) % vArray.length][0] && v[1] == vArray[(index + 1 + vArray.length) % vArray.length][1]) &&
+           (v[0] == vArray[(index - 1 + vArray.length) % vArray.length][0]) && v[1] > vArray[(index - 1 + vArray.length) % vArray.length][1]) {
+        dArray.push([v[0] + 0 - 1, v[1] - 1])
+        dArray.push([v[0] + 1 - 1, v[1] + 0])
       }
     })
 
@@ -549,8 +577,8 @@ const elementActions = {
       name: el.id.split('.')[1],
       top: topMin,
       left: leftMin,
-      height: 20 * colNumber,
-      width: 20 * rowNumber,
+      height: 21 * colNumber,
+      width: 21 * rowNumber,
       path: path
     })
 
