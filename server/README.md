@@ -1,6 +1,6 @@
 # vuegg-server
 
-> Backend server for vuegg
+> Backend server for edrop-device-tool
 
 ## Setup
 

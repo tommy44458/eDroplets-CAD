@@ -195,6 +195,7 @@ const projectActions = {
   // })
 
   var electrods = state.project.pages[0].children
+
   var dataElectrode = ''
   dataElectrode = dataElectrode + 'contactpad circle r 750\n'
   dataElectrode = dataElectrode + 'base path M0 100 L0 1900 L100 2000 L1900 2000 L2000 1900 L2000 100 L1900 0 L100 0 Z\n'
@@ -220,22 +221,6 @@ const projectActions = {
   })
   // dataElectrode = dataElectrode + "square path M0 100 L0 1900 L100 2000 L1900 2000 L2000 1900 L2000 100 L1900 0 L100 0 Z\n";
   dataElectrode = dataElectrode + '#ENDOFDEFINITION#\n'
-
-  electrods.forEach(el => {
-      // console.log(el)
-      if (el.name !== 'base' && el.name !== 'customer1' && el.name !== 'customer2' && el.name !== 'customer3') {
-        let path = ''
-        const pathlist = el.children[0].attrs.d.split(' ')
-        pathlist.forEach(p => {
-          if (p !== '') {
-            path += p + '00 '
-          } else {
-            path += 'Z\n'
-          }
-        })
-        dataElectrode = dataElectrode + el.name + ' path ' + path
-      }
-    })
 
   var dataContactPad = ''
   var tx = 0
