@@ -40,15 +40,6 @@ This is a website-based design tool for EWOD chips, users can free to draw elect
 
 ## Run edrop-design-tool locally
 
-### Auto-run
-``` bash
-# install, build and serve
-npm run edrop-design-tool
-```
-Navigate to `localhost:5000` to serve it.
-
-</br>
-
 ### Step-by-step setup
 
 ##### 1. installation
