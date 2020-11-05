@@ -95,7 +95,7 @@ export default {
       console.log(this.allElements)
       let canAdd = true
       this.allElements.forEach(el => {
-        if (e.x > el.left && e.x < (el.left + el.width) && e.y > el.top && e.y < (el.top + el.height)) {
+        if ((e.x / this.zoom) > el.left && (e.x / this.zoom) < (el.left + el.width) && (e.y / this.zoom) > el.top && (e.y / this.zoom) < (el.top + el.height)) {
           canAdd = false
         }
       })
@@ -128,13 +128,15 @@ export default {
 
         let height = getComputedProp('height', element, this.page)
         let width = getComputedProp('width', element, this.page)
-        const unit = Math.round(21 * this.zoom)
-        let top = (Math.floor(e.y / 21)) * unit
-        let left = (Math.floor(e.x / 21)) * unit
+        const unit = 21
+        const unitX = parseInt((e.x / this.zoom) / unit)
+        const unitY = parseInt((e.y / this.zoom) / unit)
+        let top = unit * unitY
+        let left = unit * unitX
 
         // Correct drop positions based on the editorZoom
-        top = Math.round(top / this.zoom)
-        left = Math.round(left / this.zoom)
+        // top = Math.round(top / this.zoom)
+        // left = Math.round(left / this.zoom)
 
         const fixedElement = fixElementToParentBounds({top, left, height, width}, this.page)
         element = {...element, ...fixedElement}
@@ -193,15 +195,15 @@ export default {
 
       let height = getComputedProp('height', element, this.page)
       let width = getComputedProp('width', element, this.page)
-      const unit = Math.round(21 * this.zoom)
-      const unitY = Math.round((e.pageY + mainContainer.scrollTop - mainContainer.offsetTop - this.$el.offsetTop - (height / 2)) / unit)
-      const unitX = Math.round((e.pageX + mainContainer.scrollLeft - mainContainer.offsetLeft - this.$el.offsetLeft - (width / 2)) / unit)
+      const unit = 21
+      const unitY = parseInt((e.pageY + mainContainer.scrollTop - mainContainer.offsetTop - this.$el.offsetTop - (height / 2)) / this.zoom / unit)
+      const unitX = parseInt((e.pageX + mainContainer.scrollLeft - mainContainer.offsetLeft - this.$el.offsetLeft - (width / 2)) / this.zoom / unit)
       let top = unitY * unit
       let left = unitX * unit
 
       // Correct drop positions based on the editorZoom
-      top = Math.round(top / this.zoom)
-      left = Math.round(left / this.zoom)
+      // top = Math.round(top / this.zoom)
+      // left = Math.round(left / this.zoom)
 
       const fixedElement = fixElementToParentBounds({top, left, height, width}, this.page)
       element = {...element, ...fixedElement}

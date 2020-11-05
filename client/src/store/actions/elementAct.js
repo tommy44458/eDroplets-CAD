@@ -474,16 +474,6 @@ const elementActions = {
       if (v.toString() != vertex[(index - 1 + vertex.length) % vertex.length].toString()) {
         vArray.push(v)
       }
-      // let exist = false
-      // vArray.forEach(v2 => {
-      //   if (v.toString() == v2.toString()) {
-      //     exist = true
-      //   }
-      // })
-      // if (!exist) {
-      //   vArray.push(v)
-      // }
-      // vArray.push(v)
     })
 
     // const dis = function (v1, v2) {
@@ -494,7 +484,7 @@ const elementActions = {
 
     const dArray = []
 
-    console.log(vArray)
+    // console.log(vArray)
 
     vArray.forEach((v, index) => {
       // dArray.push([v[0], v[1]])
@@ -564,9 +554,9 @@ const elementActions = {
         path += 'L' + v[0] + ' ' + v[1] + ' '
     })
 
-    console.log(path)
-    console.log(vertex)
-    console.log(dArray)
+    // console.log(path)
+    // console.log(vertex)
+    // console.log(dArray)
 
     const page = state.app.selectedPage
 

@@ -162,7 +162,7 @@ export default {
       } else {
         this.currentAbsPos = this.getMouseAbsPoint(e)
         this.currentRelPos = this.getMouseRelPoint(e)
-        if (this.paint && (Math.floor(this.currentRelPosPaint.x / 21) !== Math.floor(this.currentRelPos.x / 21) || Math.floor(this.currentRelPosPaint.y / 21) !== Math.floor(this.currentRelPos.y / 21))) {
+        if (this.paint && (Math.floor((this.currentRelPosPaint.x / this.zoom) / 21) !== Math.floor((this.currentRelPos.x / this.zoom) / 21) || Math.floor((this.currentRelPosPaint.y / this.zoom) / 21) !== Math.floor((this.currentRelPos.y / this.zoom) / 21))) {
           // console.log(Math.floor(this.currentAbsPosPaint.x / 21), Math.floor(this.currentAbsPos.x / 21))
           this.currentRelPosPaint = this.getMouseRelPoint(e)
           this.$emit('add', this.currentRelPosPaint)
@@ -269,24 +269,24 @@ export default {
       const elH = parseInt(el.style.height.split('px')[0])
       const elW = parseInt(el.style.width.split('px')[0])
 
-      const unit = Math.round(21 * this.zoom)
+      const unit = 21
 
-      const unitX = parseInt(posX / unit)
-      const unitY = parseInt(posY / unit)
+      const unitX = parseInt((posX / this.zoom) / unit)
+      const unitY = parseInt((posY / this.zoom) / unit)
 
       // console.log(unitX, unitY, unit, this.zoom)
 
       el.style.top = (el.style.top !== 'auto')
-        ? this.fixPosition(el, Math.round(unitY * unit / this.zoom), 'top') + 'px'
+        ? this.fixPosition(el, unit * unitY, 'top') + 'px'
         : 'auto'
       el.style.left = (el.style.left !== 'auto')
-        ? this.fixPosition(el, Math.round(unitX * unit / this.zoom), 'left') + 'px'
+        ? this.fixPosition(el, unit * unitX, 'left') + 'px'
         : 'auto'
       el.style.bottom = (el.style.bottom !== 'auto')
-        ? this.fixPosition(el, Math.round((unitY * unit + elH) / this.zoom), 'bottom') + 'px'
+        ? this.fixPosition(el, unit * unitY + elH, 'bottom') + 'px'
         : 'auto'
       el.style.right = (el.style.right !== 'auto')
-        ? this.fixPosition(el, Math.round((unitX * unit + elW) / this.zoom), 'right') + 'px'
+        ? this.fixPosition(el, unit * unitX + elW, 'right') + 'px'
         : 'auto'
     },
 
