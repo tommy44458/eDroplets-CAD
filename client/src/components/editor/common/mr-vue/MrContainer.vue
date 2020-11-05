@@ -263,8 +263,16 @@ export default {
     moveElementBy2 (el, posX, posY) {
       let canAdd = true
       this.allElements.forEach(_el => {
-        if ((posX / this.zoom) >= _el.left && (posX / this.zoom) <= (_el.left + _el.width) && (posY / this.zoom) >= _el.top && (posY / this.zoom) <= (_el.top + _el.height)) {
-          canAdd = false
+        if (_el.matrix != null && _el.matrix.length > 0) {
+          _el.matrix.forEach((row, i) => {
+            row.forEach((item, j) => {
+              if (_el.matrix[i][j] !== 0) {
+                if ((posX / this.zoom) >= (_el.left + (j * 21)) && (posX / this.zoom) <= (_el.left + (j * 21) + 21) && (posY / this.zoom) >= (_el.top + (i * 21)) && (posY / this.zoom) <= (_el.top + (i * 21) + 21)) {
+                  canAdd = false
+                }
+              }
+            })
+          })
         }
       })
 
