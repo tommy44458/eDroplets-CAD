@@ -52,5 +52,8 @@
     "inquirer": "^5.2.0",
     "shelljs": "^0.8.2",
     "standard-version": "^7.1.0"
+  },
+  "dependencies": {
+    "vue-toasted": "^1.1.28"
   }
 }

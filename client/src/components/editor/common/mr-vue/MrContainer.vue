@@ -37,6 +37,10 @@ export default {
       type: Array,
       default: []
     },
+    allElements: {
+      type: Array,
+      default: []
+    },
     zoom: {
       type: Number,
       default: 1
@@ -59,7 +63,6 @@ export default {
       initialRelPos: {x: 0, y: 0},
       currentAbsPos: {x: 0, y: 0},
       currentRelPos: {x: 0, y: 0},
-      currentRelPosPaint: {x: 0, y: 0},
       selecting: false,
       moving: false,
       resizing: false,
@@ -162,10 +165,9 @@ export default {
       } else {
         this.currentAbsPos = this.getMouseAbsPoint(e)
         this.currentRelPos = this.getMouseRelPoint(e)
-        if (this.paint && (Math.floor((this.currentRelPosPaint.x / this.zoom) / 21) !== Math.floor((this.currentRelPos.x / this.zoom) / 21) || Math.floor((this.currentRelPosPaint.y / this.zoom) / 21) !== Math.floor((this.currentRelPos.y / this.zoom) / 21))) {
+        if (this.paint) {
           // console.log(Math.floor(this.currentAbsPosPaint.x / 21), Math.floor(this.currentAbsPos.x / 21))
-          this.currentRelPosPaint = this.getMouseRelPoint(e)
-          this.$emit('add', this.currentRelPosPaint)
+          this.$emit('add', this.currentRelPos)
         } else if (!this.paint) {
           this.renderSelectionArea(this.initialRelPos, this.currentRelPos)
         }
@@ -259,6 +261,16 @@ export default {
     },
 
     moveElementBy2 (el, posX, posY) {
+      let canAdd = true
+      this.allElements.forEach(_el => {
+        if ((posX / this.zoom) >= _el.left && (posX / this.zoom) <= (_el.left + _el.width) && (posY / this.zoom) >= _el.top && (posY / this.zoom) <= (_el.top + _el.height)) {
+          canAdd = false
+        }
+      })
+
+      if (!canAdd) {
+        return false
+      }
       // ###
       // const elCompStyle = window.getComputedStyle(el)
 

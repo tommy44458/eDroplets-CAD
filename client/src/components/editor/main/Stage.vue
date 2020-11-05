@@ -5,6 +5,7 @@
     :style="pageStyles"
     :class="[page.classes, {stage: true}]"
     :activeElements="selectedElements"
+    :allElements="allElements"
     @arrows="arrowsHandler"
     @moving="movingHandler"
     @movestop="moveStopHandler"
@@ -66,6 +67,7 @@ export default {
     return {
       clipboard: [],
       dropContainer: null,
+      currentRelPosPaint: {x: 0, y: 0},
       defaultBorder: {
         width: '',
         style: '',
@@ -91,14 +93,30 @@ export default {
   },
   methods: {
     addElement (e) {
-      console.log(e.x, e.y)
-      console.log(this.allElements)
+      // console.log(e.x, e.y)
+      // console.log(this.allElements)
+      const posX = e.x
+      const posY = e.y
+
+      if (Math.floor((posX / this.zoom) / 21) === Math.floor((this.currentRelPosPaint.x / this.zoom) / 21) && Math.floor((posX / this.zoom) / 21) === Math.floor((this.currentRelPosPaint.y / this.zoom) / 21)) {
+        return false
+      }
+
       let canAdd = true
       this.allElements.forEach(el => {
-        if ((e.x / this.zoom) > el.left && (e.x / this.zoom) < (el.left + el.width) && (e.y / this.zoom) > el.top && (e.y / this.zoom) < (el.top + el.height)) {
-          canAdd = false
+        if (el.matrix != null && el.matrix.length > 0) {
+          el.matrix.forEach((row, i) => {
+            row.forEach((item, j) => {
+              if (el.matrix[i][j] !== 0) {
+                if ((posX / this.zoom) >= (el.left + (j * 21)) && (posX / this.zoom) <= (el.left + (j * 21) + 21) && (posY / this.zoom) >= (el.top + (i * 21)) && (posY / this.zoom) <= (el.top + (i * 21) + 21)) {
+                  canAdd = false
+                }
+              }
+            })
+          })
         }
       })
+
       console.log(canAdd)
       if (canAdd) {
         const base = {
@@ -111,6 +129,9 @@ export default {
             'attrs': {},
             'styles': {
             },
+            'matrix': [
+              [1]
+            ],
             'classes': {},
             'children': [
                 {
@@ -142,6 +163,8 @@ export default {
         element = {...element, ...fixedElement}
 
         this.registerElement({pageId: this.page.id, el: element, global: e.shiftKey})
+        this.currentRelPosPaint.x = posX
+        this.currentRelPosPaint.y = posY
       }
     },
 
@@ -149,8 +172,15 @@ export default {
       const combineSuccess = await this.margeSelectedElements()
       if (combineSuccess) {
         this.deleteHandler()
+      } else {
+        this.$toasted.show(
+          'Electrode combining failed',
+          {
+            position: 'bottom-right',
+            duration: 3000
+          },
+        )
       }
-      console.log('combineElectrodes')
     },
 
     clearSelectionHandler () {
@@ -189,6 +219,7 @@ export default {
     },
 
     dropHandler (e) {
+      console.log(this.allElements)
       const mainContainer = document.getElementById('main')
       let element = JSON.parse(e.dataTransfer.getData('text/plain'))
       console.log(element)
@@ -196,8 +227,37 @@ export default {
       let height = getComputedProp('height', element, this.page)
       let width = getComputedProp('width', element, this.page)
       const unit = 21
-      const unitY = parseInt((e.pageY + mainContainer.scrollTop - mainContainer.offsetTop - this.$el.offsetTop - (height / 2)) / this.zoom / unit)
-      const unitX = parseInt((e.pageX + mainContainer.scrollLeft - mainContainer.offsetLeft - this.$el.offsetLeft - (width / 2)) / this.zoom / unit)
+      const posY = (e.pageY + mainContainer.scrollTop - mainContainer.offsetTop - this.$el.offsetTop - (height / 2))
+      const posX = (e.pageX + mainContainer.scrollLeft - mainContainer.offsetLeft - this.$el.offsetLeft - (width / 2))
+
+      let canAdd = true
+      this.allElements.forEach(el => {
+        if (el.matrix != null && el.matrix.length > 0) {
+          el.matrix.forEach((row, i) => {
+            row.forEach((item, j) => {
+              if (el.matrix[i][j] !== 0) {
+                if ((posX / this.zoom) >= (el.left + (j * 21)) && (posX / this.zoom) <= (el.left + (j * 21) + 21) && (posY / this.zoom) >= (el.top + (i * 21)) && (posY / this.zoom) <= (el.top + (i * 21) + 21)) {
+                  canAdd = false
+                }
+              }
+            })
+          })
+        }
+      })
+
+      if (!canAdd) {
+        this.$toasted.show(
+          'Electrode placement failed',
+          {
+            position: 'bottom-right',
+            duration: 3000
+          },
+        )
+        return false
+      }
+
+      const unitY = parseInt(posY / this.zoom / unit)
+      const unitX = parseInt(posX / this.zoom / unit)
       let top = unitY * unit
       let left = unitX * unit
 

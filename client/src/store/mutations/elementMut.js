@@ -41,6 +41,9 @@ const commonElementMutations = {
     if (payload.path !== 'undefined' && payload.egglement.children.length > 0) {
       if (payload.path) payload.egglement.children[0].attrs.d = payload.path
     }
+    if (payload.matrix !== 'undefined') {
+      payload.egglement.matrix = payload.matrix
+    }
   },
 
 /**

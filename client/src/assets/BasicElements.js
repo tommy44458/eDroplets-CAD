@@ -399,6 +399,9 @@ const basicElements = [
         'attrs': {},
         'styles': {
         },
+        'matrix': [
+            [1]
+        ],
         'classes': {},
         'children': [
             {

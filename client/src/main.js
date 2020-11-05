@@ -2,6 +2,7 @@ import Vue from 'vue'
 import VueSVGIcon from 'vue-svgicon'
 import VueMDCAdapter from 'vue-mdc-adapter'
 import Tooltip from 'vue-directive-tooltip'
+import Toasted from 'vue-toasted'
 
 import localforage from 'localforage'
 
@@ -19,6 +20,7 @@ localforage.config({ name: 'vuegg' })
 
 Vue.use(VueSVGIcon)
 Vue.use(VueMDCAdapter)
+Vue.use(Toasted)
 Vue.use(Tooltip, {
   class: 'tooltip-vuegg',
   placement: 'bottom',
