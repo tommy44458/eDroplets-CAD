@@ -19,6 +19,10 @@ const internalAppMutations = {
   state.app.apiStatus = success
 },
 
+[types._toggleSvg]: function (state, _svg) {
+  state.app.svgContent = _svg
+},
+
 /**
  * Changes the value of "isBlockLoading", to the value passed as payload
  *

@@ -67,6 +67,7 @@ export default {
       moving: false,
       resizing: false,
       handle: null
+      // lastElPos: []
     }
   },
   computed: {
@@ -260,54 +261,60 @@ export default {
         : 'auto'
     },
 
+    // checkCollision (selectedEls, allEls) {
+    //   const unit = 21
+    //   const acElPos = []
+    //   const alElPos = []
+    //   selectedEls.forEach(acEl => {
+    //     const acElX = parseInt(acEl.left / unit)
+    //     const acElY = parseInt(acEl.top / unit)
+    //     if (acEl.matrix != null && acEl.matrix.length > 0) {
+    //       acEl.matrix.forEach((acRow, acI) => {
+    //         acRow.forEach((acItem, acJ) => {
+    //           acElPos.push([acElX + acJ, acElY + acI])
+    //         })
+    //       })
+    //     }
+    //   })
+    //   allEls.forEach(alEl => {
+    //     const alElX = parseInt(alEl.left / unit)
+    //     const alElY = parseInt(alEl.top / unit)
+    //     if (alEl.matrix != null && alEl.matrix.length > 0) {
+    //       alEl.matrix.forEach((alRow, alI) => {
+    //         alRow.forEach((alItem, alJ) => {
+    //           alElPos.push([alElX + alJ, alElY + alI])
+    //         })
+    //       })
+    //     }
+    //   })
+    //   console.log(acElPos, alElPos)
+    //   acElPos.forEach(acPos => {
+    //     alElPos.forEach(alPos => {
+    //       if (acPos.toString() === alPos.toString()) {
+    //         return true
+    //       }
+    //     })
+    //   })
+    //   return false
+    // },
+
     moveElementBy2 (el, posX, posY) {
-      let canAdd = true
-      this.allElements.forEach(_el => {
-        if (_el.matrix != null && _el.matrix.length > 0) {
-          _el.matrix.forEach((row, i) => {
-            row.forEach((item, j) => {
-              if (_el.matrix[i][j] !== 0) {
-                if ((posX / this.zoom) >= (_el.left + (j * 21)) && (posX / this.zoom) <= (_el.left + (j * 21) + 21) && (posY / this.zoom) >= (_el.top + (i * 21)) && (posY / this.zoom) <= (_el.top + (i * 21) + 21)) {
-                  canAdd = false
-                }
-              }
-            })
-          })
-        }
-      })
-
-      if (!canAdd) {
-        return false
-      }
-      // ###
-      // const elCompStyle = window.getComputedStyle(el)
-
-      // Re-set height and width on move to preserve dimensions (due addition of bottom/right props)
-      el.style.height = el.style.height
-      el.style.width = el.style.width
-
-      const elH = parseInt(el.style.height.split('px')[0])
-      const elW = parseInt(el.style.width.split('px')[0])
-
       const unit = 21
 
       const unitX = parseInt((posX / this.zoom) / unit)
       const unitY = parseInt((posY / this.zoom) / unit)
 
-      // console.log(unitX, unitY, unit, this.zoom)
+      // this.lastElPos.length = 0
+      const offsetEl = []
+      const lastElPos = []
+      this.activeElements.forEach(acEl => {
+        const acElX = parseInt(acEl.left / unit)
+        const acElY = parseInt(acEl.top / unit)
+        lastElPos.push([acEl.left, acEl.top])
+        offsetEl.push([parseInt(this.activeElements[0].left / unit) - acElX, parseInt(this.activeElements[0].top / unit) - acElY])
+      })
 
-      el.style.top = (el.style.top !== 'auto')
-        ? this.fixPosition(el, unit * unitY, 'top') + 'px'
-        : 'auto'
-      el.style.left = (el.style.left !== 'auto')
-        ? this.fixPosition(el, unit * unitX, 'left') + 'px'
-        : 'auto'
-      el.style.bottom = (el.style.bottom !== 'auto')
-        ? this.fixPosition(el, unit * unitY + elH, 'bottom') + 'px'
-        : 'auto'
-      el.style.right = (el.style.right !== 'auto')
-        ? this.fixPosition(el, unit * unitX + elW, 'right') + 'px'
-        : 'auto'
+      this.$emit('mousemove', {offsetEl, unitX, unitY, lastElPos})
     },
 
     fixPosition (el, val, prop) {

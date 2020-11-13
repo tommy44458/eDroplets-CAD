@@ -570,7 +570,9 @@ const elementActions = {
       height: 21 * colNumber,
       width: 21 * rowNumber,
       path: path,
-      matrix: matrix
+      classes: {
+        'matrix': matrix
+      }
     })
 
     dispatch(types.registerElement, {pageId: page.id, el, global: el.global})

@@ -28,6 +28,7 @@ export const downloadProject = 'downloadProject'
 // customer
 export const downloadProject2 = 'downloadProject2'
 export const downloadProject3 = 'downloadProject3'
+export const getSVG = 'getSVG'
 
 export const uploadProjectToGH = 'uploadProjectToGH'
 export const downloadVueSources = 'downloadVueSources'
@@ -70,6 +71,7 @@ export const _addAuthenticatedUser = '_addAuthenticatedUser'
 export const _removeAuthenticatedUser = '_removeAuthenticatedUser'
 
 export const _toggleApiStatus = '_toggleApiStatus'
+export const _toggleSvg = '_toggleSvg'
 export const _toggleLoadingStatus = '_toggleLoadingStatus'
 export const _toggleBlockLoadingStatus = '_toggleBlockLoadingStatus'
 export const _toggleHasChanges = '_toggleHasChanges'
@@ -116,6 +118,7 @@ const types = {
   // customer
   downloadProject2,
   downloadProject3,
+  getSVG,
   uploadVueSourcesToGH,
   uploadProjectToGH,
   checkLastSaved,
@@ -155,6 +158,7 @@ const types = {
   _removeAuthenticatedUser,
 
   _toggleApiStatus,
+  _toggleSvg,
   _toggleLoadingStatus,
   _toggleBlockLoadingStatus,
   _toggleHasChanges,

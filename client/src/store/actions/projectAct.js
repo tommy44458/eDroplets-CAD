@@ -5,7 +5,9 @@ import newState from '@/factories/stateFactory'
 import types from '@/store/types'
 import store from '@/store'
 import api from '@/api'
-// import axios from 'axios'
+
+import DxfParser from 'dxf-parser'
+import { dxfToSvg } from './dxf'
 
 const projectActions = {
 /**
@@ -170,7 +172,7 @@ const projectActions = {
   // customer
 
   const projectB64 = btoa(JSON.stringify(state.project))
-  download(projectB64, parsedRepoName + '.gg', 'appliction/json')
+  download(projectB64, parsedRepoName + '.edp', 'appliction/json')
   commit(types._toggleLoadingStatus, false)
 },
 
@@ -198,29 +200,39 @@ const projectActions = {
 
   var dataElectrode = ''
   dataElectrode = dataElectrode + 'contactpad circle r 750\n'
-  dataElectrode = dataElectrode + 'base path M0 100 L0 1900 L100 2000 L1900 2000 L2000 1900 L2000 100 L1900 0 L100 0 Z\n'
-  dataElectrode = dataElectrode + 'customer2 path M0 100 L0 3905 L100 4005 L1900 4005 L2000 3905 L2000 2000 L4005 2000 L4005 3905 L4105 4005 L5905 4005 L6005 3905 L6005 100 L5905 0 L100 0 Z\n'
-  dataElectrode = dataElectrode + 'customer1 path M0 100 L0 5910 L100 6010 L3905 6010 L4005 5910 L4005 4110 L3905 4010 L2000 4010 L2000 2000 L3905 2000 L4005 1900 L4005 100 L3905 0 L100 0 Z\n'
-  dataElectrode = dataElectrode + 'customer3 path M0 100 L0 9920 L100 10020 L5910 10020 L6010 9920 L6010 100 L5910 0 L100 0 Z\n'
+  // dataElectrode = dataElectrode + 'base path M0 100 L0 1900 L100 2000 L1900 2000 L2000 1900 L2000 100 L1900 0 L100 0 Z\n'
+  // dataElectrode = dataElectrode + 'customer2 path M0 100 L0 3905 L100 4005 L1900 4005 L2000 3905 L2000 2000 L4005 2000 L4005 3905 L4105 4005 L5905 4005 L6005 3905 L6005 100 L5905 0 L100 0 Z\n'
+  // dataElectrode = dataElectrode + 'customer1 path M0 100 L0 5910 L100 6010 L3905 6010 L4005 5910 L4005 4110 L3905 4010 L2000 4010 L2000 2000 L3905 2000 L4005 1900 L4005 100 L3905 0 L100 0 Z\n'
+  // dataElectrode = dataElectrode + 'customer3 path M0 100 L0 9920 L100 10020 L5910 10020 L6010 9920 L6010 100 L5910 0 L100 0 Z\n'
   dataElectrode = dataElectrode + 'Referenceelectrode path M0 0 L0 10000 L10000 10000 L10000 0 Z\n'
 
+  const electrodsShape = {}
   electrods.forEach(el => {
-    console.log(el)
-    if (el.name !== 'base' && el.name !== 'customer1' && el.name !== 'customer2' && el.name !== 'customer3') {
+    // console.log(el)
+    if (!(el.name in electrodsShape)) {
+      electrodsShape[el.name] = []
       let path = ''
       const pathlist = el.children[0].attrs.d.split(' ')
       pathlist.forEach(p => {
-        if (p !== '') {
+        if (p !== '' && p !== 'Z') {
           path += p + '00 '
         } else {
           path += 'Z\n'
         }
       })
+      for (let i = 0; i < pathlist.length - 1; i = i + 2) {
+        if (pathlist[i] !== '') {
+          electrodsShape[el.name].push([ parseInt(pathlist[i].substr(1) + '00'), parseInt(pathlist[i + 1] + '00') ])
+        }
+      }
+      console.log(path)
       dataElectrode = dataElectrode + el.name + ' path ' + path
     }
   })
   // dataElectrode = dataElectrode + "square path M0 100 L0 1900 L100 2000 L1900 2000 L2000 1900 L2000 100 L1900 0 L100 0 Z\n";
   dataElectrode = dataElectrode + '#ENDOFDEFINITION#\n'
+
+  console.log(electrodsShape)
 
   var dataContactPad = ''
   var tx = 0
@@ -239,12 +251,19 @@ const projectActions = {
   }
 
   var dataElectrodePos = ''
+  let _path = ''
 
-  electrods.forEach(getPos)
-
-  function getPos (item, index) {
+  electrods.forEach((item, index) => {
+    const x = (parseFloat(item.left) * parseFloat(80000 / 800) + parseFloat(-50))
+    const y = (parseFloat(item.top) * parseFloat(40000 / 400) + parseFloat(12255))
     dataElectrodePos = dataElectrodePos + item.name + ' ' + (parseFloat(item.left) * parseFloat(80000 / 800) + parseFloat(-50)) + ' ' + (parseFloat(item.top) * parseFloat(40000 / 400) + parseFloat(12255)) + '\n'
-  }
+    // pos.push([x, y])
+    _path = _path + '<path d="M'
+    electrodsShape[item.name].forEach(v => {
+      _path = _path + ((x + v[0]) / 100) + ' ' + ((y + v[1]) / 100) + ' L'
+    })
+    _path = _path.substr(0, _path.length - 1) + 'Z" />\n'
+  })
 
   dataElectrodePos = dataElectrodePos + 'Referenceelectrode -14835 13689\n'
   dataElectrodePos = dataElectrodePos + '#ENDOFLAYOUT#\n'
@@ -258,29 +277,30 @@ const projectActions = {
     name: parsedRepoName
   }
 
+  // console.log('***', _path)
+
   let resp = await api.cad(ewd)
   // console.log(resp)
 
   if (resp.status === 200) {
+    const parser = new DxfParser()
+    const dxf = parser.parseSync(resp.data)
+    console.log(dxf)
+    let _svg = dxfToSvg(resp.data) + '\n'
+    // 'M0 1 L0 19 L1 20 L19 20 L20 19 L20 1 L19 0 L1 0 Z'
+    // pos.forEach(_pos => {
+    //   let _path = '<path d="M'
+    //   _path = _path + ((_pos[0]) / 100) + ' ' + ((_pos[1] + 100) / 100) + ' L' + ((_pos[0]) / 100) + ' ' + ((_pos[1] + 1900) / 100) + ' L' + ((_pos[0] + 100) / 100) + ' ' + ((_pos[1] + 2000) / 100) + ' L' + ((_pos[0] + 1900) / 100) + ' ' + ((_pos[1] + 2000) / 100) + ' L' + ((_pos[0] + 2000) / 100) + ' ' + ((_pos[1] + 1900) / 100) + ' L' + ((_pos[0] + 2000) / 100) + ' ' + ((_pos[1] + 100) / 100) + ' L' + ((_pos[0] + 1900) / 100) + ' ' + ((_pos[1] + 0) / 100) + ' L' + ((_pos[0] + 100) / 100) + ' ' + ((_pos[1] + 0) / 100) + ' Z" />'
+    //   _svg = _svg + _path + '\n'
+    _svg = _svg + _path
+    console.log(_svg)
+
     download(resp.data, parsedRepoName + '.dwg')
     commit(types._toggleLoadingStatus, false)
   } else {
     commit(types._toggleLoadingStatus, false)
     commit(types._toggleApiStatus, false)
   }
-
-  // axios.post('http://localhost:3000/api/path/dwg', ewd)
-  // .then(function (response) {
-  //   // console.log(response.request.response)
-  //   download(response.request.response, parsedRepoName + '.dwg')
-
-  //   commit(types._toggleLoadingStatus, false)
-  // })
-  // .catch(function (error) {
-  //   console.log(error)
-
-  //   commit(types._toggleLoadingStatus, false)
-  // })
 },
 
 /**
@@ -296,6 +316,130 @@ const projectActions = {
     download(resp.data, parsedProjectName + '.zip', resp.data.type)
 
     commit(types._toggleBlockLoadingStatus, false)
+  },
+
+  [types.getSVG]: async function ({ state, dispatch, commit }) {
+    commit(types._toggleLoadingStatus, true)
+    commit(types._toggleApiStatus, true)
+
+    const parsedRepoName = state.project.title.replace(/[^a-zA-Z0-9-_]+/g, '-')
+
+    // axios.get('http://localhost:3000/api/todo', {
+    // })
+    // .then(function (response) {
+    //   console.log(response)
+    // })
+    // .catch(function (error) {
+    //   console.log(error)
+    // })
+
+    var electrods = state.project.pages[0].children
+
+    var dataElectrode = ''
+    dataElectrode = dataElectrode + 'contactpad circle r 750\n'
+    // dataElectrode = dataElectrode + 'base path M0 100 L0 1900 L100 2000 L1900 2000 L2000 1900 L2000 100 L1900 0 L100 0 Z\n'
+    // dataElectrode = dataElectrode + 'customer2 path M0 100 L0 3905 L100 4005 L1900 4005 L2000 3905 L2000 2000 L4005 2000 L4005 3905 L4105 4005 L5905 4005 L6005 3905 L6005 100 L5905 0 L100 0 Z\n'
+    // dataElectrode = dataElectrode + 'customer1 path M0 100 L0 5910 L100 6010 L3905 6010 L4005 5910 L4005 4110 L3905 4010 L2000 4010 L2000 2000 L3905 2000 L4005 1900 L4005 100 L3905 0 L100 0 Z\n'
+    // dataElectrode = dataElectrode + 'customer3 path M0 100 L0 9920 L100 10020 L5910 10020 L6010 9920 L6010 100 L5910 0 L100 0 Z\n'
+    dataElectrode = dataElectrode + 'Referenceelectrode path M0 0 L0 10000 L10000 10000 L10000 0 Z\n'
+
+    const electrodsShape = {}
+    electrods.forEach(el => {
+      // console.log(el)
+      if (!(el.name in electrodsShape)) {
+        electrodsShape[el.name] = []
+        let path = ''
+        const pathlist = el.children[0].attrs.d.split(' ')
+        pathlist.forEach(p => {
+          if (p !== '' && p !== 'Z') {
+            path += p + '00 '
+          } else {
+            path += 'Z\n'
+          }
+        })
+        for (let i = 0; i < pathlist.length - 1; i = i + 2) {
+          if (pathlist[i] !== '') {
+            electrodsShape[el.name].push([ parseInt(pathlist[i].substr(1) + '00'), parseInt(pathlist[i + 1] + '00') ])
+          }
+        }
+        console.log(path)
+        dataElectrode = dataElectrode + el.name + ' path ' + path
+      }
+    })
+    // dataElectrode = dataElectrode + "square path M0 100 L0 1900 L100 2000 L1900 2000 L2000 1900 L2000 100 L1900 0 L100 0 Z\n";
+    dataElectrode = dataElectrode + '#ENDOFDEFINITION#\n'
+
+    console.log(electrodsShape)
+
+    var dataContactPad = ''
+    var tx = 0
+    var ty = 0
+    for (var i = 0; i < 8; i++) {
+        tx = 0
+        for (var j = 0; j < 32; j++) {
+          dataContactPad = dataContactPad + 'contactpad ' + tx + ' ' + ty + '\n'
+            tx = tx + 2540
+        }
+        if (ty === 7620) {
+          ty = 56896
+        } else {
+          ty = ty + 2540
+        }
+    }
+
+    var dataElectrodePos = ''
+    let _path = ''
+
+    electrods.forEach((item, index) => {
+      const x = (parseFloat(item.left) * parseFloat(80000 / 800) + parseFloat(-50))
+      const y = (parseFloat(item.top) * parseFloat(40000 / 400) + parseFloat(12255))
+      dataElectrodePos = dataElectrodePos + item.name + ' ' + (parseFloat(item.left) * parseFloat(80000 / 800) + parseFloat(-50)) + ' ' + (parseFloat(item.top) * parseFloat(40000 / 400) + parseFloat(12255)) + '\n'
+      // pos.push([x, y])
+      _path = _path + '<path d="M'
+      electrodsShape[item.name].forEach(v => {
+        _path = _path + ((x + v[0]) / 100) + ' ' + ((y + v[1]) / 100) + ' L'
+      })
+      _path = _path.substr(0, _path.length - 1) + 'Z" />\n'
+    })
+
+    dataElectrodePos = dataElectrodePos + 'Referenceelectrode -14835 13689\n'
+    dataElectrodePos = dataElectrodePos + '#ENDOFLAYOUT#\n'
+    dataElectrodePos = dataElectrodePos + '0,0,0,0,0,0,0,0;100\n'
+    dataElectrodePos = dataElectrodePos + '#ENDOFSEQUENCE#'
+
+    const ewd = {
+      ewd1: dataElectrode,
+      ewd2: dataContactPad,
+      ewd3: dataElectrodePos,
+      name: parsedRepoName
+    }
+
+    // console.log('***', _path)
+
+    let resp = await api.cad(ewd)
+    // console.log(resp)
+
+    if (resp.status === 200) {
+      const parser = new DxfParser()
+      const dxf = parser.parseSync(resp.data)
+      console.log(dxf)
+      let _svg = dxfToSvg(resp.data) + '\n'
+      // 'M0 1 L0 19 L1 20 L19 20 L20 19 L20 1 L19 0 L1 0 Z'
+      // pos.forEach(_pos => {
+      //   let _path = '<path d="M'
+      //   _path = _path + ((_pos[0]) / 100) + ' ' + ((_pos[1] + 100) / 100) + ' L' + ((_pos[0]) / 100) + ' ' + ((_pos[1] + 1900) / 100) + ' L' + ((_pos[0] + 100) / 100) + ' ' + ((_pos[1] + 2000) / 100) + ' L' + ((_pos[0] + 1900) / 100) + ' ' + ((_pos[1] + 2000) / 100) + ' L' + ((_pos[0] + 2000) / 100) + ' ' + ((_pos[1] + 1900) / 100) + ' L' + ((_pos[0] + 2000) / 100) + ' ' + ((_pos[1] + 100) / 100) + ' L' + ((_pos[0] + 1900) / 100) + ' ' + ((_pos[1] + 0) / 100) + ' L' + ((_pos[0] + 100) / 100) + ' ' + ((_pos[1] + 0) / 100) + ' Z" />'
+      //   _svg = _svg + _path + '\n'
+      _svg = _svg + _path
+      // console.log(_svg)
+      // svgContent = _svg
+      commit(types._toggleSvg, _svg)
+
+      // download(resp.data, parsedRepoName + '.dwg')
+      commit(types._toggleLoadingStatus, false)
+    } else {
+      commit(types._toggleLoadingStatus, false)
+      commit(types._toggleApiStatus, false)
+    }
   },
 
 /**

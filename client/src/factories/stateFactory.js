@@ -3,6 +3,7 @@ import newProject from './projectFactory'
 function newState (project) {
   return {
     app: {
+      svgContent: '123',
       apiStatus: true,
       isLoading: false,
       isBlockLoading: false,

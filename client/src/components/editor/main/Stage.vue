@@ -20,6 +20,7 @@
     @undo="$root.$emit('undo')"
     @redo="$root.$emit('redo')"
     @add="addElement($event)"
+    @mousemove="mouseMoveElements($event)"
   >
 
     <stage-el
@@ -92,6 +93,70 @@ export default {
     })
   },
   methods: {
+    checkCollision (selectedEls, allEls) {
+      const unit = 21
+      const acElPos = []
+      const alElPos = []
+      selectedEls.forEach(acEl => {
+        const acElX = parseInt(acEl.left / unit)
+        const acElY = parseInt(acEl.top / unit)
+        if (acEl.classes.matrix != null && acEl.classes.matrix.length > 0) {
+          acEl.classes.matrix.forEach((acRow, acI) => {
+            acRow.forEach((acItem, acJ) => {
+              acElPos.push([acElX + acJ, acElY + acI])
+            })
+          })
+        }
+      })
+      allEls.forEach(alEl => {
+        let isSelected = false
+        selectedEls.forEach(acEl => {
+          if (alEl.id === acEl.id) {
+            isSelected = true
+          }
+        })
+        if (!isSelected) {
+          const alElX = parseInt(alEl.left / unit)
+          const alElY = parseInt(alEl.top / unit)
+          if (alEl.classes.matrix != null && alEl.classes.matrix.length > 0) {
+            alEl.classes.matrix.forEach((alRow, alI) => {
+              alRow.forEach((alItem, alJ) => {
+                alElPos.push([alElX + alJ, alElY + alI])
+              })
+            })
+          }
+        }
+      })
+      // console.log(acElPos, alElPos)
+      let collision = false
+      acElPos.forEach(acPos => {
+        alElPos.forEach(alPos => {
+          if (acPos.toString() === alPos.toString()) {
+            collision = true
+          }
+        })
+      })
+      return collision
+    },
+
+    mouseMoveElements (e) {
+      const unit = 21
+      const offset = e.offsetEl
+      const unitX = e.unitX
+      const unitY = e.unitY
+      const lastPos = e.lastElPos
+      this.selectedElements.forEach((acEl, index) => {
+        const top = unit * (unitY - offset[index][1])
+        const left = unit * (unitX - offset[index][0])
+        this.moveElement({ elId: acEl.id, pageId: this.page.id, top: top, left: left })
+      })
+      if (this.checkCollision(this.selectedElements, this.allElements)) {
+        this.selectedElements.forEach((acEl, index) => {
+          this.moveElement({ elId: acEl.id, pageId: this.page.id, top: lastPos[index][1], left: lastPos[index][0] })
+        })
+      }
+    },
+
     addElement (e) {
       // console.log(e.x, e.y)
       // console.log(this.allElements)
@@ -104,10 +169,10 @@ export default {
 
       let canAdd = true
       this.allElements.forEach(el => {
-        if (el.matrix != null && el.matrix.length > 0) {
-          el.matrix.forEach((row, i) => {
+        if (el.classes.matrix != null && el.classes.matrix.length > 0) {
+          el.classes.matrix.forEach((row, i) => {
             row.forEach((item, j) => {
-              if (el.matrix[i][j] !== 0) {
+              if (el.classes.matrix[i][j] !== 0) {
                 if ((posX / this.zoom) >= (el.left + (j * 21)) && (posX / this.zoom) <= (el.left + (j * 21) + 21) && (posY / this.zoom) >= (el.top + (i * 21)) && (posY / this.zoom) <= (el.top + (i * 21) + 21)) {
                   canAdd = false
                 }
@@ -117,8 +182,10 @@ export default {
         }
       })
 
-      console.log(canAdd)
       if (canAdd) {
+        const _matrix = [
+          [1]
+        ]
         const base = {
             'name': 'base',
             'type': 'svg',
@@ -129,10 +196,9 @@ export default {
             'attrs': {},
             'styles': {
             },
-            'matrix': [
-              [1]
-            ],
-            'classes': {},
+            'classes': {
+              'matrix': _matrix
+            },
             'children': [
                 {
                     'name': 'path',
@@ -145,7 +211,7 @@ export default {
         }
 
         let element = base
-        console.log(element)
+        // console.log(element)
 
         let height = getComputedProp('height', element, this.page)
         let width = getComputedProp('width', element, this.page)

@@ -16,11 +16,15 @@
       </svgicon>
     </button>
 
-    <router-link :to="{name: 'preview'}">
+    <!-- <router-link :to="{name: 'preview'}">
       <button v-tooltip="'Preview'" class="action-btn">
         <svgicon icon="system/actions/preview" width="24" height="24" color="#2b6a73"></svgicon>
       </button>
-    </router-link>
+    </router-link> -->
+
+    <button v-tooltip="'Preview'" class="action-btn" @click="$root.$emit('preview-svg')" >
+      <svgicon icon="system/actions/preview" width="24" height="24" color="#2b6a73"></svgicon>
+    </button>
 
     <div class="separator"></div>
 
@@ -73,7 +77,7 @@
         <mdc-menu-item disabled>Download:</mdc-menu-item>
         <mdc-menu-divider></mdc-menu-divider>
         <mdc-menu-item>Ewd file (.ewd)</mdc-menu-item>
-        <mdc-menu-item>Theta Project (.gg)</mdc-menu-item>
+        <mdc-menu-item>EDrop Project (.edp)</mdc-menu-item>
         <mdc-menu-item>Dwg file(.dwg)</mdc-menu-item>
         <!-- <mdc-menu-item>Vue sources (.zip)</mdc-menu-item> -->
       </mdc-menu>

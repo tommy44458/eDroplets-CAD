@@ -15,6 +15,7 @@
       <upload-dialog></upload-dialog>
       <confirm-dialog></confirm-dialog>
       <api-fail-dialog></api-fail-dialog>
+      <preview-svg></preview-svg>
 
       <block-loader></block-loader>
       <mdc-snackbar :dismisses-on-action="false"/>
@@ -35,10 +36,11 @@ import LoadDialog from '@/components/editor/dialogs/LoadDialog'
 import UploadDialog from '@/components/editor/dialogs/UploadDialog'
 import ConfirmDialog from '@/components/editor/dialogs/ConfirmDialog'
 import ApiFailDialog from '@/components/editor/dialogs/ApiFailDialog'
+import PreviewSvg from '@/components/editor/dialogs/PreviewSvg'
 
 export default {
   name: 'editor',
-  components: { Headegg, Drawegg, Mainegg, BlockLoader, PageDialog, LoadDialog, UploadDialog, ConfirmDialog, ApiFailDialog },
+  components: { Headegg, Drawegg, Mainegg, BlockLoader, PageDialog, LoadDialog, UploadDialog, ConfirmDialog, ApiFailDialog, PreviewSvg },
   data: function () {
     return {
       notScrolled: true
