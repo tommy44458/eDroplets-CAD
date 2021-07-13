@@ -394,8 +394,8 @@ const basicElements = [
         'type': 'svg',
         'egglement': true,
         'wrappegg': true,
-        'width': 20,
-        'height': 20,
+        'width': 22,
+        'height': 22,
         'attrs': {},
         'styles': {
         },
@@ -408,7 +408,53 @@ const basicElements = [
                 'name': 'path',
                 'type': 'path',
                 'attrs': {
-                    'd': 'M0 1 L0 19 L1 20 L19 20 L20 19 L20 1 L19 0 L1 0 Z'
+                    'd': 'M1 2 L2 1 L3 0 L5 2 L7 0 L9 2 L11 0 L13 2 L15 0 L17 2 L 19 0 L20 1 L21 2 L22 3 L20 5 L22 7 L20 9 L22 11 L20 13 L22 15 L20 17 L22 19 L21 20 L20 21 L19 20 L17 22 L15 20 L13 22 L11 20 L9 22 L7 20 L5 22 L3 20 L2 21 L1 20 L2 19 L0 17 L2 15 L0 13 L2 11 L0 9 L2 7 L0 5 L2 3 Z'
+                    // 'd': 'M0 1 L1 0 L19 0 L20 1 L20 19 L19 20 L1 20 L0 19 Z'
+                }
+            }
+        ]
+    },
+    {
+        'name': 'circle',
+        'type': 'svg',
+        'egglement': true,
+        'wrappegg': true,
+        'width': 20,
+        'height': 20,
+        'attrs': {},
+        'styles': {
+        },
+        'classes': {},
+        'children': [
+            {
+                'name': 'path',
+                'type': 'path',
+                'attrs': {
+                    'd': 'M20 10 L18.66 15 L15 18.66 L10 20 L5 18.66 L1.33 15 L0 10 L1.33 5 L4.99 1.33 L9.99 0 L15.00 1.33 L18.66 4.99 Z'
+                }
+            }
+        ]
+    },
+    {
+        'name': 'base2',
+        'type': 'svg',
+        'egglement': true,
+        'wrappegg': true,
+        'width': 22,
+        'height': 22,
+        'attrs': {},
+        'styles': {
+        },
+        'matrix': [
+            [1]
+        ],
+        'classes': {},
+        'children': [
+            {
+                'name': 'path',
+                'type': 'path',
+                'attrs': {
+                    'd': 'M1 2 L2 1 L3 0 L5 2 L7 0 L9 2 L11 0 L13 2 L15 0 L17 2 L 19 0 L20 1 L21 2 L22 3 L20 5 L22 7 L20 9 L22 11 L20 13 L22 15 L20 17 L22 19 L21 20 L20 21 L19 20 L17 22 L15 20 L13 22 L11 20 L9 22 L7 20 L5 22 L3 20 L2 21 L1 20 L2 19 L0 17 L2 15 L0 13 L2 11 L0 9 L2 7 L0 5 L2 3 Z'
                 }
             }
         ]
