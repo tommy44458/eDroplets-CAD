@@ -4,7 +4,7 @@
       <mdc-linear-progress v-show="loading" class="linear-loader" accent indeterminate></mdc-linear-progress>
       <headegg :scroll0="notScrolled"></headegg>
 
-      <drawegg></drawegg>
+      <!-- <drawegg></drawegg> -->
 
       <main id="main" role="main" @scroll="scrollFunction">
         <mainegg></mainegg>
@@ -96,7 +96,7 @@ export default {
   overflow-y: auto;
   overflow-x: auto;
   flex-grow: 1;
-  margin-right: 240px;
+  /* margin-right: 240px; */
 }
 
 /* IN DEVICES SMALLER THAN 1024px -> NO DRAWER (so remove margins) */

@@ -5,8 +5,8 @@ function newPage (name, path, height, width) {
     id: shortid.generate(),
     name: name,
     path: path,
-    width: '800px', // width || '100%', 800*1.2
-    height: '400px', // height || '70%', 400*1.2
+    width: '8000px', // width || '100%', 10x
+    height: '4000px', // height || '70%', 10x
 
     styles: {
       '--mdc-theme-primary': '#673ab7',
@@ -14,13 +14,13 @@ function newPage (name, path, height, width) {
       '--mdc-theme-background': '#ffffff',
       'position': 'relative',
       'margin': 'auto',
-      'background-color': '#ffffff',
+      'background-color': '#ced4b2',
       'background-image':
-        'linear-gradient(rgba(0,0,0,.1) 1px, transparent 0),' +
-        'linear-gradient(90deg, rgba(0,0,0,.1) 1px, transparent 0),' +
-        'linear-gradient(rgba(0,0,0,.15) 1px, transparent 0),' +
-        'linear-gradient(90deg, rgba(0,0,0,.15) 1px, transparent 0)',
-      'background-size': '21px 21px, 21px 21px, 42px 42px, 42px 42px',
+        'linear-gradient(rgba(0,0,0,.1) 2px, transparent 0),' +
+        'linear-gradient(90deg, rgba(0,0,0,.1) 2px, transparent 0),' +
+        'linear-gradient(rgba(0,0,0,.15) 2px, transparent 0),' +
+        'linear-gradient(90deg, rgba(0,0,0,.15) 2px, transparent 0)',
+      'background-size': '200px 200px, 200px 200px, 400px 400px, 400px 400px',
       'overflow': 'scroll' // 'hidden',
     },
     classes: [],

@@ -22,7 +22,7 @@ import '@/assets/icons/system/editor/zoom_in'
 import '@/assets/icons/system/editor/zoom_out'
 
 const MAX_ZOOM = 2.5
-const MIN_ZOOM = 0.5
+const MIN_ZOOM = 0.1
 
 export default {
   name: 'zoom-menu',
@@ -32,8 +32,8 @@ export default {
     canZoomOut () { return this.zoom > MIN_ZOOM }
   },
   methods: {
-    zoomIn () { this.$emit('zoomChange', Math.round((this.zoom + 0.1) * 10) / 10) },
-    zoomOut () { this.$emit('zoomChange', Math.round((this.zoom - 0.1) * 10) / 10) }
+    zoomIn () { this.$emit('zoomChange', Math.round((this.zoom + 0.05) * 20) / 20) },
+    zoomOut () { this.$emit('zoomChange', Math.round((this.zoom - 0.05) * 20) / 20) }
   }
 }
 </script>

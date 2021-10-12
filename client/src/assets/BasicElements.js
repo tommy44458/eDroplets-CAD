@@ -390,7 +390,7 @@
 
 const basicElements = [
     {
-        'name': 'base',
+        'name': 'base-x',
         'type': 'svg',
         'egglement': true,
         'wrappegg': true,
@@ -408,8 +408,129 @@ const basicElements = [
                 'name': 'path',
                 'type': 'path',
                 'attrs': {
-                    'd': 'M1 2 L2 1 L3 0 L5 2 L7 0 L9 2 L11 0 L13 2 L15 0 L17 2 L 19 0 L20 1 L21 2 L22 3 L20 5 L22 7 L20 9 L22 11 L20 13 L22 15 L20 17 L22 19 L21 20 L20 21 L19 20 L17 22 L15 20 L13 22 L11 20 L9 22 L7 20 L5 22 L3 20 L2 21 L1 20 L2 19 L0 17 L2 15 L0 13 L2 11 L0 9 L2 7 L0 5 L2 3 Z'
+                    'd': 'M 1 2 L 2 1 L 3 0 L 5 2 L 7 0 L 9 2 L 11 0 L 13 2 L 15 0 L 17 2 L 19 0 L 20 1 L 21 2 L 22 3 L 20 5 L 22 7 L 20 9 L 22 11 L 20 13 L 22 15 L 20 17 L 22 19 L 21 20 L 20 21 L 19 20 L 17 22 L 15 20 L 13 22 L 11 20 L 9 22 L 7 20 L 5 22 L 3 20 L 2 21 L 1 20 L 2 19 L 0 17 L 2 15 L 0 13 L 2 11 L 0 9 L 2 7 L 0 5 L 2 3 Z'
                     // 'd': 'M0 1 L1 0 L19 0 L20 1 L20 19 L19 20 L1 20 L0 19 Z'
+                }
+            }
+        ]
+    },
+    {
+        'name': 'base-s',
+        'type': 'svg',
+        'egglement': true,
+        'wrappegg': true,
+        'width': 20,
+        'height': 20,
+        'attrs': {},
+        'styles': {
+        },
+        'matrix': [
+            [1]
+        ],
+        'classes': {},
+        'children': [
+            {
+                'name': 'path',
+                'type': 'path',
+                'attrs': {
+                    'd': 'M 0 1 L 1 0 L 19 0 L 20 1 L 20 19 L 19 20 L 1 20 L 0 19 Z'
+                }
+            }
+        ]
+    },
+    {
+        'name': 'base-ct',
+        'type': 'svg',
+        'egglement': true,
+        'wrappegg': true,
+        'width': 20,
+        'height': 20,
+        'attrs': {},
+        'styles': {
+        },
+        'matrix': [
+            [1]
+        ],
+        'classes': {},
+        'children': [
+            {
+                'name': 'path',
+                'type': 'path',
+                'attrs': {
+                    'd': 'M 0 7 L 1.33 5 L 5 8.66 L 10 10 L 15 8.66 L 18.66 5 L 20 7 L 20 19 L 19 20 L 1 20 L 0 19 Z'
+                }
+            }
+        ]
+    },
+    {
+        'name': 'base-cd',
+        'type': 'svg',
+        'egglement': true,
+        'wrappegg': true,
+        'width': 20,
+        'height': 20,
+        'attrs': {},
+        'styles': {
+        },
+        'matrix': [
+            [1]
+        ],
+        'classes': {},
+        'children': [
+            {
+                'name': 'path',
+                'type': 'path',
+                'attrs': {
+                    'd': 'M 0 1 L 1 0 L 19 0 L 20 1 L 20 13 L 18.66 15 L 15 11.33 L 10 10 L 5 11.33 L 1.33 15 L 0 13 Z'
+                }
+            }
+        ]
+    },
+    {
+        'name': 'base-cl',
+        'type': 'svg',
+        'egglement': true,
+        'wrappegg': true,
+        'width': 20,
+        'height': 20,
+        'attrs': {},
+        'styles': {
+        },
+        'matrix': [
+            [1]
+        ],
+        'classes': {},
+        'children': [
+            {
+                'name': 'path',
+                'type': 'path',
+                'attrs': {
+                    'd': 'M 0 1 L 1 0 L 13 0 L 15 1.33 L 11.33 5 L 10 10 L 11.33 15 L 15 18.66 L 13 20 L 1 20 L 0 19 Z'
+                }
+            }
+        ]
+    },
+    {
+        'name': 'base-cr',
+        'type': 'svg',
+        'egglement': true,
+        'wrappegg': true,
+        'width': 20,
+        'height': 20,
+        'attrs': {},
+        'styles': {
+        },
+        'matrix': [
+            [1]
+        ],
+        'classes': {},
+        'children': [
+            {
+                'name': 'path',
+                'type': 'path',
+                'attrs': {
+                    'd': 'M 7 0 L 19 0 L 20 1 L 20 19 L 19 20 L 7 20 L 5 18.66 L 8.66 15 L 10 10 L 8.66 5 L 5 1.33 Z'
+                    // M0 1 L 1 0 L 19 0 L 20 1 L 20 19 L 19 20 L 1 20 L 0 19 Z'
                 }
             }
         ]
@@ -430,35 +551,35 @@ const basicElements = [
                 'name': 'path',
                 'type': 'path',
                 'attrs': {
-                    'd': 'M20 10 L18.66 15 L15 18.66 L10 20 L5 18.66 L1.33 15 L0 10 L1.33 5 L4.99 1.33 L9.99 0 L15.00 1.33 L18.66 4.99 Z'
+                    'd': 'M 20 10 L 18.66 15 L 15 18.66 L 10 20 L 5 18.66 L 1.33 15 L 0 10 L 1.33 5 L 4.99 1.33 L 9.99 0 L 15.00 1.33 L 18.66 4.99 Z'
                 }
             }
         ]
     },
-    {
-        'name': 'base2',
-        'type': 'svg',
-        'egglement': true,
-        'wrappegg': true,
-        'width': 22,
-        'height': 22,
-        'attrs': {},
-        'styles': {
-        },
-        'matrix': [
-            [1]
-        ],
-        'classes': {},
-        'children': [
-            {
-                'name': 'path',
-                'type': 'path',
-                'attrs': {
-                    'd': 'M1 2 L2 1 L3 0 L5 2 L7 0 L9 2 L11 0 L13 2 L15 0 L17 2 L 19 0 L20 1 L21 2 L22 3 L20 5 L22 7 L20 9 L22 11 L20 13 L22 15 L20 17 L22 19 L21 20 L20 21 L19 20 L17 22 L15 20 L13 22 L11 20 L9 22 L7 20 L5 22 L3 20 L2 21 L1 20 L2 19 L0 17 L2 15 L0 13 L2 11 L0 9 L2 7 L0 5 L2 3 Z'
-                }
-            }
-        ]
-    },
+    // {
+    //     'name': 'base2',
+    //     'type': 'svg',
+    //     'egglement': true,
+    //     'wrappegg': true,
+    //     'width': 22,
+    //     'height': 22,
+    //     'attrs': {},
+    //     'styles': {
+    //     },
+    //     'matrix': [
+    //         [1]
+    //     ],
+    //     'classes': {},
+    //     'children': [
+    //         {
+    //             'name': 'path',
+    //             'type': 'path',
+    //             'attrs': {
+    //                 'd': 'M1 2 L2 1 L3 0 L5 2 L7 0 L9 2 L11 0 L13 2 L15 0 L17 2 L 19 0 L20 1 L21 2 L22 3 L20 5 L22 7 L20 9 L22 11 L20 13 L22 15 L20 17 L22 19 L21 20 L20 21 L19 20 L17 22 L15 20 L13 22 L11 20 L9 22 L7 20 L5 22 L3 20 L2 21 L1 20 L2 19 L0 17 L2 15 L0 13 L2 11 L0 9 L2 7 L0 5 L2 3 Z'
+    //             }
+    //         }
+    //     ]
+    // },
     {
         'name': 'customer1',
         'type': 'svg',

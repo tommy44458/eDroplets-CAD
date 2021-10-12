@@ -30,6 +30,7 @@ require('./table')
 require('./text')
 
 require('./electrode/base')
+require('./electrode/base2')
 require('./electrode/circle')
 require('./electrode/customer1')
 require('./electrode/customer2')

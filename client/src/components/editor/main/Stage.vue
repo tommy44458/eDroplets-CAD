@@ -191,8 +191,8 @@ export default {
             'type': 'svg',
             'egglement': true,
             'wrappegg': true,
-            'width': 22,
-            'height': 22,
+            'width': 198.5,
+            'height': 198.5,
             'attrs': {},
             'styles': {
             },
@@ -204,8 +204,9 @@ export default {
                     'name': 'path',
                     'type': 'path',
                     'attrs': {
-                      'd': 'M1 2 L2 1 L3 0 L5 2 L7 0 L9 2 L11 0 L13 2 L15 0 L17 2 L 19 0 L20 1 L21 2 L22 3 L20 5 L22 7 L20 9 L22 11 L20 13 L22 15 L20 17 L22 19 L21 20 L20 21 L19 20 L17 22 L15 20 L13 22 L11 20 L9 22 L7 20 L5 22 L3 20 L2 21 L1 20 L2 19 L0 17 L2 15 L0 13 L2 11 L0 9 L2 7 L0 5 L2 3 Z'
-                        // 'd': 'M0 1 L0 19 L1 20 L19 20 L20 19 L20 1 L19 0 L1 0 Z'
+                      // 'd': 'M1 2 L2 1 L3 0 L5 2 L7 0 L9 2 L11 0 L13 2 L15 0 L17 2 L 19 0 L20 1 L21 2 L22 3 L20 5 L22 7 L20 9 L22 11 L20 13 L22 15 L20 17 L22 19 L21 20 L20 21 L19 20 L17 22 L15 20 L13 22 L11 20 L9 22 L7 20 L5 22 L3 20 L2 21 L1 20 L2 19 L0 17 L2 15 L0 13 L2 11 L0 9 L2 7 L0 5 L2 3 Z'
+                      // 'd': 'M 0 1 L 0 19 L 1 20 L 19 20 L 20 19 L 20 1 L 19 0 L 1 0 Z'
+                      'd': 'M0 1.5 L1.5 0 L197 0 L197 1.5 L198.5 197 L197 198.5 L1.5 198.5 L0 197 Z'
                     }
                 }
             ]
@@ -216,7 +217,7 @@ export default {
 
         let height = getComputedProp('height', element, this.page)
         let width = getComputedProp('width', element, this.page)
-        const unit = 21
+        const unit = 200
         const unitX = parseInt((e.x / this.zoom) / unit)
         const unitY = parseInt((e.y / this.zoom) / unit)
         let top = unit * unitY
@@ -495,7 +496,7 @@ html.droppable * {
 .stage {
   transform-origin: 0 0;
   user-select: none;
-  margin: 10px auto 35px !important;
+  margin: 0 auto 0 !important;
   border: 2px solid rgba(0, 0, 0, 0);
   /* for paper style */
   box-shadow:

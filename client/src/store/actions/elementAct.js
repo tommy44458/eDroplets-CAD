@@ -549,9 +549,9 @@ const elementActions = {
       }
     })
 
-    let path = 'M' + dArray[0][0] + ' ' + dArray[0][1] + ' '
+    let path = 'M ' + dArray[0][0] + ' ' + dArray[0][1] + ' '
     dArray.forEach((v, index) => {
-        path += 'L' + v[0] + ' ' + v[1] + ' '
+        path += 'L ' + v[0] + ' ' + v[1] + ' '
     })
 
     // console.log(path)

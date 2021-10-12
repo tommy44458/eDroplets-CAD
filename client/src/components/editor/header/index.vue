@@ -64,12 +64,15 @@ export default {
 
 .headegg {
   z-index: 1000;
-  height: 64px;
-  width: calc(100% - 240px);
-  color: rgba(0,0,0,0.66);
+  height: 50px;
+  width: 100%;
+  background: #FAEDCD;
+  border: 1px solid #A06933;
+  /* calc(100% - 240px); */
+  /* color: rgba(0,0,0,0.66); */
   padding: 0 25px 0 25px;
-  margin-right: 240px;
-  border: none;
+  /* margin-right: 0; */
+  /* border: none; */
   display: flex;
   flex-shrink: 0;
   flex-direction: row;

@@ -102,24 +102,35 @@ const projectActions = {
 
     var dataElectrode = ''
     dataElectrode = dataElectrode + 'contactpad circle r 750\n'
-    dataElectrode = dataElectrode + 'base path M0 100 L0 1900 L100 2000 L1900 2000 L2000 1900 L2000 100 L1900 0 L100 0 Z\n'
-    dataElectrode = dataElectrode + 'customer2 path M0 100 L0 3905 L100 4005 L1900 4005 L2000 3905 L2000 2000 L4005 2000 L4005 3905 L4105 4005 L5905 4005 L6005 3905 L6005 100 L5905 0 L100 0 Z\n'
-    dataElectrode = dataElectrode + 'customer1 path M0 100 L0 5910 L100 6010 L3905 6010 L4005 5910 L4005 4110 L3905 4010 L2000 4010 L2000 2000 L3905 2000 L4005 1900 L4005 100 L3905 0 L100 0 Z\n'
-    dataElectrode = dataElectrode + 'customer3 path M0 100 L0 9920 L100 10020 L5910 10020 L6010 9920 L6010 100 L5910 0 L100 0 Z\n'
+    // dataElectrode = dataElectrode + 'base path M0 100 L0 1900 L100 2000 L1900 2000 L2000 1900 L2000 100 L1900 0 L100 0 Z\n'
+    // dataElectrode = dataElectrode + 'customer2 path M0 100 L0 3905 L100 4005 L1900 4005 L2000 3905 L2000 2000 L4005 2000 L4005 3905 L4105 4005 L5905 4005 L6005 3905 L6005 100 L5905 0 L100 0 Z\n'
+    // dataElectrode = dataElectrode + 'customer1 path M0 100 L0 5910 L100 6010 L3905 6010 L4005 5910 L4005 4110 L3905 4010 L2000 4010 L2000 2000 L3905 2000 L4005 1900 L4005 100 L3905 0 L100 0 Z\n'
+    // dataElectrode = dataElectrode + 'customer3 path M0 100 L0 9920 L100 10020 L5910 10020 L6010 9920 L6010 100 L5910 0 L100 0 Z\n'
     dataElectrode = dataElectrode + 'Referenceelectrode path M0 0 L0 10000 L10000 10000 L10000 0 Z\n'
 
+    const electrodsShape = {}
     electrods.forEach(el => {
-      console.log(el)
-      if (el.name !== 'base' && el.name !== 'customer1' && el.name !== 'customer2' && el.name !== 'customer3') {
+      // console.log(el)
+      if (!(el.name in electrodsShape)) {
+        electrodsShape[el.name] = []
         let path = ''
         const pathlist = el.children[0].attrs.d.split(' ')
+        console.log('***', pathlist)
         pathlist.forEach(p => {
-          if (p !== '') {
-            path += p + '00 '
+          if (p === 'M' || p === 'L') {
+            path += p
+          } else if (p !== '' && p !== 'Z') {
+            path += parseInt(p * 100) + ' '
           } else {
             path += 'Z\n'
           }
         })
+        for (let i = 0; i < pathlist.length - 1; i = i + 3) {
+          if (pathlist[i] !== '') {
+            electrodsShape[el.name].push([ parseInt(pathlist[i] * 100), parseInt(pathlist[i + 1] * 100) ])
+          }
+        }
+        console.log(path)
         dataElectrode = dataElectrode + el.name + ' path ' + path
       }
     })
@@ -146,7 +157,7 @@ const projectActions = {
       dataElectrode = dataElectrode + item.name + ' ' + (parseFloat(item.left) * parseFloat(80000 / 800) + parseFloat(-50)) + ' ' + (parseFloat(item.top) * parseFloat(40000 / 400) + parseFloat(12255)) + '\n'
     }
 
-    dataElectrode = dataElectrode + 'Referenceelectrode -14835 13689\n'
+    // dataElectrode = dataElectrode + 'Referenceelectrode -14835 13689\n'
     dataElectrode = dataElectrode + '#ENDOFLAYOUT#\n'
     dataElectrode = dataElectrode + '0,0,0,0,0,0,0,0;100\n'
     dataElectrode = dataElectrode + '#ENDOFSEQUENCE#'
@@ -345,7 +356,7 @@ const projectActions = {
 
     const electrodsShape = {}
     electrods.forEach(el => {
-      // console.log(el)
+      console.log('**', el)
       if (!(el.name in electrodsShape)) {
         electrodsShape[el.name] = []
         let path = ''
@@ -362,7 +373,7 @@ const projectActions = {
             electrodsShape[el.name].push([ parseInt(pathlist[i].substr(1) + '00'), parseInt(pathlist[i + 1] + '00') ])
           }
         }
-        console.log(path)
+        console.log('---', path)
         dataElectrode = dataElectrode + el.name + ' path ' + path
       }
     })
