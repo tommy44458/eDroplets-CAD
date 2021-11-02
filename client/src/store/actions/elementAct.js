@@ -261,7 +261,7 @@ const elementActions = {
     if (state.app.selectedElements.length < 2) {
       return false
     }
-    const unit = state.app.gridUnit
+    const unit = state.app.gridUnit / 10
     const cornerSize = state.app.cornerSize
 
     commit(types.sortSelectedElement)
