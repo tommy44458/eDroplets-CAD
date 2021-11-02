@@ -5,6 +5,7 @@ function newProject (title, gridUnit) {
   return {
     id: shortid.generate(),
     title: title,
+    gridUnit: gridUnit,
     components: [],
     pages: [newPage('Layer1', '/', gridUnit)]
   }

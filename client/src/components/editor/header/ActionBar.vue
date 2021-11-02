@@ -206,6 +206,9 @@ export default {
 
     ...mapActions([downloadProject, downloadProject2, downloadProject3, downloadVueSources, loadVueggProject])
   },
+  mounted () {
+    this.$root.$emit('open-setting-dialog')
+  },
   watch: {
     apiStatus: function (val) {
       console.log(val)

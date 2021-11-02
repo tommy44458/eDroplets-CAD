@@ -101,7 +101,7 @@ export default {
   },
   methods: {
     checkCollision (selectedEls, allEls) {
-      const unit = this.gridUnit
+      const unit = this.gridUnit / 10
       const acElPos = []
       const alElPos = []
       selectedEls.forEach(acEl => {
@@ -147,7 +147,7 @@ export default {
     },
 
     mouseMoveElements (e) {
-      const unit = this.gridUnit
+      const unit = this.gridUnit / 10
       const offset = e.offsetEl
       const unitX = e.unitX
       const unitY = e.unitY
@@ -167,7 +167,7 @@ export default {
     addElement (e) {
       // console.log(e.x, e.y)
       // console.log(this.allElements)
-      const unit = this.gridUnit
+      const unit = this.gridUnit / 10
       const cornerSize = this.cornerSize
       const posX = e.x
       const posY = e.y
@@ -272,7 +272,7 @@ export default {
 
       let height = getComputedProp('height', element, this.page)
       let width = getComputedProp('width', element, this.page)
-      const unit = this.gridUnit
+      const unit = this.gridUnit / 10
       const posY = (e.pageY + mainContainer.scrollTop - mainContainer.offsetTop - this.$el.offsetTop - (height / 2))
       const posX = (e.pageX + mainContainer.scrollLeft - mainContainer.offsetLeft - this.$el.offsetLeft - (width / 2))
 

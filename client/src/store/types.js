@@ -37,6 +37,7 @@ export const checkLastSaved = 'checkLastSaved'
 export const syncLocal = 'syncLocal'
 export const loadVueggProject = 'loadVueggProject'
 export const clearProject = 'clearProject'
+export const newProject = 'newProject'
 
 export const savePageAndClose = 'savePageAndClose'
 export const duplicatePage = 'duplicatePage'
@@ -125,6 +126,7 @@ const types = {
   syncLocal,
   loadVueggProject,
   clearProject,
+  newProject,
 
   savePageAndClose,
   duplicatePage,

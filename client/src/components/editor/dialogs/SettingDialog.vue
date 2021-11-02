@@ -1,24 +1,32 @@
 <template>
   <dialog>
-    <p class="confirm-dialog__title">EWOD chip setting</p>
+    <p class="confirm-dialog__title">New EWOD chip</p>
     <div class="confirm-dialog__content">
-      <input  v-model="gridUnit" @blur="onGridBlur"
-      title="grid scale" placeholder="grid scale"/>
-      <!-- <p>
-        If you do, all local changes will be lost!<br />
-        ... although in reality you can undo it
-      </p> -->
+      <p>
+        If you create a new EWOD chip, all local changes will be lost!<br />
+        ... using the new setting.
+      </p>
+      <p>
+        chip grid: 
+        <span>
+          <input  v-model="gridUnit" @blur="onGridBlur"
+          title="grid scale" placeholder="grid scale"/>
+          <span>
+            um
+          </span>
+        </span>
+      </p>
     </div>
     <div class="confirm-dialog__actions">
-      <mdc-button @click="onConfirm" class="confirm-dialog__delete-btn" unelevated>Delete</mdc-button>
-      <mdc-button @click="closeDialog">Cancel</mdc-button>
+      <mdc-button @click="onConfirm" class="confirm-dialog__delete-btn" unelevated>Apply</mdc-button>
+      <mdc-button @click="closeDialog" v-if="parseInt(gridUnit) > 0">Cancel</mdc-button>
     </div>
   </dialog>
 </template>
 
 <script>
 import { mapState, mapActions } from 'vuex'
-import { clearProject } from '@/store/types'
+import { newProject } from '@/store/types'
 import dialogPolyfill from 'dialog-polyfill/dialog-polyfill'
 import { mapFields } from 'vuex-map-fields'
 
@@ -52,7 +60,7 @@ export default {
     },
 
     onConfirm () {
-      this.clearProject()
+      this.newProject({gridUnit: this.gridUnit, cornerSize: 3})
       this.closeDialog()
     },
 
@@ -64,7 +72,7 @@ export default {
 
     },
 
-    ...mapActions([clearProject])
+    ...mapActions([newProject])
   }
 }
 </script>
