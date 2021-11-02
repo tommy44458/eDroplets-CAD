@@ -58,7 +58,6 @@ export default {
   components: { StageEl, MrContainer },
   props: ['page', 'zoom'],
   created: function () {
-    // this.$root.$on('paint-electrodes', this.paintElectrodes)
     this.$root.$on('combine-electrodes', this.combineElectrodes)
   },
 

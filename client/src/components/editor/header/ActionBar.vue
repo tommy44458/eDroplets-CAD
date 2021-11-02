@@ -28,13 +28,13 @@
 
     <div class="separator"></div>
 
-    <button v-tooltip="'Paint Electrodes'" class="action-btn" :disabled="isLoading" @click="paint ? $root.$emit('paint-electrodes-disable') : $root.$emit('paint-electrodes')">
+    <button v-tooltip="'Paint Electrodes'" class="action-btn" :disabled="isLoading" @click="paintChange()">
       <div v-if="paint">
         <svgicon icon="system/actions/pencil" width="20" height="20"
           :color="'red'">
         </svgicon>
       </div>
-      <div v-if="!paint">
+      <div v-else>
         <svgicon icon="system/actions/pencil" width="20" height="20"
           :color="'#2b6a73'">
         </svgicon>
@@ -49,13 +49,13 @@
 
     <div class="separator"></div>
 
-    <button v-tooltip="'Project setting'" class="action-btn"
+    <!-- <button v-tooltip="'Project setting'" class="action-btn"
       :disabled="isLoading" @click="$root.$emit('open-setting-dialog')">
       <svgicon icon="system/settings" width="24" height="24" color="#2b6a73"></svgicon>
-    </button>
+    </button> -->
 
     <button v-tooltip="'Clear project'" class="action-btn"
-      :disabled="isLoading" @click="$root.$emit('open-confirm-dialog')">
+      :disabled="isLoading" @click="$root.$emit('open-setting-dialog')">
       <svgicon icon="system/actions/delete" width="24" height="24" color="#2b6a73"></svgicon>
     </button>
 
@@ -110,6 +110,7 @@
 <script>
 import { mapState, mapActions } from 'vuex'
 import { downloadProject, downloadProject2, downloadProject3, downloadVueSources, loadVueggProject } from '@/store/types'
+import { mapFields } from 'vuex-map-fields'
 
 import '@/assets/icons/system/actions'
 
@@ -117,21 +118,15 @@ export default {
   name: 'action-bar',
   data: function () {
     return {
-      fileValue: null,
-      paint: false
+      fileValue: null
     }
-  },
-  created: function () {
-    this.$root.$on('paint-electrodes', this.paintElectrodes)
-    this.$root.$on('paint-electrodes-disable', this.paintElectrodesDisable)
-  },
-
-  beforeDestroy: function () {
-    this.$root.$on('paint-electrodes', this.paintElectrodes)
-    this.$root.$off('paint-electrodes-disable', this.paintElectrodesDisable)
   },
 
   computed: {
+    ...mapFields([
+      'app.edit.paint'
+    ]),
+
     saveBtnTitle () {
       return !this.isLoggedIn
         ? 'Login with GitHub to save project'
@@ -151,12 +146,8 @@ export default {
     })
   },
   methods: {
-    paintElectrodes () {
-      this.paint = true
-    },
-
-    paintElectrodesDisable () {
-      this.paint = false
+    paintChange () {
+      this.paint = !this.paint
     },
 
     // --- DOWNLOAD MENU METHODS

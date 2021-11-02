@@ -48,19 +48,9 @@ export default {
       default: 1
     }
   },
-  created: function () {
-    this.$root.$on('paint-electrodes', this.paintElectrodes)
-    this.$root.$on('paint-electrodes-disable', this.paintElectrodesDisable)
-  },
-
-  beforeDestroy: function () {
-    this.$root.$off('paint-electrodes', this.paintElectrodes)
-    this.$root.$off('paint-electrodes-disable', this.paintElectrodesDisable)
-  },
 
   data: function () {
     return {
-      paint: false,
       initialAbsPos: {x: 0, y: 0},
       initialRelPos: {x: 0, y: 0},
       currentAbsPos: {x: 0, y: 0},
@@ -74,7 +64,8 @@ export default {
   },
   computed: {
     ...mapFields([
-      'app.gridUnit'
+      'app.gridUnit',
+      'app.edit.paint'
     ]),
 
     mrElements () {
@@ -82,13 +73,6 @@ export default {
     }
   },
   methods: {
-    paintElectrodes () {
-      this.paint = true
-    },
-
-    paintElectrodesDisable () {
-      this.paint = false
-    },
 
     mouseDownHandler (e) {
       let isMrs = false
@@ -175,7 +159,7 @@ export default {
         if (this.paint) {
           // console.log(Math.floor(this.currentAbsPosPaint.x / 21), Math.floor(this.currentAbsPos.x / 21))
           this.$emit('add', this.currentRelPos)
-        } else if (!this.paint) {
+        } else {
           this.renderSelectionArea(this.initialRelPos, this.currentRelPos)
         }
         // this.$emit('selecting')

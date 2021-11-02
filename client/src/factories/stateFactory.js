@@ -19,7 +19,10 @@ function newState (gridUnit, cornerSize, project) {
       selectedElements: [],
       editorZoom: 0.2,
       gridUnit: gridUnit,
-      cornerSize: cornerSize
+      cornerSize: cornerSize,
+      edit: {
+        paint: false
+      }
     },
     oauth: {
       isAuthorized: false,
