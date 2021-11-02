@@ -44,23 +44,16 @@ This is a website-based design tool for EWOD chips, users can free to draw elect
 
 ##### 1. installation
 ``` bash
-# install client & server dependencies
+# install node dependencies
 npm run install:all
-
-# OR install only client / server
-npm run install:client
-npm run install:server
 ```
 
 ##### 2. development
 ``` bash
 # serve client with hot reload
 npm run client
-
-# start server (auto-restarts on changes)
-npm run server
 ```
-Navigate to `localhost:8080` to serve *client* with hot-reload (development server).
+Navigate to `localhost:7000` to serve *client* with hot-reload (development server).
 
 > For detailed explanation on how things work on the client side, checkout the **[vuejs-templates/webpack](http://vuejs-templates.github.io/webpack/)** guide and docs for **[vue-loader](http://vuejs.github.io/vue-loader)**.
 
