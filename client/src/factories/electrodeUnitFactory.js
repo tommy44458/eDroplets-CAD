@@ -12,18 +12,18 @@ function newElectrodeUnit (name, gridUnit, cornerSize) {
     [elecSize, elecSize - cornerSize],
     [elecSize - cornerSize, elecSize],
     [cornerSize, elecSize],
-    [0, elecSize - cornerSize],
+    [0, elecSize - cornerSize]
   ]
 
-  const dPath = ''
+  let dPath = ''
 
   _vertax.forEach((p, i) => {
-    dPath += (i == 0) ? 'M ' : 'L '
+    dPath += (i === 0) ? 'M ' : 'L '
     dPath += p[0] + ' ' + p[1] + ' '
   })
 
   dPath += 'Z'
-  
+
   return {
     'name': name,
     'type': 'svg',

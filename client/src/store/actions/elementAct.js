@@ -262,6 +262,7 @@ const elementActions = {
       return false
     }
     const unit = state.app.gridUnit
+    const cornerSize = state.app.cornerSize
 
     commit(types.sortSelectedElement)
 
@@ -492,29 +493,29 @@ const elementActions = {
       // |
       if ((v[0] < vArray[(index + 1 + vArray.length) % vArray.length][0] && v[1] == vArray[(index + 1 + vArray.length) % vArray.length][1]) &&
            (v[0] == vArray[(index - 1 + vArray.length) % vArray.length][0]) && v[1] < vArray[(index - 1 + vArray.length) % vArray.length][1]) {
-        dArray.push([v[0] + 0, v[1] + 1.5])
-        dArray.push([v[0] + 1.5, v[1] + 0])
+        dArray.push([v[0] + 0, v[1] + cornerSize])
+        dArray.push([v[0] + cornerSize, v[1] + 0])
       }
       //  __.
       //    |
       if ((v[0] == vArray[(index + 1 + vArray.length) % vArray.length][0] && v[1] < vArray[(index + 1 + vArray.length) % vArray.length][1]) &&
            (v[0] > vArray[(index - 1 + vArray.length) % vArray.length][0]) && v[1] == vArray[(index - 1 + vArray.length) % vArray.length][1]) {
-        dArray.push([v[0] - 1.5 - 1.5, v[1] + 0])
-        dArray.push([v[0] + 0 - 1.5, v[1] + 1.5])
+        dArray.push([v[0] - cornerSize - cornerSize, v[1] + 0])
+        dArray.push([v[0] + 0 - cornerSize, v[1] + cornerSize])
       }
       //    |
       //  --.
       if ((v[0] > vArray[(index + 1 + vArray.length) % vArray.length][0] && v[1] == vArray[(index + 1 + vArray.length) % vArray.length][1]) &&
            (v[0] == vArray[(index - 1 + vArray.length) % vArray.length][0]) && v[1] > vArray[(index - 1 + vArray.length) % vArray.length][1]) {
-        dArray.push([v[0] + 0 - 1.5, v[1] - 1.5 - 1.5])
-        dArray.push([v[0] - 1.5 - 1.5, v[1] + 0 - 1.5])
+        dArray.push([v[0] + 0 - cornerSize, v[1] - cornerSize - cornerSize])
+        dArray.push([v[0] - cornerSize - cornerSize, v[1] + 0 - cornerSize])
       }
       //  |
       //  .--
       if ((v[0] == vArray[(index + 1 + vArray.length) % vArray.length][0] && v[1] > vArray[(index + 1 + vArray.length) % vArray.length][1]) &&
            (v[0] < vArray[(index - 1 + vArray.length) % vArray.length][0]) && v[1] == vArray[(index - 1 + vArray.length) % vArray.length][1]) {
-        dArray.push([v[0] + 1.5, v[1] + 0 - 1.5])
-        dArray.push([v[0] + 0, v[1] - 1.5 - 1.5])
+        dArray.push([v[0] + cornerSize, v[1] + 0 - cornerSize])
+        dArray.push([v[0] + 0, v[1] - cornerSize - cornerSize])
       }
 
       // internal
@@ -522,29 +523,29 @@ const elementActions = {
       // |
       if ((v[0] == vArray[(index + 1 + vArray.length) % vArray.length][0] && v[1] < vArray[(index + 1 + vArray.length) % vArray.length][1]) &&
            (v[0] < vArray[(index - 1 + vArray.length) % vArray.length][0]) && v[1] == vArray[(index - 1 + vArray.length) % vArray.length][1]) {
-        dArray.push([v[0] + 1.5 - 1.5, v[1] + 0 - 1.5])
-        dArray.push([v[0] + 0 - 1.5, v[1] + 1.5 - 1.5])
+        dArray.push([v[0] + cornerSize - cornerSize, v[1] + 0 - cornerSize])
+        dArray.push([v[0] + 0 - cornerSize, v[1] + cornerSize - cornerSize])
       }
       //  __.
       //    |
       if ((v[0] > vArray[(index + 1 + vArray.length) % vArray.length][0] && v[1] == vArray[(index + 1 + vArray.length) % vArray.length][1]) &&
            (v[0] == vArray[(index - 1 + vArray.length) % vArray.length][0]) && v[1] < vArray[(index - 1 + vArray.length) % vArray.length][1]) {
-        dArray.push([v[0] + 0, v[1] + 1.5 - 1.5])
-        dArray.push([v[0] - 1.5, v[1] + 0 - 1.5])
+        dArray.push([v[0] + 0, v[1] + cornerSize - cornerSize])
+        dArray.push([v[0] - cornerSize, v[1] + 0 - cornerSize])
       }
       //    |
       //  --.
       if ((v[0] == vArray[(index + 1 + vArray.length) % vArray.length][0] && v[1] > vArray[(index + 1 + vArray.length) % vArray.length][1]) &&
            (v[0] > vArray[(index - 1 + vArray.length) % vArray.length][0]) && v[1] == vArray[(index - 1 + vArray.length) % vArray.length][1]) {
-        dArray.push([v[0] - 1.5, v[1] + 0])
-        dArray.push([v[0] + 0, v[1] - 1.5])
+        dArray.push([v[0] - cornerSize, v[1] + 0])
+        dArray.push([v[0] + 0, v[1] - cornerSize])
       }
       //  |
       //  .--
       if ((v[0] < vArray[(index + 1 + vArray.length) % vArray.length][0] && v[1] == vArray[(index + 1 + vArray.length) % vArray.length][1]) &&
            (v[0] == vArray[(index - 1 + vArray.length) % vArray.length][0]) && v[1] > vArray[(index - 1 + vArray.length) % vArray.length][1]) {
-        dArray.push([v[0] + 0 - 1.5, v[1] - 1.5])
-        dArray.push([v[0] + 1.5 - 1.5, v[1] + 0])
+        dArray.push([v[0] + 0 - cornerSize, v[1] - cornerSize])
+        dArray.push([v[0] + cornerSize - cornerSize, v[1] + 0])
       }
     })
 
@@ -566,8 +567,8 @@ const elementActions = {
       name: el.id.split('.')[1],
       top: topMin,
       left: leftMin,
-      height: (unit * colNumber) - 1.5,
-      width: (unit * rowNumber) - 1.5,
+      height: (unit * colNumber) - cornerSize,
+      width: (unit * rowNumber) - cornerSize,
       path: path,
       classes: {
         'matrix': matrix

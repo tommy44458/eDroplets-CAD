@@ -45,6 +45,7 @@ import { _clearSelectedElements, _addSelectedElements, registerElement,
 import MrContainer from '@/components/editor/common/mr-vue/MrContainer'
 import StageEl from './StageEl'
 import { mapFields } from 'vuex-map-fields'
+import newElectrodeUnit from '@/factories/electrodeUnitFactory'
 
 const DROP_BORDER = {
   width: '2px',
@@ -79,7 +80,8 @@ export default {
   },
   computed: {
     ...mapFields([
-      'app.gridUnit'
+      'app.gridUnit',
+      'app.cornerSize'
     ]),
 
     pageStyles () {
@@ -166,6 +168,7 @@ export default {
       // console.log(e.x, e.y)
       // console.log(this.allElements)
       const unit = this.gridUnit
+      const cornerSize = this.cornerSize
       const posX = e.x
       const posY = e.y
 
@@ -189,42 +192,14 @@ export default {
       })
 
       if (canAdd) {
-        const _matrix = [
-          [1]
-        ]
-        const base = {
-            'name': 'base',
-            'type': 'svg',
-            'egglement': true,
-            'wrappegg': true,
-            'width': (unit - 1.5),
-            'height': (unit - 1.5),
-            'attrs': {},
-            'styles': {
-            },
-            'classes': {
-              'matrix': _matrix
-            },
-            'children': [
-                {
-                    'name': 'path',
-                    'type': 'path',
-                    'attrs': {
-                      'd': 'M 0 1.5 L 1.5 0 L ' + (unit - 3) + ' 0 L ' + (unit - 1.5) + ' 1.5 L ' + (unit - 1.5) + ' ' + (unit - 3) + ' L ' + (unit - 3) + ' ' + (unit - 1.5) + ' L 1.5 ' + (unit - 1.5) + ' L 0 ' + (unit - 3) + ' Z'
-                    }
-                }
-            ]
-        }
+        let element = newElectrodeUnit('base', unit, cornerSize)
 
-        let element = base
-        // console.log(element)
-
-        let height = getComputedProp('height', element, this.page)
-        let width = getComputedProp('width', element, this.page)
+        const height = getComputedProp('height', element, this.page)
+        const width = getComputedProp('width', element, this.page)
         const unitX = parseInt((e.x / this.zoom) / unit)
         const unitY = parseInt((e.y / this.zoom) / unit)
-        let top = unit * unitY
-        let left = unit * unitX
+        const top = unit * unitY
+        const left = unit * unitX
 
         // Correct drop positions based on the editorZoom
         // top = Math.round(top / this.zoom)
