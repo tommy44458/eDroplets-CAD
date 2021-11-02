@@ -1,6 +1,7 @@
 import pageGetters from './pageGet'
 import elementGetters from './elementGet'
 import componentGetters from './componentGet'
+import { getField } from 'vuex-map-fields'
 
 /**
  * Vuex Store Getters
@@ -10,6 +11,7 @@ import componentGetters from './componentGet'
  * @see {@link https://vuex.vuejs.org/en/getters.html|Vuex Getters}
  */
 const getters = {
+  getField,
   ...pageGetters,
   ...elementGetters,
   ...componentGetters

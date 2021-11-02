@@ -30,6 +30,8 @@
 
 
 <script>
+import { mapFields } from 'vuex-map-fields'
+
 export default {
   name: 'mr-container',
   props: {
@@ -71,6 +73,10 @@ export default {
     }
   },
   computed: {
+    ...mapFields([
+      'app.gridUnit'
+    ]),
+
     mrElements () {
       return this.activeElements.map(el => document.getElementById(el.id).parentElement)
     }
@@ -299,7 +305,7 @@ export default {
     // },
 
     moveElementBy2 (el, posX, posY) {
-      const unit = 21
+      const unit = this.gridUnit
 
       const unitX = parseInt((posX / this.zoom) / unit)
       const unitY = parseInt((posY / this.zoom) / unit)

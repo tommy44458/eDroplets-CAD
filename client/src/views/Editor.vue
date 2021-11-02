@@ -13,6 +13,7 @@
       <page-dialog></page-dialog>
       <load-dialog></load-dialog>
       <upload-dialog></upload-dialog>
+      <setting-dialog></setting-dialog>
       <confirm-dialog></confirm-dialog>
       <api-fail-dialog></api-fail-dialog>
       <preview-svg></preview-svg>
@@ -34,13 +35,14 @@ import BlockLoader from '@/components/editor/common/loader/BlockLoader'
 import PageDialog from '@/components/editor/dialogs/PageDialog'
 import LoadDialog from '@/components/editor/dialogs/LoadDialog'
 import UploadDialog from '@/components/editor/dialogs/UploadDialog'
+import SettingDialog from '@/components/editor/dialogs/SettingDialog'
 import ConfirmDialog from '@/components/editor/dialogs/ConfirmDialog'
 import ApiFailDialog from '@/components/editor/dialogs/ApiFailDialog'
 import PreviewSvg from '@/components/editor/dialogs/PreviewSvg'
 
 export default {
   name: 'editor',
-  components: { Headegg, Drawegg, Mainegg, BlockLoader, PageDialog, LoadDialog, UploadDialog, ConfirmDialog, ApiFailDialog, PreviewSvg },
+  components: { Headegg, Drawegg, Mainegg, BlockLoader, PageDialog, LoadDialog, UploadDialog, SettingDialog, ConfirmDialog, ApiFailDialog, PreviewSvg },
   data: function () {
     return {
       notScrolled: true

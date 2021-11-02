@@ -1,12 +1,12 @@
 import shortid from 'shortid'
 import newPage from './pageFactory'
 
-function newProject (title) {
+function newProject (title, gridUnit) {
   return {
     id: shortid.generate(),
     title: title,
     components: [],
-    pages: [newPage('Layer1', '/')]
+    pages: [newPage('Layer1', '/', gridUnit)]
   }
 }
 

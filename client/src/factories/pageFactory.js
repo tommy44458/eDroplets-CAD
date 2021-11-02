@@ -1,6 +1,6 @@
 import shortid from 'shortid'
 
-function newPage (name, path, height, width) {
+function newPage (name, path, gridUnit, height, width) {
   return {
     id: shortid.generate(),
     name: name,
@@ -20,7 +20,7 @@ function newPage (name, path, height, width) {
         'linear-gradient(90deg, rgba(0,0,0,.1) 2px, transparent 0),' +
         'linear-gradient(rgba(0,0,0,.15) 2px, transparent 0),' +
         'linear-gradient(90deg, rgba(0,0,0,.15) 2px, transparent 0)',
-      'background-size': '200px 200px, 200px 200px, 400px 400px, 400px 400px',
+      'background-size': gridUnit + 'px ' + gridUnit + 'px, ' + gridUnit + 'px ' + gridUnit + 'px, ' + (2 * gridUnit) + 'px ' + (2 * gridUnit) + 'px, ' + (2 * gridUnit) + 'px ' + (2 * gridUnit) + 'px',
       'overflow': 'scroll' // 'hidden',
     },
     classes: [],

@@ -1,6 +1,6 @@
 <template>
   <nav class="navigation">
-    <!-- <div class="tab-bar">
+    <div class="tab-bar">
       <a title="Elements" class="tab" @click="toggleTab('elements')">
         <svgicon icon="system/widgets" width="24" height="24"
           :color="showElements ? '#2b6a73' : 'rgba(0,0,0,.38)'">
@@ -18,7 +18,7 @@
       </a>
 
       <div class="tab-indicator mdc-theme--primary-bg" :style="{'left': indiLeft, 'right': indiRight}"></div>
-    </div> -->
+    </div>
 
     <div class="tab-content">
       <ElementsMenu v-show="showElements"></ElementsMenu>

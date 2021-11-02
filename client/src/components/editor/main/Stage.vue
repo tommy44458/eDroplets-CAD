@@ -44,6 +44,7 @@ import { _clearSelectedElements, _addSelectedElements, registerElement,
 
 import MrContainer from '@/components/editor/common/mr-vue/MrContainer'
 import StageEl from './StageEl'
+import { mapFields } from 'vuex-map-fields'
 
 const DROP_BORDER = {
   width: '2px',
@@ -77,6 +78,10 @@ export default {
     }
   },
   computed: {
+    ...mapFields([
+      'app.gridUnit'
+    ]),
+
     pageStyles () {
       return {
         ...this.page.styles,
@@ -94,7 +99,7 @@ export default {
   },
   methods: {
     checkCollision (selectedEls, allEls) {
-      const unit = 21
+      const unit = this.gridUnit
       const acElPos = []
       const alElPos = []
       selectedEls.forEach(acEl => {
@@ -129,18 +134,18 @@ export default {
       })
       // console.log(acElPos, alElPos)
       let collision = false
-      acElPos.forEach(acPos => {
-        alElPos.forEach(alPos => {
-          if (acPos.toString() === alPos.toString()) {
-            collision = true
-          }
-        })
-      })
+      // acElPos.forEach(acPos => {
+      //   alElPos.forEach(alPos => {
+      //     if (acPos.toString() === alPos.toString()) {
+      //       collision = true
+      //     }
+      //   })
+      // })
       return collision
     },
 
     mouseMoveElements (e) {
-      const unit = 21
+      const unit = this.gridUnit
       const offset = e.offsetEl
       const unitX = e.unitX
       const unitY = e.unitY
@@ -160,10 +165,11 @@ export default {
     addElement (e) {
       // console.log(e.x, e.y)
       // console.log(this.allElements)
+      const unit = this.gridUnit
       const posX = e.x
       const posY = e.y
 
-      if (Math.floor((posX / this.zoom) / 21) === Math.floor((this.currentRelPosPaint.x / this.zoom) / 21) && Math.floor((posX / this.zoom) / 21) === Math.floor((this.currentRelPosPaint.y / this.zoom) / 21)) {
+      if (Math.floor((posX / this.zoom) / unit) === Math.floor((this.currentRelPosPaint.x / this.zoom) / unit) && Math.floor((posX / this.zoom) / unit) === Math.floor((this.currentRelPosPaint.y / this.zoom) / unit)) {
         return false
       }
 
@@ -173,7 +179,7 @@ export default {
           el.classes.matrix.forEach((row, i) => {
             row.forEach((item, j) => {
               if (el.classes.matrix[i][j] !== 0) {
-                if ((posX / this.zoom) >= (el.left + (j * 21)) && (posX / this.zoom) <= (el.left + (j * 21) + 21) && (posY / this.zoom) >= (el.top + (i * 21)) && (posY / this.zoom) <= (el.top + (i * 21) + 21)) {
+                if ((posX / this.zoom) >= (el.left + (j * unit)) && (posX / this.zoom) <= (el.left + (j * unit) + unit) && (posY / this.zoom) >= (el.top + (i * unit)) && (posY / this.zoom) <= (el.top + (i * unit) + unit)) {
                   canAdd = false
                 }
               }
@@ -191,8 +197,8 @@ export default {
             'type': 'svg',
             'egglement': true,
             'wrappegg': true,
-            'width': 198.5,
-            'height': 198.5,
+            'width': (unit - 1.5),
+            'height': (unit - 1.5),
             'attrs': {},
             'styles': {
             },
@@ -204,9 +210,7 @@ export default {
                     'name': 'path',
                     'type': 'path',
                     'attrs': {
-                      // 'd': 'M1 2 L2 1 L3 0 L5 2 L7 0 L9 2 L11 0 L13 2 L15 0 L17 2 L 19 0 L20 1 L21 2 L22 3 L20 5 L22 7 L20 9 L22 11 L20 13 L22 15 L20 17 L22 19 L21 20 L20 21 L19 20 L17 22 L15 20 L13 22 L11 20 L9 22 L7 20 L5 22 L3 20 L2 21 L1 20 L2 19 L0 17 L2 15 L0 13 L2 11 L0 9 L2 7 L0 5 L2 3 Z'
-                      // 'd': 'M 0 1 L 0 19 L 1 20 L 19 20 L 20 19 L 20 1 L 19 0 L 1 0 Z'
-                      'd': 'M0 1.5 L1.5 0 L197 0 L197 1.5 L198.5 197 L197 198.5 L1.5 198.5 L0 197 Z'
+                      'd': 'M 0 1.5 L 1.5 0 L ' + (unit - 3) + ' 0 L ' + (unit - 1.5) + ' 1.5 L ' + (unit - 1.5) + ' ' + (unit - 3) + ' L ' + (unit - 3) + ' ' + (unit - 1.5) + ' L 1.5 ' + (unit - 1.5) + ' L 0 ' + (unit - 3) + ' Z'
                     }
                 }
             ]
@@ -217,7 +221,6 @@ export default {
 
         let height = getComputedProp('height', element, this.page)
         let width = getComputedProp('width', element, this.page)
-        const unit = 200
         const unitX = parseInt((e.x / this.zoom) / unit)
         const unitY = parseInt((e.y / this.zoom) / unit)
         let top = unit * unitY
@@ -294,7 +297,7 @@ export default {
 
       let height = getComputedProp('height', element, this.page)
       let width = getComputedProp('width', element, this.page)
-      const unit = 21
+      const unit = this.gridUnit
       const posY = (e.pageY + mainContainer.scrollTop - mainContainer.offsetTop - this.$el.offsetTop - (height / 2))
       const posX = (e.pageX + mainContainer.scrollLeft - mainContainer.offsetLeft - this.$el.offsetLeft - (width / 2))
 
@@ -304,7 +307,7 @@ export default {
           el.matrix.forEach((row, i) => {
             row.forEach((item, j) => {
               if (el.matrix[i][j] !== 0) {
-                if ((posX / this.zoom) >= (el.left + (j * 21)) && (posX / this.zoom) <= (el.left + (j * 21) + 21) && (posY / this.zoom) >= (el.top + (i * 21)) && (posY / this.zoom) <= (el.top + (i * 21) + 21)) {
+                if ((posX / this.zoom) >= (el.left + (j * unit)) && (posX / this.zoom) <= (el.left + (j * unit) + unit) && (posY / this.zoom) >= (el.top + (i * unit)) && (posY / this.zoom) <= (el.top + (i * unit) + unit)) {
                   canAdd = false
                 }
               }

@@ -85,6 +85,7 @@ const projectActions = {
  */
   [types.downloadProject]: async function ({ state, dispatch, commit }) {
     commit(types._toggleLoadingStatus, true)
+    const scale = (80000 / 8000)
 
     const parsedRepoName = state.project.title.replace(/[^a-zA-Z0-9-_]+/g, '-')
 
@@ -120,14 +121,14 @@ const projectActions = {
           if (p === 'M' || p === 'L') {
             path += p
           } else if (p !== '' && p !== 'Z') {
-            path += parseInt(p * 100) + ' '
+            path += parseInt(p * scale) + ' '
           } else {
             path += 'Z\n'
           }
         })
         for (let i = 0; i < pathlist.length - 1; i = i + 3) {
           if (pathlist[i] !== '') {
-            electrodsShape[el.name].push([ parseInt(pathlist[i] * 100), parseInt(pathlist[i + 1] * 100) ])
+            electrodsShape[el.name].push([ parseInt(pathlist[i] * scale), parseInt(pathlist[i + 1] * scale) ])
           }
         }
         console.log(path)
@@ -154,7 +155,7 @@ const projectActions = {
     electrods.forEach(getPos)
 
     function getPos (item, index) {
-      dataElectrode = dataElectrode + item.name + ' ' + (parseFloat(item.left) * parseFloat(80000 / 800) + parseFloat(-50)) + ' ' + (parseFloat(item.top) * parseFloat(40000 / 400) + parseFloat(12255)) + '\n'
+      dataElectrode = dataElectrode + item.name + ' ' + (parseFloat(item.left) * scale + parseFloat(-50)) + ' ' + (parseFloat(item.top) * scale + parseFloat(12255)) + '\n'
     }
 
     // dataElectrode = dataElectrode + 'Referenceelectrode -14835 13689\n'
@@ -486,7 +487,7 @@ const projectActions = {
     }
 
     if (project) {
-      store.replaceState(newState(JSON.parse(atob(project))))
+      store.replaceState(newState(100, JSON.parse(atob(project))))
       commit(types.addProject)
       if (origin === 'github') localforage.setItem('gh-repo-name', repoName)
 
@@ -502,7 +503,7 @@ const projectActions = {
   [types.clearProject]: async function ({ dispatch, commit }) {
     commit(types._toggleBlockLoadingStatus, true)
 
-    store.replaceState(newState())
+    store.replaceState(newState(100))
     commit(types.deleteProject)
 
     await dispatch(types.checkAuth)

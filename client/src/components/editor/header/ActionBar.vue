@@ -49,6 +49,11 @@
 
     <div class="separator"></div>
 
+    <button v-tooltip="'Project setting'" class="action-btn"
+      :disabled="isLoading" @click="$root.$emit('open-setting-dialog')">
+      <svgicon icon="system/settings" width="24" height="24" color="#2b6a73"></svgicon>
+    </button>
+
     <button v-tooltip="'Clear project'" class="action-btn"
       :disabled="isLoading" @click="$root.$emit('open-confirm-dialog')">
       <svgicon icon="system/actions/delete" width="24" height="24" color="#2b6a73"></svgicon>

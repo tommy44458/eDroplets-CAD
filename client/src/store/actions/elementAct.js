@@ -221,7 +221,7 @@ const elementActions = {
  * @see {@link [types.createEgglement]}
  * @see {@link [types.updateEgglement]}
  */
-  [types.changeElementParent]: function ({ getters, commit }, payload) {
+  [types.changeElementParent]: function ({ state, getters, commit }, payload) {
       // To avoid reference problems (the oldSelected element will be different)
     commit(types._clearSelectedElements)
 
@@ -261,6 +261,7 @@ const elementActions = {
     if (state.app.selectedElements.length < 2) {
       return false
     }
+    const unit = state.app.gridUnit
 
     commit(types.sortSelectedElement)
 
@@ -277,8 +278,8 @@ const elementActions = {
       console.log(el)
     })
 
-    const rowNumber = ((leftMax - leftMin) / 21) + 1
-    const colNumber = ((topMax - topMin) / 21) + 1
+    const rowNumber = ((leftMax - leftMin) / unit) + 1
+    const colNumber = ((topMax - topMin) / unit) + 1
 
     const matrix = []
 
@@ -294,8 +295,8 @@ const elementActions = {
 
     const initMatrix = async function () {
       state.app.selectedElements.forEach(el => {
-        const rowIndex = (el.left - leftMin) / 21
-        const colIndex = (el.top - topMin) / 21
+        const rowIndex = (el.left - leftMin) / unit
+        const colIndex = (el.top - topMin) / unit
         matrix[colIndex][rowIndex] = 1
         if (colIndex == 0) {
           firstElec = firstElec < rowIndex ? firstElec : rowIndex
@@ -454,7 +455,7 @@ const elementActions = {
       }
     }
 
-    await drewPathLeft(0, firstElec, 21)
+    await drewPathLeft(0, firstElec, unit)
 
     let fault = false
 
@@ -493,29 +494,29 @@ const elementActions = {
       // |
       if ((v[0] < vArray[(index + 1 + vArray.length) % vArray.length][0] && v[1] == vArray[(index + 1 + vArray.length) % vArray.length][1]) &&
            (v[0] == vArray[(index - 1 + vArray.length) % vArray.length][0]) && v[1] < vArray[(index - 1 + vArray.length) % vArray.length][1]) {
-        dArray.push([v[0] + 0, v[1] + 1])
-        dArray.push([v[0] + 1, v[1] + 0])
+        dArray.push([v[0] + 0, v[1] + 1.5])
+        dArray.push([v[0] + 1.5, v[1] + 0])
       }
       //  __.
       //    |
       if ((v[0] == vArray[(index + 1 + vArray.length) % vArray.length][0] && v[1] < vArray[(index + 1 + vArray.length) % vArray.length][1]) &&
            (v[0] > vArray[(index - 1 + vArray.length) % vArray.length][0]) && v[1] == vArray[(index - 1 + vArray.length) % vArray.length][1]) {
-        dArray.push([v[0] - 1 - 1, v[1] + 0])
-        dArray.push([v[0] + 0 - 1, v[1] + 1])
+        dArray.push([v[0] - 1.5 - 1.5, v[1] + 0])
+        dArray.push([v[0] + 0 - 1.5, v[1] + 1.5])
       }
       //    |
       //  --.
       if ((v[0] > vArray[(index + 1 + vArray.length) % vArray.length][0] && v[1] == vArray[(index + 1 + vArray.length) % vArray.length][1]) &&
            (v[0] == vArray[(index - 1 + vArray.length) % vArray.length][0]) && v[1] > vArray[(index - 1 + vArray.length) % vArray.length][1]) {
-        dArray.push([v[0] + 0 - 1, v[1] - 1 - 1])
-        dArray.push([v[0] - 1 - 1, v[1] + 0 - 1])
+        dArray.push([v[0] + 0 - 1.5, v[1] - 1.5 - 1.5])
+        dArray.push([v[0] - 1.5 - 1.5, v[1] + 0 - 1.5])
       }
       //  |
       //  .--
       if ((v[0] == vArray[(index + 1 + vArray.length) % vArray.length][0] && v[1] > vArray[(index + 1 + vArray.length) % vArray.length][1]) &&
            (v[0] < vArray[(index - 1 + vArray.length) % vArray.length][0]) && v[1] == vArray[(index - 1 + vArray.length) % vArray.length][1]) {
-        dArray.push([v[0] + 1, v[1] + 0 - 1])
-        dArray.push([v[0] + 0, v[1] - 1 - 1])
+        dArray.push([v[0] + 1.5, v[1] + 0 - 1.5])
+        dArray.push([v[0] + 0, v[1] - 1.5 - 1.5])
       }
 
       // 內凹
@@ -523,29 +524,29 @@ const elementActions = {
       // |
       if ((v[0] == vArray[(index + 1 + vArray.length) % vArray.length][0] && v[1] < vArray[(index + 1 + vArray.length) % vArray.length][1]) &&
            (v[0] < vArray[(index - 1 + vArray.length) % vArray.length][0]) && v[1] == vArray[(index - 1 + vArray.length) % vArray.length][1]) {
-        dArray.push([v[0] + 1 - 1, v[1] + 0 - 1])
-        dArray.push([v[0] + 0 - 1, v[1] + 1 - 1])
+        dArray.push([v[0] + 1.5 - 1.5, v[1] + 0 - 1.5])
+        dArray.push([v[0] + 0 - 1.5, v[1] + 1.5 - 1.5])
       }
       //  __.
       //    |
       if ((v[0] > vArray[(index + 1 + vArray.length) % vArray.length][0] && v[1] == vArray[(index + 1 + vArray.length) % vArray.length][1]) &&
            (v[0] == vArray[(index - 1 + vArray.length) % vArray.length][0]) && v[1] < vArray[(index - 1 + vArray.length) % vArray.length][1]) {
-        dArray.push([v[0] + 0, v[1] + 1 - 1])
-        dArray.push([v[0] - 1, v[1] + 0 - 1])
+        dArray.push([v[0] + 0, v[1] + 1.5 - 1.5])
+        dArray.push([v[0] - 1.5, v[1] + 0 - 1.5])
       }
       //    |
       //  --.
       if ((v[0] == vArray[(index + 1 + vArray.length) % vArray.length][0] && v[1] > vArray[(index + 1 + vArray.length) % vArray.length][1]) &&
            (v[0] > vArray[(index - 1 + vArray.length) % vArray.length][0]) && v[1] == vArray[(index - 1 + vArray.length) % vArray.length][1]) {
-        dArray.push([v[0] - 1, v[1] + 0])
-        dArray.push([v[0] + 0, v[1] - 1])
+        dArray.push([v[0] - 1.5, v[1] + 0])
+        dArray.push([v[0] + 0, v[1] - 1.5])
       }
       //  |
       //  .--
       if ((v[0] < vArray[(index + 1 + vArray.length) % vArray.length][0] && v[1] == vArray[(index + 1 + vArray.length) % vArray.length][1]) &&
            (v[0] == vArray[(index - 1 + vArray.length) % vArray.length][0]) && v[1] > vArray[(index - 1 + vArray.length) % vArray.length][1]) {
-        dArray.push([v[0] + 0 - 1, v[1] - 1])
-        dArray.push([v[0] + 1 - 1, v[1] + 0])
+        dArray.push([v[0] + 0 - 1.5, v[1] - 1.5])
+        dArray.push([v[0] + 1.5 - 1.5, v[1] + 0])
       }
     })
 
@@ -567,8 +568,8 @@ const elementActions = {
       name: el.id.split('.')[1],
       top: topMin,
       left: leftMin,
-      height: 21 * colNumber,
-      width: 21 * rowNumber,
+      height: (unit * colNumber) - 1.5,
+      width: (unit * rowNumber) - 1.5,
       path: path,
       classes: {
         'matrix': matrix
