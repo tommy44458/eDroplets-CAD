@@ -3,8 +3,8 @@ import newProject from './projectFactory'
 function newState (gridUnit, project) {
   return {
     app: {
-      svgContent: '123',
-      apiStatus: true,
+      svgContent: '',
+      apiStatus: false,
       isLoading: false,
       isBlockLoading: false,
       hasChanges: false,

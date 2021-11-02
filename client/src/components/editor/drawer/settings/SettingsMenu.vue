@@ -41,7 +41,7 @@
 <script>
 import cloneDeep from 'clone-deep'
 import { mapState, mapMutations } from 'vuex'
-import { updatePage, updateEgglement } from '@/store/types'
+import { updatePage, updateElement } from '@/store/types'
 
 import PageSettings from './submenus/PageSettings.vue'
 import ElementSettings from './submenus/ElementSettings.vue'
@@ -140,13 +140,13 @@ export default {
       if (this.selectionType === 'page') {
         this.updatePage({page: this.activePage, ...newValue})
       } else if (this.selectionType === 'multiple') {
-        this.selectedItem.map(egglement => this.updateEgglement({egglement, ...newValue}))
+        this.selectedItem.map(egglement => this.updateElement({egglement, ...newValue}))
       } else {
-        this.updateEgglement({egglement: this.selectedItem, ...newValue})
+        this.updateElement({egglement: this.selectedItem, ...newValue})
       }
     },
 
-    ...mapMutations([updatePage, updateEgglement])
+    ...mapMutations([updatePage, updateElement])
   },
   watch: {
     'selectedItem': function (val) {

@@ -25,7 +25,7 @@ const commonElementMutations = {
  * @param {object|null} [payload.styles] : New egglement's styles
  * @param {object|null} [payload.attrs] : New egglement's attributes
  */
-  [types.updateEgglement]: function (state, payload) {
+  [types.updateElement]: function (state, payload) {
     if ((typeof payload.left !== 'undefined') && (payload.left !== null)) payload.egglement.left = payload.left
     if ((typeof payload.top !== 'undefined') && (payload.top !== null)) payload.egglement.top = payload.top
     if ((typeof payload.right !== 'undefined') && (payload.right !== null)) payload.egglement.right = payload.right

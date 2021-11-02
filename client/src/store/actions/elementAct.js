@@ -9,7 +9,7 @@ import { fixElementToParentBounds, getComputedProp } from '@/helpers/positionDim
 // const refreshMergeElements = function (state, commit) {
 //   mergeElementsGroups.forEach(group => {
 //     group.forEach(el => {
-//       commit(types.updateEgglement, {
+//       commit(types.updateElement, {
 //         egglement: el,
 //         height: 21,
 //         width: 21
@@ -28,13 +28,13 @@ import { fixElementToParentBounds, getComputedProp } from '@/helpers/positionDim
 //       })
 
 //       if (tMax) {
-//         commit(types.updateEgglement, {
+//         commit(types.updateElement, {
 //           egglement: el,
 //           height: 20
 //         })
 //       }
 //       if (lMax) {
-//         commit(types.updateEgglement, {
+//         commit(types.updateElement, {
 //           egglement: el,
 //           width: 20
 //         })
@@ -145,7 +145,7 @@ const elementActions = {
  * @param {number} payload.height : New value for the element's height
  * @param {number} payload.width : New value for the element's width
  *
- * @see {@link [types.updateEgglement]}
+ * @see {@link [types.updateElement]}
  */
   [types.resizeElement]: function ({ getters, commit }, payload) {
     let page = getters.getPageById(payload.pageId)
@@ -156,7 +156,7 @@ const elementActions = {
         payload.right !== egglement.right || payload.bottom !== egglement.bottom ||
         payload.height !== egglement.height || payload.width !== egglement.width
       ) {
-      commit(types.updateEgglement, {
+      commit(types.updateElement, {
         egglement,
         left: (egglement.left !== 'auto') ? payload.left : null,
         top: (egglement.top !== 'auto') ? payload.top : null,
@@ -184,7 +184,7 @@ const elementActions = {
  * @param {string|null} [payload.parentId] : Id of the container where the element has been dropped
  *
  * @see {@link [types.changeElementParent]}
- * @see {@link [types.updateEgglement]}
+ * @see {@link [types.updateElement]}
  */
   [types.moveElement]: function ({ getters, dispatch, commit }, payload) {
     let page = getters.getPageById(payload.pageId)
@@ -193,7 +193,7 @@ const elementActions = {
     if (payload.parentId) {
       dispatch(types.changeElementParent, {...payload, page, egglement})
     } else if (payload.left !== egglement.left || payload.top !== egglement.top) {
-      commit(types.updateEgglement, {
+      commit(types.updateElement, {
         egglement,
         left: (egglement.left !== 'auto') ? payload.left : null,
         top: (egglement.top !== 'auto') ? payload.top : null,
@@ -219,7 +219,7 @@ const elementActions = {
  *
  * @see {@link [types.deleteEgglement]}
  * @see {@link [types.createEgglement]}
- * @see {@link [types.updateEgglement]}
+ * @see {@link [types.updateElement]}
  */
   [types.changeElementParent]: function ({ state, getters, commit }, payload) {
       // To avoid reference problems (the oldSelected element will be different)
@@ -249,7 +249,7 @@ const elementActions = {
     let top = relPoint.top - (height / 2)
 
     const fixedProps = fixElementToParentBounds({top, left, height, width}, newParent)
-    commit(types.updateEgglement, {
+    commit(types.updateElement, {
       ...fixedProps,
       egglement: payload.egglement,
       bottom: 'auto',
@@ -305,8 +305,6 @@ const elementActions = {
     }
 
     await initMatrix()
-
-    console.log(matrix)
 
     const vertex = []
     const vArray = []
@@ -489,7 +487,7 @@ const elementActions = {
 
     vArray.forEach((v, index) => {
       // dArray.push([v[0], v[1]])
-      // 外凸
+      // external
       // .__
       // |
       if ((v[0] < vArray[(index + 1 + vArray.length) % vArray.length][0] && v[1] == vArray[(index + 1 + vArray.length) % vArray.length][1]) &&
@@ -519,7 +517,7 @@ const elementActions = {
         dArray.push([v[0] + 0, v[1] - 1.5 - 1.5])
       }
 
-      // 內凹
+      // internal
       // .__
       // |
       if ((v[0] == vArray[(index + 1 + vArray.length) % vArray.length][0] && v[1] < vArray[(index + 1 + vArray.length) % vArray.length][1]) &&
@@ -563,7 +561,7 @@ const elementActions = {
 
     const el = state.app.selectedElements[0]
 
-    commit(types.updateEgglement, {
+    commit(types.updateElement, {
       egglement: el,
       name: el.id.split('.')[1],
       top: topMin,

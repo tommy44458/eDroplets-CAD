@@ -60,7 +60,7 @@ export const updatePage = 'updatePage'
 export const deletePage = 'deletePage'
 
 export const createEgglement = 'createEgglement'
-export const updateEgglement = 'updateEgglement'
+export const updateElement = 'updateElement'
 export const deleteEgglement = 'deleteEgglement'
 
 export const sortSelectedElement = 'sortSelectedElement'
@@ -148,7 +148,7 @@ const types = {
   deletePage,
 
   createEgglement,
-  updateEgglement,
+  updateElement,
   deleteEgglement,
   sortSelectedElement,
 
