@@ -1,6 +1,6 @@
 import newProject from './projectFactory'
 
-function newState (gridUnit, project) {
+function newState (gridUnit, cornerSize, project) {
   return {
     app: {
       svgContent: '',
@@ -18,7 +18,8 @@ function newState (gridUnit, project) {
       selectedPage: null,
       selectedElements: [],
       editorZoom: 0.2,
-      gridUnit: gridUnit
+      gridUnit: gridUnit,
+      cornerSize: cornerSize
     },
     oauth: {
       isAuthorized: false,

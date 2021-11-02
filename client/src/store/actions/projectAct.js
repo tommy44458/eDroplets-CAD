@@ -487,7 +487,7 @@ const projectActions = {
     }
 
     if (project) {
-      store.replaceState(newState(100, JSON.parse(atob(project))))
+      store.replaceState(newState(100, 3, JSON.parse(atob(project))))
       commit(types.addProject)
       if (origin === 'github') localforage.setItem('gh-repo-name', repoName)
 
@@ -503,7 +503,7 @@ const projectActions = {
   [types.clearProject]: async function ({ dispatch, commit }) {
     commit(types._toggleBlockLoadingStatus, true)
 
-    store.replaceState(newState(100))
+    store.replaceState(newState(100, 3))
     commit(types.deleteProject)
 
     await dispatch(types.checkAuth)
