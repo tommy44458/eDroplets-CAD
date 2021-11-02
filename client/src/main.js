@@ -16,6 +16,8 @@ import 'normalize.css'
 import 'dialog-polyfill/dialog-polyfill.css'
 import 'vue-directive-tooltip/css/index.css'
 
+import global_ from './global'
+
 localforage.config({ name: 'vuegg' })
 
 Vue.use(VueSVGIcon)
@@ -28,6 +30,7 @@ Vue.use(Tooltip, {
 })
 
 Vue.config.productionTip = false
+Vue.prototype.GLOBAL = global_
 
 /* eslint-disable no-new */
 const vm = new Vue({
