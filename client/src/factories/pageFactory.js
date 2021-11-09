@@ -6,8 +6,8 @@ function newPage (name, path, gridUnit, height, width) {
     id: shortid.generate(),
     name: name,
     path: path,
-    width: '8000px', // width || '100%', 10x
-    height: '4000px', // height || '70%', 10x
+    width: width / 10 + 'px', // 8000 px == 80000 um
+    height: height / 10 + 'px', // 4000 px == 40000 um
 
     styles: {
       '--mdc-theme-primary': '#673ab7',
@@ -16,11 +16,11 @@ function newPage (name, path, gridUnit, height, width) {
       'position': 'relative',
       'margin': 'auto',
       'background-color': '#ced4b2',
-      'background-image':
-        'linear-gradient(rgba(0,0,0,.1) 2px, transparent 0),' +
-        'linear-gradient(90deg, rgba(0,0,0,.1) 2px, transparent 0),' +
-        'linear-gradient(rgba(0,0,0,.15) 2px, transparent 0),' +
-        'linear-gradient(90deg, rgba(0,0,0,.15) 2px, transparent 0)',
+      // 'background-image':
+      //   'linear-gradient(rgba(0,0,0,.1) 2px, transparent 2px),' +
+      //   'linear-gradient(90deg, rgba(0,0,0,.1) 2px, transparent 2px),' +
+      //   'linear-gradient(rgba(0,0,0,.15) 2px, transparent 2px),' +
+      //   'linear-gradient(90deg, rgba(0,0,0,.15) 2px, transparent 2px)',
       'background-size': unit + 'px ' + unit + 'px, ' + unit + 'px ' + unit + 'px, ' + (2 * unit) + 'px ' + (2 * unit) + 'px, ' + (2 * unit) + 'px ' + (2 * unit) + 'px',
       'overflow': 'scroll' // 'hidden',
     },

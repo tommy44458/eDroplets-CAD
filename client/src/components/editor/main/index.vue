@@ -1,6 +1,15 @@
 <template>
-  <div class="mainegg">
-    <stage v-if="selectedPage" :page="selectedPage" :zoom="zoom"></stage>
+  <div class="mainegg main-container">
+    <stage
+      class="main-stage"
+      :style="{
+        top: stagePosTop + 'px',
+        left: stagePosLeft + 'px',
+      }"
+      v-if="selectedPage"
+      :page="selectedPage"
+      :zoom="zoom">
+    </stage>
     <zoom-menu @zoomChange="zoomHandler" :zoom="zoom" class="zoom-menu"></zoom-menu>
   </div>
 </template>
@@ -12,6 +21,7 @@ import { _changeActivePage, _rebaseActivePage, _updateEditorZoom, getPageIndexBy
 
 import ZoomMenu from '@/components/editor/common/ZoomMenu'
 import Stage from './Stage'
+import { mapFields } from 'vuex-map-fields'
 
 export default {
   name: 'mainegg',
@@ -20,6 +30,11 @@ export default {
     this.selectFallbackPage(this.selectedPage)
   },
   computed: {
+    ...mapFields([
+      'app.stagePosTop',
+      'app.stagePosLeft',
+      'app.edit.moveStage'
+    ]),
     ...mapState({
       selectedPage: state => state.app.selectedPage,
       pages: state => state ? state.project.pages : [],
@@ -54,8 +69,19 @@ export default {
 <style scoped>
 .mainegg {
   margin: 0px 0px; 
-  height: 90%;
+  height: 100%;
   width: 100%;
+  background-color: #f3eedc;
+}
+
+.main-container {
+  /* display: flex; */
+  justify-content: center; 
+  align-items: center; 
+}
+
+.main-stage {
+  position: relative;
 }
 
 .zoom-menu {

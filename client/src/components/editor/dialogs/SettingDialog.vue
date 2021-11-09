@@ -44,7 +44,8 @@ export default {
   },
   computed: {
     ...mapFields([
-      'app.gridUnit'
+      'app.gridUnit',
+      'app.chip'
     ]),
 
     ...mapState({
@@ -60,7 +61,7 @@ export default {
     },
 
     onConfirm () {
-      this.newProject({gridUnit: this.gridUnit, cornerSize: 3})
+      this.newProject({height: this.chip.height, width: this.chip.width, gridUnit: this.gridUnit, cornerSize: 3})
       this.closeDialog()
     },
 
