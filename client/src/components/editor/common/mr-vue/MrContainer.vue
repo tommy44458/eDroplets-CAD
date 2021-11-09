@@ -65,7 +65,8 @@ export default {
   computed: {
     ...mapFields([
       'app.gridUnit',
-      'app.edit.paint'
+      'app.edit.paint',
+      'app.edit.moveStage'
     ]),
 
     mrElements () {
@@ -96,6 +97,9 @@ export default {
       if (isMrs) {
         document.documentElement.addEventListener('mousemove', this.mouseMoveHandler, true)
         document.documentElement.addEventListener('mouseup', this.mouseUpHandler, true)
+      }
+      if (this.moveStage) {
+        this.$emit('setStageLastPos')
       }
     },
 
@@ -157,8 +161,9 @@ export default {
         this.currentAbsPos = this.getMouseAbsPoint(e)
         this.currentRelPos = this.getMouseRelPoint(e)
         if (this.paint) {
-          // console.log(Math.floor(this.currentAbsPosPaint.x / 21), Math.floor(this.currentAbsPos.x / 21))
           this.$emit('add', this.currentRelPos)
+        } else if (this.moveStage) {
+          this.$emit('moveStage', [this.initialAbsPos, this.currentAbsPos])
         } else {
           this.renderSelectionArea(this.initialRelPos, this.currentRelPos)
         }

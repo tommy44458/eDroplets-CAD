@@ -28,15 +28,35 @@
 
     <div class="separator"></div>
 
-    <button v-tooltip="'Paint Electrodes'" class="action-btn" :disabled="isLoading" @click="paintChange()">
-      <div v-if="paint">
-        <svgicon icon="system/actions/pencil" width="20" height="20"
-          :color="'red'">
+    <button
+      v-tooltip="'Move chip'"
+      class="action-btn"
+      :disabled="isLoading"
+      @click="() => {
+       moveStage = !moveStage 
+       paint = false
+      }"
+    >
+      <div>
+        <i class="far fa-hand-paper"></i>
+        <svgicon icon="system/actions/hand" width="20" height="20"
+          :color="moveStage ? 'red' : '#2b6a73'">
         </svgicon>
       </div>
-      <div v-else>
+    </button>
+
+    <button
+      v-tooltip="'Paint Electrodes'"
+      class="action-btn"
+      :disabled="isLoading"
+      @click="() => {
+       paint = !paint
+       moveStage = false 
+      }"
+    >
+      <div>
         <svgicon icon="system/actions/pencil" width="20" height="20"
-          :color="'#2b6a73'">
+          :color="paint ? 'red' : '#2b6a73'">
         </svgicon>
       </div>
     </button>
@@ -124,7 +144,8 @@ export default {
 
   computed: {
     ...mapFields([
-      'app.edit.paint'
+      'app.edit.paint',
+      'app.edit.moveStage'
     ]),
 
     saveBtnTitle () {

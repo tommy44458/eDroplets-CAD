@@ -1,6 +1,6 @@
 import newProject from './projectFactory'
 
-function newState (gridUnit, cornerSize, project) {
+function newState (height, width, gridUnit, cornerSize, project) {
   return {
     app: {
       svgContent: '',
@@ -20,15 +20,22 @@ function newState (gridUnit, cornerSize, project) {
       editorZoom: 0.2,
       gridUnit: gridUnit,
       cornerSize: cornerSize,
+      chip: {
+        height: 40000,
+        width: 80000
+      },
+      stagePosTop: 0,
+      stagePosLeft: 0,
       edit: {
-        paint: false
+        paint: false,
+        moveStage: false
       }
     },
     oauth: {
       isAuthorized: false,
       authenticatedUser: null
     },
-    project: project || newProject('ewod chip project', gridUnit)
+    project: project || newProject('ewod chip project', gridUnit, height, width)
   }
 }
 
