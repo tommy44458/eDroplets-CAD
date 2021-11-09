@@ -20,6 +20,8 @@
     @undo="$root.$emit('undo')"
     @redo="$root.$emit('redo')"
     @add="addElement($event)"
+    @setStageLastPos="setChipLastPos()"
+    @moveStage="moveChip($event)"
     @mousemove="mouseMoveElements($event)"
   >
 
@@ -74,21 +76,35 @@ export default {
         width: '',
         style: '',
         color: ''
+      },
+      chipLastPos: {
+        top: 0,
+        left: 0
       }
     }
   },
   computed: {
     ...mapFields([
       'app.gridUnit',
-      'app.cornerSize'
+      'app.cornerSize',
+      'app.stagePosTop',
+      'app.stagePosLeft',
+      'app.editorZoom',
+      'app.edit.moveStage',
+      'app.chip'
     ]),
 
     pageStyles () {
+      const gridLineWidth = 1 / this.zoom
       return {
         ...this.page.styles,
         height: (typeof this.page.height === 'string') ? this.page.height : (this.page.height + 'px'),
         width: (typeof this.page.width === 'string') ? this.page.width : (this.page.width + 'px'),
-        transform: 'scale(' + this.zoom + ')'
+        transform: 'scale(' + this.zoom + ')',
+        'background-image': 'linear-gradient(rgba(0,0,0,.1) ' + gridLineWidth + 'px, transparent 0),' +
+        'linear-gradient(90deg, rgba(0,0,0,.1) ' + gridLineWidth + 'px, transparent 0),' +
+        'linear-gradient(rgba(0,0,0,.15) ' + gridLineWidth + 'px, transparent 0),' +
+        'linear-gradient(90deg, rgba(0,0,0,.15) ' + gridLineWidth + 'px, transparent 0)'
       }
     },
 
@@ -150,17 +166,31 @@ export default {
       const offset = e.offsetEl
       const unitX = e.unitX
       const unitY = e.unitY
-      const lastPos = e.lastElPos
+      // const lastPos = e.lastElPos
+      const _time = Date.now()
       this.selectedElements.forEach((acEl, index) => {
         const top = unit * (unitY - offset[index][1])
         const left = unit * (unitX - offset[index][0])
         this.moveElement({ elId: acEl.id, pageId: this.page.id, top: top, left: left })
       })
-      if (this.checkCollision(this.selectedElements, this.allElements)) {
-        this.selectedElements.forEach((acEl, index) => {
-          this.moveElement({ elId: acEl.id, pageId: this.page.id, top: lastPos[index][1], left: lastPos[index][0] })
-        })
-      }
+      console.log(Date.now() - _time)
+      // if (this.checkCollision(this.selectedElements, this.allElements)) {
+      //   this.selectedElements.forEach((acEl, index) => {
+      //     this.moveElement({ elId: acEl.id, pageId: this.page.id, top: lastPos[index][1], left: lastPos[index][0] })
+      //   })
+      // }
+    },
+
+    setChipLastPos () {
+      this.chipLastPos.top = this.stagePosTop
+      this.chipLastPos.left = this.stagePosLeft
+    },
+
+    moveChip (e) {
+      const _x = e[1].x - e[0].x
+      const _y = e[1].y - e[0].y
+      this.stagePosTop = this.chipLastPos.top + _y
+      this.stagePosLeft = this.chipLastPos.left + _x
     },
 
     addElement (e) {

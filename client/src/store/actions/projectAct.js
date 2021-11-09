@@ -488,7 +488,7 @@ const projectActions = {
 
     if (project) {
       const _project = JSON.parse(atob(project))
-      store.replaceState(newState(parseInt(_project.gridUnit), 3, _project))
+      store.replaceState(newState(parseInt(_project.chip.height), parseInt(_project.chip.width), parseInt(_project.gridUnit), 3, _project))
       commit(types.addProject)
       if (origin === 'github') localforage.setItem('gh-repo-name', repoName)
 
@@ -516,10 +516,10 @@ const projectActions = {
    * (or better to say, resets vuegg to initial state)
    */
   [types.newProject]: async function ({ dispatch, commit }, payload) {
-    const { gridUnit, cornerSize } = payload
+    const { height, width, gridUnit, cornerSize } = payload
     commit(types._toggleBlockLoadingStatus, true)
 
-    store.replaceState(newState(gridUnit, cornerSize))
+    store.replaceState(newState(height, width, gridUnit, cornerSize))
     commit(types.deleteProject)
 
     await dispatch(types.checkAuth)
