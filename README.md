@@ -27,8 +27,11 @@ This is a website-based design tool for EWOD chips, users can free to draw elect
 * **Ctrl [or Meta] + Z / click icon**: Undo last action
 * **Ctrl [or Meta] + Shift + Z / Click icon**: Redo last action
 
+### Move chip
+* **Click icon**: Start/Stop chip moving mode
+
 ### Paint
-* **Click icon**: Start/Stop electrode painting mode (add base electrode in mouse point) 
+* **Click icon**: Start/Stop electrode painting mode (add electrode unit in mouse point) 
 
 ### Combine
 * **Click icon**: Combine the selected electrodes
@@ -70,3 +73,22 @@ npm run build
 npm run start
 ```
 Navigate to `localhost:5000` to serve (a production-ready) edrop-design-tool.
+
+## Code
+
+<img src="/readme_pic.png" width="128"/>
+
+### Vuex
+For managing all parameters of the app.
+* **State**: all app config
+* **Action**: add electrode, reset chip, download .ewd, etc.
+* **Mutation**: change electrode attribute, etc.
+* **Getter**: aget electrode index , etc.
+
+### Factory
+For defining parameters required by components.
+* **State**: app config (zoom in/out, edit status, selected electrodes, etc.)
+* **Project**: chip config (chip layers, size, grid, etc.)
+* **Page**: layer config (canvas grid line, electrodes, etc.)
+* **ElectrodeUnit**: electrode config (shape matrix, svg path, etc.)
+
