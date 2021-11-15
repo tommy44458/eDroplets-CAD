@@ -30,6 +30,7 @@
     "es6-promisify": "^5.0.0",
     "fs": "0.0.1-security",
     "fsevents": "^1.2.9",
+    "jquery": "^3.6.0",
     "localforage": "^1.7.1",
     "normalize.css": "^7.0.0",
     "oauth-open": "^1.0.3",
@@ -40,7 +41,9 @@
     "vue-directive-tooltip": "^1.4.5",
     "vue-mdc-adapter": "^0.15.3",
     "vue-router": "^2.8.1",
-    "vuex": "^2.5.0"
+    "vue-toasted": "^1.1.28",
+    "vuex": "^2.5.0",
+    "vuex-map-fields": "^1.4.1"
   },
   "devDependencies": {
     "autoprefixer": "^7.2.6",
