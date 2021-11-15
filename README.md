@@ -48,7 +48,7 @@ This is a website-based design tool for EWOD chips, users can free to draw elect
 ##### 1. installation
 ``` bash
 # install node dependencies
-npm run install:all
+npm run install:client
 ```
 
 ##### 2. development
