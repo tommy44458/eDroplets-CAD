@@ -76,7 +76,7 @@ Navigate to `localhost:5000` to serve (a production-ready) edrop-design-tool.
 
 ## Code
 
-<img src="/readme_pic.png" width="128"/>
+<img src="/readme_pic.png"/>
 
 ### Vuex
 For managing all parameters of the app.
