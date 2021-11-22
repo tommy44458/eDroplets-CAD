@@ -9,6 +9,7 @@ import localforage from 'localforage'
 import App from './App'
 import router from './router/'
 import store from './store/'
+import ContextMenu from '@/components/editor/common/ContextMenu'
 
 import './theme.scss'
 
@@ -28,6 +29,7 @@ Vue.use(Tooltip, {
   placement: 'bottom',
   delay: 50
 })
+Vue.use(ContextMenu)
 
 Vue.config.productionTip = false
 Vue.prototype.GLOBAL = global_
