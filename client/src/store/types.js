@@ -81,6 +81,7 @@ export const _toggleCanRedo = '_toggleCanRedo'
 export const _toggleCanUndo = '_toggleCanUndo'
 export const _togglePageDialog = '_togglePageDialog'
 export const _updateEditorZoom = '_updateEditorZoom'
+export const _updateMatrix = '_updateMatrix'
 
 export const _changeActivePage = '_changeActivePage'
 export const _rebaseActivePage = '_rebaseActivePage'
@@ -169,6 +170,7 @@ const types = {
   _toggleCanUndo,
   _togglePageDialog,
   _updateEditorZoom,
+  _updateMatrix,
 
   _changeActivePage,
   _rebaseActivePage,

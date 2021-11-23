@@ -75,7 +75,19 @@ const internalAppMutations = {
    */
   [types._updateEditorZoom]: function (state, currentZoom) {
     state.app.editorZoom = currentZoom
+  },
+
+  /**
+   * Updates the value of matrix property with the value passed in the payload
+   * @param {number} row : Row Number
+   * @param {number} col : Col Number
+   * @param {boolean} painted : Painted or Not
+   */
+   [types._updateMatrix]: function (state, payload) {
+    state.app.chip.matrix[payload.row][payload.col] = payload.painted
+    console.log(state.app.chip.matrix)
   }
+
 }
 
 const appMutations = {

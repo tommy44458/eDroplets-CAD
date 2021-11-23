@@ -1,6 +1,7 @@
 import newProject from './projectFactory'
 
 function newState (height, width, gridUnit, cornerSize, project) {
+  let matrix = Array.from({ length: 40000 / gridUnit }, () => Array.from({ length: 80000 / gridUnit }, () => false))
   return {
     app: {
       svgContent: '',
@@ -21,6 +22,7 @@ function newState (height, width, gridUnit, cornerSize, project) {
       gridUnit: gridUnit,
       cornerSize: cornerSize,
       chip: {
+        matrix: matrix,
         height: 40000,
         width: 80000
       },

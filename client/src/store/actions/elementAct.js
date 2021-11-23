@@ -3,7 +3,6 @@ import types from '@/store/types'
 import componentFactory from '@/factories/componentFactory'
 import { setElId, getChildNode, calcRelativePoint } from '@/helpers/recursiveMethods'
 import { fixElementToParentBounds, getComputedProp } from '@/helpers/positionDimension'
-
 // const mergeElementsGroups = []
 
 // const refreshMergeElements = function (state, commit) {
@@ -76,7 +75,13 @@ const elementActions = {
   [types.registerElement]: function ({ getters, commit }, payload) {
     let parent = getters.getPageById(payload.pageId)
     let el = payload.el
-
+    if (el.name === `base`) {
+      let row = Math.floor(el.top / el.height)
+      let col = Math.floor(el.left / el.width)
+      console.log(row, col)
+      let painted = true
+      commit(types._updateMatrix, {row, col, painted})
+    }
     if (el.componegg) {
       if (payload.global) {
         el = componentFactory.compInst(payload.el)
@@ -100,7 +105,6 @@ const elementActions = {
         }
       }
     }
-
     let egglement = setElId(el, payload.pageId)
     commit(types.createEgglement, {parent, egglement})
   },
