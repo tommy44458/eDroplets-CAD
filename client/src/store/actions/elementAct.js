@@ -75,10 +75,9 @@ const elementActions = {
   [types.registerElement]: function ({ getters, commit }, payload) {
     let parent = getters.getPageById(payload.pageId)
     let el = payload.el
-    if (el.name === `base`) {
+    if (el.name === `base`) { // Registers Painted electrodes in the chip matrix
       let row = Math.floor(el.top / el.height)
       let col = Math.floor(el.left / el.width)
-      console.log(row, col)
       let painted = true
       commit(types._updateMatrix, {row, col, painted})
     }
@@ -124,8 +123,13 @@ const elementActions = {
     let parentId = payload.elId.substring(0, payload.elId.lastIndexOf('.'))
     let parent = getChildNode(payload.page, parentId)
     let eggIndex = parent.children.findIndex(egg => egg.id === payload.elId)
-
     let element = parent.children[eggIndex]
+    if (element.name === `base`) { // Deletes Selected electrodes fom the chip Matrix
+      let row = Math.floor(element.top / element.height)
+      let col = Math.floor(element.left / element.width)
+      let painted = false
+      commit(types._updateMatrix, {row, col, painted})
+    }
     if (element.componegg) {
       if (element.global || element.external) {
         let compIndex = getters.getComponentRefIndexByName(element.name)
@@ -308,7 +312,6 @@ const elementActions = {
         }
       })
     }
-
     await initMatrix()
 
     const vertex = []
