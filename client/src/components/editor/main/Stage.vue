@@ -6,6 +6,7 @@
     :class="[page.classes, {stage: true}]"
     :activeElements="selectedElements"
     :allElements="allElements"
+    @rightClick="rightClickHandler"
     @arrows="arrowsHandler"
     @moving="movingHandler"
     @movestop="moveStopHandler"
@@ -31,6 +32,12 @@
       :elem="element">
     </stage-el>
 
+    <context-menu
+      v-if="openContextMenu"
+      :axis="rightClickPoint"
+      @close="closeContextMenu"
+    ></context-menu>
+
   </mr-container>
 </template>
 
@@ -48,6 +55,7 @@ import MrContainer from '@/components/editor/common/mr-vue/MrContainer'
 import StageEl from './StageEl'
 import { mapFields } from 'vuex-map-fields'
 import newElectrodeUnit from '@/factories/electrodeUnitFactory'
+import ContextMenu from '../common/ContextMenu/main.vue'
 
 const DROP_BORDER = {
   width: '2px',
@@ -57,7 +65,7 @@ const DROP_BORDER = {
 
 export default {
   name: 'stage',
-  components: { StageEl, MrContainer },
+  components: { StageEl, MrContainer, ContextMenu },
   props: ['page', 'zoom'],
   created: function () {
     this.$root.$on('combine-electrodes', this.combineElectrodes)
@@ -69,6 +77,7 @@ export default {
 
   data: function () {
     return {
+      rightClickPoint: {x: 0, y: 0},
       clipboard: [],
       dropContainer: null,
       currentRelPosPaint: {x: 0, y: 0},
@@ -85,6 +94,7 @@ export default {
   },
   computed: {
     ...mapFields([
+      'app.openContextMenu',
       'app.gridUnit',
       'app.cornerSize',
       'app.stagePosTop',
@@ -115,6 +125,16 @@ export default {
     })
   },
   methods: {
+
+    rightClickHandler (mousePoint) {
+      this.rightClickPoint = mousePoint
+      this.openContextMenu = true
+    },
+
+    closeContextMenu () {
+      this.openContextMenu = false
+    },
+
     checkCollision (selectedEls, allEls) {
       const unit = this.gridUnit / 10
       const acElPos = []

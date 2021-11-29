@@ -11,6 +11,7 @@ function newState (height, width, gridUnit, cornerSize, project) {
       isSyncing: false,
       canUndo: false,
       canRedo: false,
+      openContextMenu: false,
       pageDialog: {
         isNew: true,
         isOpen: false

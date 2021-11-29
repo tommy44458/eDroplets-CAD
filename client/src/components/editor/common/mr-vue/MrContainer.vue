@@ -2,6 +2,7 @@
   <div data-mr-container="true"
     class="mr-container"
     tabindex="0"
+    @click.right.stop="mouseRightClickHandler"
     @mousedown.capture="mouseDownHandler"
     @mouseup.capture="$root.$emit('paint-electrodes-disable')"
     @keydown.esc.stop.prevent="$emit('clearselection')"
@@ -64,6 +65,7 @@ export default {
   },
   computed: {
     ...mapFields([
+      'app.openContextMenu',
       'app.gridUnit',
       'app.edit.paint',
       'app.edit.moveStage'
@@ -74,6 +76,14 @@ export default {
     }
   },
   methods: {
+
+    mouseRightClickHandler (e) {
+      const mousePoint = this.getMouseRelPoint(e)
+      if (this.selecting) {
+        e.preventDefault()
+        this.$emit('rightClick', mousePoint)
+      }
+    },
 
     mouseDownHandler (e) {
       let isMrs = false
@@ -100,6 +110,9 @@ export default {
       }
       if (this.moveStage) {
         this.$emit('setStageLastPos')
+      }
+      if (this.openContextMenu) {
+        this.openContextMenu = false
       }
     },
 

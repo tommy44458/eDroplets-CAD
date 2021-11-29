@@ -32,12 +32,10 @@ export default {
     //   type: Object
     // },
     icon: {
-      // 是否显示icon
       type: Boolean,
       default: true
     },
     menu: {
-      // 最重要的列表，没有的话直接不显示
       type: Array,
       default () {
         return [
@@ -55,11 +53,11 @@ export default {
       // 点击menu按钮时执行的方法
       type: Function,
       default: function () {}
+    },
+    reject: { // 不点击按钮点击其他地方关闭时执行的方法 .catch(e => {})
+      type: Function,
+      default: function () {}
     }
-    // reject: { // 不点击按钮点击其他地方关闭时执行的方法 .catch(e => {})
-    //   type: Function,
-    //   default: function () {}
-    // }
   },
   data () {
     return {
