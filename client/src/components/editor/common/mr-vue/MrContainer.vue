@@ -2,7 +2,7 @@
   <div data-mr-container="true"
     class="mr-container"
     tabindex="0"
-    @click.right.stop="mouseRightClickHandler"
+    @click.right.prevent="mouseRightClickHandler"
     @mousedown.capture="mouseDownHandler"
     @mouseup.capture="$root.$emit('paint-electrodes-disable')"
     @keydown.esc.stop.prevent="$emit('clearselection')"
@@ -79,10 +79,7 @@ export default {
 
     mouseRightClickHandler (e) {
       const mousePoint = this.getMouseRelPoint(e)
-      if (this.selecting) {
-        e.preventDefault()
-        this.$emit('rightClick', mousePoint)
-      }
+      this.$emit('rightClick', mousePoint)
     },
 
     mouseDownHandler (e) {

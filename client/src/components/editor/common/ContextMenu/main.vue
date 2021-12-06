@@ -1,6 +1,5 @@
 <template>
   <div class="contextmenu-wrap" v-show="status" :style="style">
-    <div @click="$emit('close')"></div>
     <ContextMenu :icon="icon" :menu="menu" :resolve="resolve"></ContextMenu>
   </div>
 </template>
@@ -39,7 +38,30 @@ export default {
     },
     resolve: {
       type: Function,
-      default: function () {}
+      default: function (action) {
+        switch (action) {
+          case 'move':
+            this.$emit('moving')
+            break
+          case 'copy':
+            this.$emit('copy')
+            break
+          case 'paste':
+            this.$emit('paste')
+            break
+          case 'cut':
+            this.$emit('cut')
+            break
+          case 'delete':
+            console.log('delete')
+            this.$emit('delete')
+            break
+          case 'combine':
+            break
+          case 'separate':
+            break
+        }
+      }
     },
     reject: {
       type: Function,
@@ -52,7 +74,7 @@ export default {
       let y = this.axis.y
       // 判断menu距离浏览器可视窗口底部距离,以免距离底部太近的时候，会导致menu被遮挡
       let menuHeight = this.menu.length * 32 // 不能用scrollHeight,获取到的menu是上一次的menu宽高
-      let menuWidth = 150 // 不能用scrollWidth,同理
+      let menuWidth = this.menu.width// 不能用scrollWidth,同理
       return {
         left:
           (document.body.clientWidth < x + menuWidth ? x - menuWidth : x) +
@@ -70,6 +92,7 @@ export default {
   },
   methods: {
     fnHandler (item) {
+      console.log('inHandle')
       this.status = false
       if (item.fn) item.fn(this.customEvent)
       this.resolve(item.action)
@@ -90,92 +113,15 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .contextmenu-wrap {
   display: block;
   position: fixed;
   z-index: 9999;
   top: 0;
   left: 0;
-  border-radius: 5px;
-  /*overflow: hidden;*/
-  /*border: 1px solid #ccc;*/
-}
-
-.contextmenu-wrap .contextmenu {
-  margin: 0;
-  -webkit-box-shadow: 0 0 5px #ccc;
-          box-shadow: 0 0 5px #ccc;
+  border-radius: 3rem;
+  overflow: hidden;
   border: 1px solid #ccc;
 }
-
-.contextmenu-wrap .contextmenu__item {
-  width: 155px;
-  height: 30px;
-  line-height: 30px;
-  border-radius: 4px;
-  background: #fff;
-  text-decoration: none;
-  list-style: none;
-  position: relative;
-}
-
-.contextmenu-wrap .contextmenu__item .button {
-  cursor: pointer;
-  width: 100%;
-  height: 100%;
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
-  outline: 0;
-  border: 0;
-  background: #fff;
-  padding: 0 5px;
-}
-
-.contextmenu-wrap .contextmenu__item .button > * {
-  color: #333;
-}
-
-.contextmenu-wrap .contextmenu__item .button span {
-  -webkit-box-flex: 1;
-      -ms-flex: 1;
-          flex: 1;
-  text-align: left;
-  margin-left: 5px;
-}
-
-.contextmenu-wrap .contextmenu__item .button i {
-  text-align: center;
-}
-
-.contextmenu-wrap .contextmenu__item .button .contextmenu {
-  position: absolute;
-  right: calc(-100% - 2px);
-  top: -1px;
-  display: none;
-}
-
-.contextmenu-wrap .contextmenu__item .button:hover {
-  -webkit-box-shadow: 0px 1px 3px rgba(34, 25, 25, 0.2);
-          box-shadow: 0px 1px 3px rgba(34, 25, 25, 0.2);
-  /*border-radius: 4px;*/
-  /* Safari 5.1 - 6.0 */
-  /* Opera 11.1 - 12.0 */
-  /* Firefox 3.6 - 15 */
-  background: -webkit-gradient(linear, left top, left bottom, from(#5a6a76), to(#2e3940));
-  background: linear-gradient(to bottom, #5a6a76, #2e3940);
-}
-
-.contextmenu-wrap .contextmenu__item .button:hover > .contextmenu {
-  display: block;
-}
-
-.contextmenu-wrap .contextmenu__item .button:hover > * {
-  color: #fff;
-}
-/*# sourceMappingURL=style.css.map */
 </style>

@@ -35,7 +35,11 @@
     <context-menu
       v-if="openContextMenu"
       :axis="rightClickPoint"
-      @close="closeContextMenu"
+      @moving="movingHandler"
+      @delete="deleteHandler"
+      @copy="copyHandler"
+      @cut="cutHandler"
+      @paste="pasteHandler"
     ></context-menu>
 
   </mr-container>
@@ -125,9 +129,9 @@ export default {
     })
   },
   methods: {
-
     rightClickHandler (mousePoint) {
-      this.rightClickPoint = mousePoint
+      this.rightClickPoint.x = mousePoint.x / this.zoom
+      this.rightClickPoint.y = mousePoint.y / this.zoom
       this.openContextMenu = true
     },
 

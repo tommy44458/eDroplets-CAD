@@ -39,20 +39,42 @@ export default {
       type: Array,
       default () {
         return [
-          // { icon: '', name: '', action: '', fn: function () {} },
-          // 模板，必须有name是国际化传过来, action是作为key和action的存在, icon如果显示但不传icon的话会留空白
-          // { icon: 'el-icon-view', name: '查看', action: 'view', fn: function () {} },
-          { icon: 'el-icon-edit', name: '编辑', action: 'edit' },
-          { icon: 'el-icon-setting', name: '设置', action: 'setting' }
-          // { icon: 'el-icon-delete', name: '删除', action: 'delete' }, // 此处传入参数时记得国际化
-          // { icon: 'el-icon-printer', name: '打印', action: 'print' },
+          { icon: 'el-icon-edit', name: 'move', action: 'move' },
+          { icon: 'el-icon-setting', name: 'copy', action: 'copy' },
+          { icon: 'el-icon-setting', name: 'paste', action: 'paste' },
+          { icon: 'el-icon-setting', name: 'cut', action: 'cut' },
+          { icon: 'el-icon-setting', name: 'delete', action: 'delete' },
+          { icon: 'el-icon-setting', name: 'combine', action: 'combine' },
+          { icon: 'el-icon-setting', name: 'separate', action: 'separate' }
         ]
       }
     },
     resolve: {
-      // 点击menu按钮时执行的方法
       type: Function,
-      default: function () {}
+      default: function (action) {
+        switch (action) {
+          case 'move':
+            this.emit('moving')
+            break
+          case 'copy':
+            this.emit('copy')
+            break
+          case 'paste':
+            this.emit('paste')
+            break
+          case 'cut':
+            this.emit('cut')
+            break
+          case 'delete':
+            console('delete')
+            this.emit('delete')
+            break
+          case 'combine':
+            break
+          case 'separate':
+            break
+        }
+      }
     },
     reject: { // 不点击按钮点击其他地方关闭时执行的方法 .catch(e => {})
       type: Function,
@@ -71,6 +93,7 @@ export default {
       }
       this.status = false
       // if (item.fn) item.fn(this.customEvent)
+      console.log('in2')
       this.resolve(item.action)
     }
   },
@@ -87,3 +110,83 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+.contextmenu {
+  margin: 0;
+  padding: 0;
+  -webkit-box-shadow: 0 0 5px #ccc;
+          box-shadow: 0 0 5px #ccc;
+  border: 2px solid #ccc;
+}
+
+.contextmenu__item {
+  width: 30rem;
+  height: 7rem;
+  font-size: 5rem;
+  line-height: 7rem;
+  border-radius: 10rem;
+  background: #fff;
+  text-decoration: none;
+  list-style: none;
+  position: relative;
+}
+
+.button {
+  cursor: pointer;
+  width: 100%;
+  height: 100%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  outline: 0;
+  border: 0;
+  background: #fff;
+  padding: 0 1rem;
+}
+
+ .button > * {
+  color: #333;
+}
+
+.button span {
+  -webkit-box-flex: 1;
+      -ms-flex: 1;
+          flex: 1;
+  text-align: left;
+  margin-left: 5px;
+}
+
+.button i {
+  text-align: center;
+}
+
+.contextmenu__item .button .contextmenu {
+  position: absolute;
+  right: calc(-100% - 2px);
+  top: -1px;
+  display: none;
+}
+
+.button:hover {
+  -webkit-box-shadow: 0px 1px 3px rgba(34, 25, 25, 0.2);
+          box-shadow: 0px 1px 3px rgba(34, 25, 25, 0.2);
+  /*border-radius: 4px;*/
+  /* Safari 5.1 - 6.0 */
+  /* Opera 11.1 - 12.0 */
+  /* Firefox 3.6 - 15 */
+  background: -webkit-gradient(linear, left top, left bottom, from(#5a6a76), to(#2e3940));
+  background: linear-gradient(to bottom, #5a6a76, #2e3940);
+}
+
+.button:hover > .contextmenu {
+  display: block;
+}
+
+.button:hover > * {
+  color: #fff;
+}
+</style>
