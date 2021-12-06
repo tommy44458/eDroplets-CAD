@@ -53,7 +53,7 @@ export default {
             this.$emit('cut')
             break
           case 'delete':
-            console.log('delete')
+            console.log('emit delete')
             this.$emit('delete')
             break
           case 'combine':
@@ -77,7 +77,7 @@ export default {
       let menuWidth = this.menu.width// 不能用scrollWidth,同理
       return {
         left:
-          (document.body.clientWidth < x + menuWidth ? x - menuWidth : x) +
+          (document.body.clientWidth < x + menuWidth ? x - menuWidth : x + 10) +
           'px',
         top:
           (document.body.clientHeight < y + menuHeight ? y - menuHeight : y) +
@@ -92,15 +92,14 @@ export default {
   },
   methods: {
     fnHandler (item) {
-      console.log('inHandle')
       this.status = false
       if (item.fn) item.fn(this.customEvent)
       this.resolve(item.action)
     }
   },
-  beforeDestroy () {
-    document.body.removeChild(this.$el)
-  },
+  // beforeDestroy () {
+  //   document.body.removeChild(this.$el)
+  // },
   mounted () {
     // 挂载后才开始计算左右，隐藏挂载后显示不会闪一下
     this.$nextTick(function () {

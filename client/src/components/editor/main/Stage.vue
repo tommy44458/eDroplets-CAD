@@ -40,6 +40,7 @@
       @copy="copyHandler"
       @cut="cutHandler"
       @paste="pasteHandler"
+      @combine="combineElectrodes"
     ></context-menu>
 
   </mr-container>
@@ -287,12 +288,14 @@ export default {
     },
 
     deleteHandler () {
+      console.log('delete')
       if (this.selectedElements.length > 0) {
         this.selectedElements.map(el => this.removeElement({page: this.page, elId: el.id}))
       }
     },
 
     copyHandler () {
+      console.log('coping')
       if (this.selectedElements.length > 0) {
         this.clipboard = []
         this.selectedElements.map(el => this.clipboard.push(cloneDeep(el)))
@@ -310,6 +313,7 @@ export default {
     },
 
     pasteHandler () {
+      console.log('pasting')
       if (this.clipboard.length > 0) {
         this.clipboard.map(el => {
           this.registerElement({pageId: this.page.id, el, global: el.global})

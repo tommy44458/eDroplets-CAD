@@ -51,30 +51,7 @@ export default {
     },
     resolve: {
       type: Function,
-      default: function (action) {
-        switch (action) {
-          case 'move':
-            this.emit('moving')
-            break
-          case 'copy':
-            this.emit('copy')
-            break
-          case 'paste':
-            this.emit('paste')
-            break
-          case 'cut':
-            this.emit('cut')
-            break
-          case 'delete':
-            console('delete')
-            this.emit('delete')
-            break
-          case 'combine':
-            break
-          case 'separate':
-            break
-        }
-      }
+      default: function () {}
     },
     reject: { // 不点击按钮点击其他地方关闭时执行的方法 .catch(e => {})
       type: Function,
@@ -93,13 +70,12 @@ export default {
       }
       this.status = false
       // if (item.fn) item.fn(this.customEvent)
-      console.log('in2')
       this.resolve(item.action)
     }
   },
-  beforeDestroy () {
-    document.body.removeChild(this.$el)
-  },
+  // beforeDestroy () {
+  //   document.body.removeChild(this.$el)
+  // },
   mounted () {
     // 挂载后才开始计算左右，隐藏挂载后显示不会闪一下
     this.$nextTick(function () {
