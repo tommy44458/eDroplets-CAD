@@ -136,10 +136,6 @@ export default {
       this.openContextMenu = true
     },
 
-    closeContextMenu () {
-      this.openContextMenu = false
-    },
-
     checkCollision (selectedEls, allEls) {
       const unit = this.gridUnit / 10
       const acElPos = []

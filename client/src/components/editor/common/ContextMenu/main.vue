@@ -1,6 +1,29 @@
 <template>
   <div class="contextmenu-wrap" v-show="status" :style="style">
-    <ContextMenu :icon="icon" :menu="menu" :resolve="resolve"></ContextMenu>
+    <!-- <ContextMenu :icon="icon" :menu="menu" :resolve="resolve"></ContextMenu> -->
+    <ul class="contextmenu">
+      <li @click.stop=""
+        v-for="item in menu"
+        class="contextmenu__item"
+        :key="item.action || item.name"
+        :id="item.action || item.name"
+      >
+        <div @click.stop="fnHandler(item)" class="button">
+          <i v-if="icon" :class="item.icon"></i>
+          <span>{{ item.name }}</span>
+          <i
+            class="el-icon-arrow-right"
+            v-if="item.children && item.children.length > 0"
+          ></i>
+          <context-menu
+            v-if="item.children && item.children.length > 0"
+            :menu="item.children"
+            :icon="icon"
+            :resolve="resolve"
+          ></context-menu>
+        </div>
+      </li>
+    </ul>
   </div>
 </template>
 
@@ -122,5 +145,83 @@ export default {
   border-radius: 3rem;
   overflow: hidden;
   border: 1px solid #ccc;
+}
+
+contextmenu {
+  margin: 0;
+  padding: 0;
+  -webkit-box-shadow: 0 0 5px #ccc;
+          box-shadow: 0 0 5px #ccc;
+  border: 2px solid #ccc;
+}
+
+.contextmenu__item {
+  width: 30rem;
+  height: 7rem;
+  font-size: 5rem;
+  line-height: 7rem;
+  border-radius: 10rem;
+  background: #fff;
+  text-decoration: none;
+  list-style: none;
+  position: relative;
+}
+
+.button {
+  cursor: pointer;
+  width: 100%;
+  height: 100%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  outline: 0;
+  border: 0;
+  background: #fff;
+  padding: 0 1rem;
+}
+
+ .button > * {
+  color: #333;
+}
+
+.button span {
+  -webkit-box-flex: 1;
+      -ms-flex: 1;
+          flex: 1;
+  text-align: left;
+  margin-left: 5px;
+}
+
+.button i {
+  text-align: center;
+}
+
+.contextmenu__item .button .contextmenu {
+  position: absolute;
+  right: calc(-100% - 2px);
+  top: -1px;
+  display: none;
+}
+
+.button:hover {
+  -webkit-box-shadow: 0px 1px 3px rgba(34, 25, 25, 0.2);
+          box-shadow: 0px 1px 3px rgba(34, 25, 25, 0.2);
+  /*border-radius: 4px;*/
+  /* Safari 5.1 - 6.0 */
+  /* Opera 11.1 - 12.0 */
+  /* Firefox 3.6 - 15 */
+  background: -webkit-gradient(linear, left top, left bottom, from(#5a6a76), to(#2e3940));
+  background: linear-gradient(to bottom, #5a6a76, #2e3940);
+}
+
+.button:hover > .contextmenu {
+  display: block;
+}
+
+.button:hover > * {
+  color: #fff;
 }
 </style>

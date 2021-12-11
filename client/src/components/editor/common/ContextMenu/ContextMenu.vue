@@ -1,6 +1,6 @@
 <template>
   <ul class="contextmenu">
-    <li
+    <li @click.stop=""
       v-for="item in menu"
       class="contextmenu__item"
       :key="item.action || item.name"

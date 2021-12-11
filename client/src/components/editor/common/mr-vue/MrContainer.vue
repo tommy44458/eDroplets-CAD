@@ -2,7 +2,8 @@
   <div data-mr-container="true"
     class="mr-container"
     tabindex="0"
-    @click.right.prevent="mouseRightClickHandler"
+    @click="openContextMenu = false"
+    @click.right.stop.prevent="mouseRightClickHandler"
     @mousedown.capture="mouseDownHandler"
     @mouseup.capture="$root.$emit('paint-electrodes-disable')"
     @keydown.esc.stop.prevent="$emit('clearselection')"
@@ -76,7 +77,6 @@ export default {
     }
   },
   methods: {
-
     mouseRightClickHandler (e) {
       const mousePoint = this.getMouseRelPoint(e)
       this.$emit('rightClick', mousePoint)
@@ -108,9 +108,9 @@ export default {
       if (this.moveStage) {
         this.$emit('setStageLastPos')
       }
-      if (this.openContextMenu) {
-        this.openContextMenu = false
-      }
+      // if (this.openContextMenu) {
+      //   this.openContextMenu = false
+      // }
     },
 
     mouseUpHandler (e) {
