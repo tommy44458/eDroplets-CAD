@@ -203,24 +203,6 @@ const elementActions = {
   [types.moveElement]: function ({ getters, dispatch, commit }, payload) {
     let page = getters.getPageById(payload.pageId)
     let egglement = getChildNode(page, payload.elId)
-    if (egglement.left !== payload.left || egglement.top !== payload.top) {
-      console.log(`left ` + egglement.left + `->` + payload.left)
-      console.log(`top ` + egglement.top + `->` + payload.top)
-      // let oldRow = Math.round(egglement.top / egglement.height)
-      // let oldCol = Math.round(egglement.left / egglement.width)
-      // let newRow = Math.round(payload.top / egglement.height)
-      // let newCol = Math.round(payload.left / egglement.width)
-      // let notPainted = false
-      // let row = oldRow
-      // let col = oldCol
-      // let painted = notPainted
-      // commit(types._updateMatrix, {row, col, painted})
-      //  row = newRow
-      //  col = newCol
-      //  painted = !notPainted
-      // commit(types._updateMatrix, {row, col, painted})
-    }
-
     if (payload.parentId) {
       dispatch(types.changeElementParent, {...payload, page, egglement})
     } else if (payload.left !== egglement.left || payload.top !== egglement.top) {

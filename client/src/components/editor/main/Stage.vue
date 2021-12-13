@@ -23,6 +23,8 @@
     @setStageLastPos="setChipLastPos()"
     @moveStage="moveChip($event)"
     @mousemove="mouseMoveElements($event)"
+    @mouseup="mouseUp()"
+    @mousedown="mouseDown()"
   >
 
     <stage-el
@@ -41,7 +43,7 @@ import elementsFromPoint from '@/polyfills/elementsFromPoint'
 import { getComputedProp, fixElementToParentBounds } from '@/helpers/positionDimension'
 
 import { mapState, mapActions, mapMutations } from 'vuex'
-import { _clearSelectedElements, _addSelectedElements, registerElement,
+import { _clearSelectedElements, _addSelectedElements, registerElement, _updateMatrix,
         removeElement, resizeElement, moveElement, rebaseSelectedElements, margeSelectedElements } from '@/store/types'
 
 import MrContainer from '@/components/editor/common/mr-vue/MrContainer'
@@ -161,6 +163,14 @@ export default {
       return collision
     },
 
+    mouseUp () {
+      console.log('up')
+    },
+
+    mouseDown () {
+      console.log('down')
+    },
+
     mouseMoveElements (e) {
       const unit = this.gridUnit / 10
       const offset = e.offsetEl
@@ -260,7 +270,20 @@ export default {
     },
 
     clearSelectionHandler () {
-      if (this.selectedElements.length > 0) this._clearSelectedElements()
+      // console.log('clearing selected')
+      if (this.selectedElements.length > 0) {
+        let cells = []
+        this.selectedElements.forEach(element => {
+          cells.push({
+            row: Math.round(element.top / element.height),
+            col: Math.round(element.left / element.width),
+            painted: true
+          })
+        })
+        let singular = false
+        this._updateMatrix({cells, singular})
+        this._clearSelectedElements()
+      }
     },
 
     deleteHandler () {
@@ -369,6 +392,17 @@ export default {
       })
 
       if (selectedElements.length > 0) {
+        // console.log('select')
+        let cells = []
+        selectedElements.forEach(element => {
+          cells.push({
+            row: Math.round(element.top / element.height),
+            col: Math.round(element.left / element.width),
+            painted: false
+          })
+        })
+        let singular = false
+        this._updateMatrix({cells, singular})
         this._addSelectedElements(selectedElements)
       }
     },
@@ -469,7 +503,7 @@ export default {
     },
 
     ...mapActions([rebaseSelectedElements, registerElement, removeElement, resizeElement, moveElement, margeSelectedElements]),
-    ...mapMutations([_clearSelectedElements, _addSelectedElements])
+    ...mapMutations([_clearSelectedElements, _addSelectedElements, _updateMatrix])
   },
   watch: {
     dropContainer: function (newVal, oldVal) {

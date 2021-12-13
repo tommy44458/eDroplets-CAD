@@ -18,6 +18,7 @@ export const getComponentRefByIndex = 'getComponentRefByIndex'
 export const componentExist = 'componentExist'
 
 export const getSelectedElIndexById = 'getSelectedElIndexById'
+export const getSelectedEl = 'getSelectedEl'
 
 // ACTIONS
 export const logIn = 'logIn'
@@ -109,6 +110,7 @@ const types = {
   componentExist,
 
   getSelectedElIndexById,
+  getSelectedEl,
 
 // ACTIONS
   logIn,

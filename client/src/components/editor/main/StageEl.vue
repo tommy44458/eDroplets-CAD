@@ -106,7 +106,27 @@ export default {
       if (e.shiftKey && !this.isActive) {
         this._addSelectedElement(this.elem)
       } else if (!e.shiftKey && !this.isActive) {
+        //  console.log('select Single')
+
+        let cells = []
+        this.selectedElements.forEach(element => {
+          cells.push({
+            row: Math.round(element.top / element.height),
+            col: Math.round(element.left / element.width),
+            painted: true
+          })
+        })
+        let singular = false
+        this._updateMatrix({cells, singular})
         this._clearSelectedElements()
+
+        let cell = {
+          row: Math.round(this.elem.top / this.elem.height),
+          col: Math.round(this.elem.left / this.elem.width),
+          painted: true
+        }
+        singular = true
+        this._updateMatrix({cell, singular})
         this._addSelectedElement(this.elem)
       }
     },

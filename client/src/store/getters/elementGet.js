@@ -9,6 +9,15 @@ const elementGetters = {
  */
   [types.getSelectedElIndexById]: (state, getters) => (id) => {
     return state.app.selectedElements.findIndex(el => el.id === id)
+  },
+
+/**
+ * Finds an element index (from the selected elements array) by a given id
+ *
+ * @return {array} : Element index
+ */
+   [types.getSelectedEl]: (state, getters) => () => {
+    return state.app.selectedElements
   }
 }
 

@@ -76,6 +76,7 @@ export default {
   methods: {
 
     mouseDownHandler (e) {
+      this.$emit('mousedown')
       let isMrs = false
       this.initialAbsPos = this.currentAbsPos = this.getMouseAbsPoint(e)
       this.initialRelPos = this.currentRelPos = this.getMouseRelPoint(e)
@@ -105,6 +106,7 @@ export default {
 
     mouseUpHandler (e) {
       // Saves the scroll position before giving focus and sets it back after focus
+      this.$emit('mouseup')
       const mainContainer = document.getElementById('main')
       let currentScroll = mainContainer.scrollTop
       this.$el.focus()
