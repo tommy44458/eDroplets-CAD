@@ -35,7 +35,7 @@
     <context-menu
       v-if="openContextMenu"
       :axis="rightClickPoint"
-      @moving="movingHandler"
+      @moving="moving"
       @delete="deleteHandler"
       @copy="copyHandler"
       @cut="cutHandler"
@@ -106,6 +106,7 @@ export default {
       'app.stagePosLeft',
       'app.editorZoom',
       'app.edit.moveStage',
+      'app.edit.paint',
       'app.chip'
     ]),
 
@@ -134,6 +135,11 @@ export default {
       this.rightClickPoint.x = mousePoint.x / this.zoom
       this.rightClickPoint.y = mousePoint.y / this.zoom
       this.openContextMenu = true
+    },
+
+    moving () {
+      this.paint = false
+      this.moveStage = true
     },
 
     checkCollision (selectedEls, allEls) {
