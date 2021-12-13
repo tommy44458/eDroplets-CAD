@@ -60,7 +60,7 @@ import MrContainer from '@/components/editor/common/mr-vue/MrContainer'
 import StageEl from './StageEl'
 import { mapFields } from 'vuex-map-fields'
 import newElectrodeUnit from '@/factories/electrodeUnitFactory'
-import ContextMenu from '../common/ContextMenu/main.vue'
+import ContextMenu from '../common/ContextMenu/index.vue'
 
 const DROP_BORDER = {
   width: '2px',

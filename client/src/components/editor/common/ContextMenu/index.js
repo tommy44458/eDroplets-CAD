@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import contextMenuVue from './main.vue'
+import contextMenuVue from './index.vue'
 
 const ContextMenuConstructor = Vue.extend(contextMenuVue)
 let instance
@@ -22,7 +22,6 @@ const ContextMenu = function (options) {
       instance.resolve('')
     }
     if (instance) {
-      // 如果还有上一个未关闭
       instance.resolve('')
     }
     instance = new ContextMenuConstructor({
@@ -38,7 +37,6 @@ const ContextMenu = function (options) {
       resolve(arguments[0])
       remove()
     }
-    // instance.reject = reject;// 这里不reject了，如果不点击则回传空字符串，不跑报错，简化写法
     document.body.appendChild(instance.$el)
     document.body.addEventListener('click', bodyClick)
     document.body.addEventListener('scroll', bodyClick)

@@ -1,39 +1,47 @@
 <template>
-  <ul class="contextmenu">
-    <li @click.stop=""
-      v-for="item in menu"
-      class="contextmenu__item"
-      :key="item.action || item.name"
-      :id="item.action || item.name"
-    >
-      <div @click.stop="fnHandler(item)" class="button">
-        <i v-if="icon" :class="item.icon"></i>
-        <span>{{ item.name }}</span>
-        <i
-          class="el-icon-arrow-right"
-          v-if="item.children && item.children.length > 0"
-        ></i>
-        <context-menu
-          v-if="item.children && item.children.length > 0"
-          :menu="item.children"
-          :icon="icon"
-          :resolve="resolve"
-        ></context-menu>
-      </div>
-    </li>
-  </ul>
+  <div class="contextmenu-wrap" v-show="status" :style="style">
+    <ul class="contextmenu">
+      <li @click.stop=""
+        v-for="item in menu"
+        class="contextmenu__item"
+        :key="item.action || item.name"
+        :id="item.action || item.name"
+      >
+        <div @click.stop="fnHandler(item)" class="button">
+          <i v-if="icon" :class="item.icon"></i>
+          <span>{{ item.name }}</span>
+          <i
+            class="el-icon-arrow-right"
+            v-if="item.children && item.children.length > 0"
+          ></i>
+          <context-menu
+            v-if="item.children && item.children.length > 0"
+            :menu="item.children"
+            :icon="icon"
+            :resolve="resolve"
+          ></context-menu>
+        </div>
+      </li>
+    </ul>
+  </div>
 </template>
 
 <script>
 export default {
-  name: 'context-menu',
+  name: 'contextmenu',
   props: {
-    // customEvent: {
-    //   type: Object
-    // },
+    customEvent: {
+      type: Object
+    },
     icon: {
       type: Boolean,
       default: true
+    },
+    axis: {
+      type: Object,
+      default () {
+        return { x: null, y: null }
+      }
     },
     menu: {
       type: Array,
@@ -51,11 +59,51 @@ export default {
     },
     resolve: {
       type: Function,
-      default: function () {}
+      default: function (action) {
+        switch (action) {
+          case 'move':
+            this.$emit('moving')
+            break
+          case 'copy':
+            this.$emit('copy')
+            break
+          case 'paste':
+            this.$emit('paste')
+            break
+          case 'cut':
+            this.$emit('cut')
+            break
+          case 'delete':
+            this.$emit('delete')
+            break
+          case 'combine':
+            this.$emit('combine')
+            break
+          case 'separate':
+            this.$emit('separate')
+            break
+        }
+      }
     },
-    reject: { // 不点击按钮点击其他地方关闭时执行的方法 .catch(e => {})
+    reject: {
       type: Function,
       default: function () {}
+    }
+  },
+  computed: {
+    style () {
+      let x = this.axis.x
+      let y = this.axis.y
+      let menuHeight = this.menu.length * 32
+      let menuWidth = this.menu.width
+      return {
+        left:
+          (document.body.clientWidth < x + menuWidth ? x - menuWidth : x + 10) +
+          'px',
+        top:
+          (document.body.clientHeight < y + menuHeight ? y - menuHeight : y) +
+          'px'
+      }
     }
   },
   data () {
@@ -65,30 +113,32 @@ export default {
   },
   methods: {
     fnHandler (item) {
-      if (item.children && item.children.length > 0) {
-        return false
-      }
       this.status = false
-      // if (item.fn) item.fn(this.customEvent)
+      if (item.fn) item.fn(this.customEvent)
       this.resolve(item.action)
     }
   },
-  // beforeDestroy () {
-  //   document.body.removeChild(this.$el)
-  // },
   mounted () {
-    // 挂载后才开始计算左右，隐藏挂载后显示不会闪一下
     this.$nextTick(function () {
       this.status = true
     })
-  },
-  components: {
   }
 }
 </script>
 
 <style scoped>
-.contextmenu {
+.contextmenu-wrap {
+  display: block;
+  position: fixed;
+  z-index: 9999;
+  top: 0;
+  left: 0;
+  border-radius: 3rem;
+  overflow: hidden;
+  border: 1px solid #ccc;
+}
+
+contextmenu {
   margin: 0;
   padding: 0;
   -webkit-box-shadow: 0 0 5px #ccc;
