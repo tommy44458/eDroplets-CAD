@@ -75,11 +75,14 @@ const elementActions = {
   [types.registerElement]: function ({ getters, commit }, payload) {
     let parent = getters.getPageById(payload.pageId)
     let el = payload.el
-    if (el.name === `base`) { // Registers Painted electrodes in the chip matrix
-      let row = Math.floor(el.top / el.height)
-      let col = Math.floor(el.left / el.width)
-      let painted = true
-      commit(types._updateMatrix, {row, col, painted})
+    if (el.name === `base`) {
+      let cell = {
+         row: Math.round(el.top / el.height),
+         col: Math.round(el.left / el.width),
+         painted: true
+      }
+      let singular = true
+      commit(types._updateMatrix, {cell, singular})
     }
     if (el.componegg) {
       if (payload.global) {
@@ -125,10 +128,13 @@ const elementActions = {
     let eggIndex = parent.children.findIndex(egg => egg.id === payload.elId)
     let element = parent.children[eggIndex]
     if (element.name === `base`) { // Deletes Selected electrodes fom the chip Matrix
-      let row = Math.floor(element.top / element.height)
-      let col = Math.floor(element.left / element.width)
-      let painted = false
-      commit(types._updateMatrix, {row, col, painted})
+      let cell = {
+        row: Math.round(element.top / element.height),
+        col: Math.round(element.left / element.width),
+        painted: false
+     }
+     let singular = true
+     commit(types._updateMatrix, {cell, singular})
     }
     if (element.componegg) {
       if (element.global || element.external) {
@@ -190,13 +196,30 @@ const elementActions = {
  * @param {number} payload.mouseX : Global mouse position for left axis
  * @param {number} payload.mouseY : Global mouse position for top axis
  * @param {string|null} [payload.parentId] : Id of the container where the element has been dropped
- *
+ * Need to use lastElPos ////////////////////////////////////////////////
  * @see {@link [types.changeElementParent]}
  * @see {@link [types.updateElement]}
  */
   [types.moveElement]: function ({ getters, dispatch, commit }, payload) {
     let page = getters.getPageById(payload.pageId)
     let egglement = getChildNode(page, payload.elId)
+    if (egglement.left !== payload.left || egglement.top !== payload.top) {
+      console.log(`left ` + egglement.left + `->` + payload.left)
+      console.log(`top ` + egglement.top + `->` + payload.top)
+      // let oldRow = Math.round(egglement.top / egglement.height)
+      // let oldCol = Math.round(egglement.left / egglement.width)
+      // let newRow = Math.round(payload.top / egglement.height)
+      // let newCol = Math.round(payload.left / egglement.width)
+      // let notPainted = false
+      // let row = oldRow
+      // let col = oldCol
+      // let painted = notPainted
+      // commit(types._updateMatrix, {row, col, painted})
+      //  row = newRow
+      //  col = newCol
+      //  painted = !notPainted
+      // commit(types._updateMatrix, {row, col, painted})
+    }
 
     if (payload.parentId) {
       dispatch(types.changeElementParent, {...payload, page, egglement})

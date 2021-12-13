@@ -79,12 +79,18 @@ const internalAppMutations = {
 
   /**
    * Updates the value of matrix property with the value passed in the payload
-   * @param {number} row : Row Number
-   * @param {number} col : Col Number
-   * @param {boolean} painted : Painted or Not
+   * @param {object} cell : Single cell
+   * @param {boolean} singular : Singular Cell or Array
+   * @param {array}  cells : Array of rows and Cols
    */
    [types._updateMatrix]: function (state, payload) {
-    state.app.chip.matrix[payload.row][payload.col] = payload.painted
+    if (payload.singular) {
+      state.app.chip.matrix[payload.cell.row][payload.cell.col] = payload.cell.painted
+    } else {
+      for (const cell of payload.cells) {
+        state.app.chip.matrix[cell.row][cell.col] = cell.painted
+      }
+    }
     console.log(state.app.chip.matrix)
   }
 
