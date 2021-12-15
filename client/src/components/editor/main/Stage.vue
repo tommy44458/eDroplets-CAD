@@ -35,6 +35,7 @@
     <context-menu
       v-if="openContextMenu"
       :axis="rightClickPoint"
+      :menu="paintStateMenu"
       @clearState="clearState"
       @delete="deleteHandler"
       @copy="copyHandler"
@@ -108,7 +109,8 @@ export default {
       chipLastPos: {
         top: 0,
         left: 0
-      }
+      },
+      paintStateMenu: null
     }
   },
   computed: {
@@ -148,6 +150,19 @@ export default {
     rightClickHandler (mousePoint) {
       this.rightClickPoint.x = mousePoint.x / this.zoom
       this.rightClickPoint.y = mousePoint.y / this.zoom
+      if (this.paint) {
+        this.paintStateMenu = [{ icon: 'el-icon-edit', name: 'select', action: 'select' }]
+      } else {
+        this.paintStateMenu = [
+          { icon: 'el-icon-edit', name: 'select', action: 'select' },
+          { icon: 'el-icon-setting', name: 'copy', action: 'copy' },
+          { icon: 'el-icon-setting', name: 'paste', action: 'paste' },
+          { icon: 'el-icon-setting', name: 'cut', action: 'cut' },
+          { icon: 'el-icon-setting', name: 'delete', action: 'delete' },
+          { icon: 'el-icon-setting', name: 'combine', action: 'combine' },
+          { icon: 'el-icon-setting', name: 'separate', action: 'separate' }
+        ]
+      }
       this.openContextMenu = true
     },
 
