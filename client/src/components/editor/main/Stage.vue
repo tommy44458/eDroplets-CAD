@@ -35,13 +35,25 @@
     <context-menu
       v-if="openContextMenu"
       :axis="rightClickPoint"
-      @moving="moving"
+      @clearState="clearState"
       @delete="deleteHandler"
       @copy="copyHandler"
       @cut="cutHandler"
       @paste="pasteHandler"
       @combine="combineElectrodes"
     ></context-menu>
+
+    <sidebar-menu
+      v-if="showSidebarMenu"
+
+    >
+    </sidebar-menu>
+
+    <button
+      @click="showSidebarMenu = !showSidebarMenu"
+    >
+    click
+    </button>
 
   </mr-container>
 </template>
@@ -61,6 +73,7 @@ import StageEl from './StageEl'
 import { mapFields } from 'vuex-map-fields'
 import newElectrodeUnit from '@/factories/electrodeUnitFactory'
 import ContextMenu from '../common/ContextMenu/index.vue'
+import SidebarMenu from '../common/SidebarMenu/index.vue'
 
 const DROP_BORDER = {
   width: '2px',
@@ -70,7 +83,7 @@ const DROP_BORDER = {
 
 export default {
   name: 'stage',
-  components: { StageEl, MrContainer, ContextMenu },
+  components: { StageEl, MrContainer, ContextMenu, SidebarMenu },
   props: ['page', 'zoom'],
   created: function () {
     this.$root.$on('combine-electrodes', this.combineElectrodes)
@@ -82,6 +95,7 @@ export default {
 
   data: function () {
     return {
+      showSidebarMenu: false,
       rightClickPoint: {x: 0, y: 0},
       clipboard: [],
       dropContainer: null,
@@ -137,9 +151,9 @@ export default {
       this.openContextMenu = true
     },
 
-    moving () {
+    clearState () {
       this.paint = false
-      this.moveStage = true
+      this.moveStage = false
     },
 
     checkCollision (selectedEls, allEls) {
@@ -540,5 +554,14 @@ html.droppable * {
     0 2px 2px 0 rgba(0, 0, 0, 0.14),
     0 1px 5px 0 rgba(0, 0, 0, 0.12),
     0 3px 1px -2px rgba(0, 0, 0, 0.2);
+}
+
+button {
+  height: 200px;
+  width: 200px;
+  font-size: 50px;
+  position: fixed;
+  top: 0;
+  right: 0;
 }
 </style>

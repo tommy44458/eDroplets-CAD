@@ -47,7 +47,7 @@ export default {
       type: Array,
       default () {
         return [
-          { icon: 'el-icon-edit', name: 'move', action: 'move' },
+          { icon: 'el-icon-edit', name: 'select', action: 'select' },
           { icon: 'el-icon-setting', name: 'copy', action: 'copy' },
           { icon: 'el-icon-setting', name: 'paste', action: 'paste' },
           { icon: 'el-icon-setting', name: 'cut', action: 'cut' },
@@ -61,8 +61,8 @@ export default {
       type: Function,
       default: function (action) {
         switch (action) {
-          case 'move':
-            this.$emit('moving')
+          case 'select':
+            this.$emit('clearState')
             break
           case 'copy':
             this.$emit('copy')
