@@ -1,16 +1,15 @@
 <template>
   <div class="headegg mdc-theme--background" :class="{'not-scrolled': scroll0}">
-    <a class="home-btn" href="https://www.nthu.edu.tw" target="_blank">
-      <!-- <svgicon icon="product/vuegg" width="40" height="40" :original="true"></svgicon> -->
-      <img src="/static/Edrop.png" height="40"/>
-    </a>
-
-    <input class="title-input" v-model="tmpProjectTitle" @blur="onTitleBlur"
-      title="Project title" placeholder="Project title"/>
-
-    <div class="spacer"></div>
     <action-bar></action-bar>
     <!-- <user-menu></user-menu> -->
+    <div class="title-container">
+      <input class="title-input" v-model="tmpProjectTitle" @blur="onTitleBlur"
+        title="Project title" placeholder="Project title"/>
+      <a class="home-btn" href="https://www.nthu.edu.tw" target="_blank">
+        <!-- <svgicon icon="product/vuegg" width="40" height="40" :original="true"></svgicon> -->
+        <img src="/static/Edrop.png" height="40"/>
+      </a>
+    </div>
   </div>
 </template>
 
@@ -77,7 +76,7 @@ export default {
   flex-shrink: 0;
   flex-direction: row;
   flex-wrap: nowrap;
-  justify-content: flex-start;
+  justify-content: space-between;
   align-self: stretch;
   align-items: center;
   box-sizing: border-box;
@@ -121,5 +120,11 @@ export default {
   height: 56px;
   background: transparent;
   outline: none;
+}
+
+.title-container{
+  height: 50px;
+  display: flex;
+  align-items: center;
 }
 </style>
