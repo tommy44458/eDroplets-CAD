@@ -20,9 +20,9 @@
     position: fixed;
     top: 0;
     left: 0;
-    width: 1300px;
+    width: 250px;
     height: 100%;
-    padding: 20px 0;
+    padding: 50px 0;
     transition: all 0.5s ease;
     display: flex;
     flex-direction: column;
@@ -30,6 +30,6 @@
 }
 
 .sidebar-content{
-    font-size: 100px;
+    font-size: 20px;
 }
 </style>

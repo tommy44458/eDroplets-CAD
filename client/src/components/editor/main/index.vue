@@ -10,6 +10,11 @@
       :page="selectedPage"
       :zoom="zoom">
     </stage>
+
+    <sidebar-menu
+      v-if="openSidebar"
+    >
+    </sidebar-menu>
     <zoom-menu @zoomChange="zoomHandler" :zoom="zoom" class="zoom-menu"></zoom-menu>
   </div>
 </template>
@@ -22,10 +27,11 @@ import { _changeActivePage, _rebaseActivePage, _updateEditorZoom, getPageIndexBy
 import ZoomMenu from '@/components/editor/common/ZoomMenu'
 import Stage from './Stage'
 import { mapFields } from 'vuex-map-fields'
+import SidebarMenu from '../common/SidebarMenu/index.vue'
 
 export default {
   name: 'mainegg',
-  components: { Stage, ZoomMenu },
+  components: { Stage, ZoomMenu, SidebarMenu },
   created: function () {
     this.selectFallbackPage(this.selectedPage)
   },
@@ -33,7 +39,8 @@ export default {
     ...mapFields([
       'app.stagePosTop',
       'app.stagePosLeft',
-      'app.edit.moveStage'
+      'app.edit.moveStage',
+      'app.openSidebar'
     ]),
     ...mapState({
       selectedPage: state => state.app.selectedPage,
