@@ -4,22 +4,11 @@
       <li @click.stop=""
         v-for="item in menu"
         class="contextmenu__item"
-        :key="item.action || item.name"
-        :id="item.action || item.name"
+        :key="item.name"
+        :id="item.name"
       >
         <div @click.stop="fnHandler(item)" class="button">
-          <i v-if="icon" :class="item.icon"></i>
           <span>{{ item.name }}</span>
-          <i
-            class="el-icon-arrow-right"
-            v-if="item.children && item.children.length > 0"
-          ></i>
-          <context-menu
-            v-if="item.children && item.children.length > 0"
-            :menu="item.children"
-            :icon="icon"
-            :resolve="resolve"
-          ></context-menu>
         </div>
       </li>
     </ul>
@@ -30,36 +19,65 @@
 export default {
   name: 'contextmenu',
   props: {
-    customEvent: {
-      type: Object
-    },
-    icon: {
+    specialState: {
       type: Boolean,
-      default: true
+      default () {
+        return false
+      }
     },
     axis: {
       type: Object,
       default () {
         return { x: null, y: null }
       }
-    },
-    menu: {
-      type: Array,
-      default () {
-        return [
-          { icon: 'el-icon-edit', name: 'select', action: 'select' },
-          { icon: 'el-icon-setting', name: 'copy', action: 'copy' },
-          { icon: 'el-icon-setting', name: 'paste', action: 'paste' },
-          { icon: 'el-icon-setting', name: 'cut', action: 'cut' },
-          { icon: 'el-icon-setting', name: 'delete', action: 'delete' },
-          { icon: 'el-icon-setting', name: 'combine', action: 'combine' },
-          { icon: 'el-icon-setting', name: 'separate', action: 'separate' }
-        ]
+    }
+  },
+  data: function () {
+    return {
+      status: false
+      // menu: [
+      //     { name: 'select', action: 'select' },
+      //     { name: 'copy', action: 'copy' },
+      //     { name: 'paste', action: 'paste' },
+      //     { name: 'cut', action: 'cut' },
+      //     { name: 'delete', action: 'delete' },
+      //     { name: 'combine', action: 'combine' },
+      //     { name: 'separate', action: 'separate' }
+      //   ]
+    }
+  },
+  computed: {
+    style () {
+      let x = this.axis.x
+      let y = this.axis.y
+      let menuHeight = this.menu.length * 32
+      let menuWidth = this.menu.width
+      return {
+        left:
+          (document.body.clientWidth < x + menuWidth ? x - menuWidth : x + 10) +
+          'px',
+        top:
+          (document.body.clientHeight < y + menuHeight ? y - menuHeight : y) +
+          'px'
       }
     },
-    resolve: {
-      type: Function,
-      default: function (action) {
+    menu () {
+      if (this.specialState) {
+        return [ { name: 'select', action: 'select' } ]
+      }
+      return [
+          { name: 'select', action: 'select' },
+          { name: 'copy', action: 'copy' },
+          { name: 'paste', action: 'paste' },
+          { name: 'cut', action: 'cut' },
+          { name: 'delete', action: 'delete' },
+          { name: 'combine', action: 'combine' },
+          { name: 'separate', action: 'separate' }
+        ]
+    }
+  },
+  methods: {
+    resolve (action) {
         switch (action) {
           case 'select':
             this.$emit('clearState')
@@ -82,36 +100,8 @@ export default {
           case 'separate':
             this.$emit('separate')
             break
-        }
       }
     },
-    reject: {
-      type: Function,
-      default: function () {}
-    }
-  },
-  computed: {
-    style () {
-      let x = this.axis.x
-      let y = this.axis.y
-      let menuHeight = this.menu.length * 32
-      let menuWidth = this.menu.width
-      return {
-        left:
-          (document.body.clientWidth < x + menuWidth ? x - menuWidth : x + 10) +
-          'px',
-        top:
-          (document.body.clientHeight < y + menuHeight ? y - menuHeight : y) +
-          'px'
-      }
-    }
-  },
-  data () {
-    return {
-      status: false
-    }
-  },
-  methods: {
     fnHandler (item) {
       this.status = false
       if (item.fn) item.fn(this.customEvent)
