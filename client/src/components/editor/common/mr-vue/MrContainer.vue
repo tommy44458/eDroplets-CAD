@@ -86,7 +86,6 @@ export default {
       let isMrs = false
       this.initialAbsPos = this.currentAbsPos = this.getMouseAbsPoint(e)
       this.initialRelPos = this.currentRelPos = this.getMouseRelPoint(e)
-
       if (e.target.dataset.mrContainer) {
         this.$emit('clearselection')
         this.renderSelectionArea({x: -1, y: -1}, {x: -1, y: -1})
@@ -108,9 +107,6 @@ export default {
       if (this.moveStage) {
         this.$emit('setStageLastPos')
       }
-      // if (this.openContextMenu) {
-      //   this.openContextMenu = false
-      // }
     },
 
     mouseUpHandler (e) {
@@ -305,13 +301,12 @@ export default {
 
     moveElementBy2 (el, posX, posY) {
       const unit = this.gridUnit / 10
-
       const unitX = parseInt((posX / this.zoom) / unit)
       const unitY = parseInt((posY / this.zoom) / unit)
 
       // this.lastElPos.length = 0
       const offsetEl = []
-      const lastElPos = []
+      const lastElPos = [ ]
       this.activeElements.forEach(acEl => {
         const acElX = parseInt(acEl.left / unit)
         const acElY = parseInt(acEl.top / unit)

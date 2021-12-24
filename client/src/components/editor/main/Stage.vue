@@ -100,6 +100,7 @@ export default {
   computed: {
     ...mapFields([
       'app.openContextMenu',
+      'app.squareSize',
       'app.gridUnit',
       'app.cornerSize',
       'app.stagePosTop',
@@ -190,17 +191,18 @@ export default {
 
     mouseMoveElements (e) {
       const unit = this.gridUnit / 10
+      // const unit = 200
       const offset = e.offsetEl
       const unitX = e.unitX
       const unitY = e.unitY
       // const lastPos = e.lastElPos
-      const _time = Date.now()
+      // const _time = Date.now()
       this.selectedElements.forEach((acEl, index) => {
         const top = unit * (unitY - offset[index][1])
         const left = unit * (unitX - offset[index][0])
         this.moveElement({ elId: acEl.id, pageId: this.page.id, top: top, left: left })
       })
-      console.log(Date.now() - _time)
+      // console.log(Date.now() - _time)
       // if (this.checkCollision(this.selectedElements, this.allElements)) {
       //   this.selectedElements.forEach((acEl, index) => {
       //     this.moveElement({ elId: acEl.id, pageId: this.page.id, top: lastPos[index][1], left: lastPos[index][0] })
@@ -223,7 +225,7 @@ export default {
     addElement (e) {
       // console.log(e.x, e.y)
       // console.log(this.allElements)
-      const unit = this.gridUnit / 10
+      const unit = this.squareSize / 10
       const cornerSize = this.cornerSize
       const posX = e.x
       const posY = e.y

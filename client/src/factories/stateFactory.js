@@ -13,6 +13,7 @@ function newState (height, width, gridUnit, cornerSize, project) {
       canRedo: false,
       openContextMenu: false,
       openSidebar: false,
+      squareSize: gridUnit,
       pageDialog: {
         isNew: true,
         isOpen: false
