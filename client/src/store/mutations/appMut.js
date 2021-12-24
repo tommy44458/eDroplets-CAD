@@ -92,8 +92,25 @@ const internalAppMutations = {
       }
     }
     console.log(state.app.chip.matrix)
-  }
+  },
 
+  /**
+   *
+   * @param {number} row : Single cell
+   * @param {number} col : Singular Cell or Array
+   */
+   [types._updateInitialPosition]: function (state, payload) {
+    state.app.selectedInitialPosition.push([payload.row, payload.col])
+    console.log(state.app.selectedInitialPosition)
+  },
+
+   /**
+   *
+   */
+    [types._clearInitialPosition]: function (state) {
+      state.app.selectedInitialPosition = []
+      console.log(state.app.selectedInitialPosition)
+    }
 }
 
 const appMutations = {

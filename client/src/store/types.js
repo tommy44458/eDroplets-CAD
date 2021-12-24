@@ -83,6 +83,8 @@ export const _toggleCanUndo = '_toggleCanUndo'
 export const _togglePageDialog = '_togglePageDialog'
 export const _updateEditorZoom = '_updateEditorZoom'
 export const _updateMatrix = '_updateMatrix'
+export const _updateInitialPosition = '_updateInitialPosition'
+export const _clearInitialPosition = '_clearInitialPosition'
 
 export const _changeActivePage = '_changeActivePage'
 export const _rebaseActivePage = '_rebaseActivePage'
@@ -173,6 +175,8 @@ const types = {
   _togglePageDialog,
   _updateEditorZoom,
   _updateMatrix,
+  _updateInitialPosition,
+  _clearInitialPosition,
 
   _changeActivePage,
   _rebaseActivePage,

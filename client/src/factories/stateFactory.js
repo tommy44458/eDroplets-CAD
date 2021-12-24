@@ -18,6 +18,7 @@ function newState (height, width, gridUnit, cornerSize, project) {
       },
       selectedPage: null,
       selectedElements: [],
+      selectedInitialPosition: [],
       editorZoom: 0.2,
       gridUnit: gridUnit,
       cornerSize: cornerSize,
