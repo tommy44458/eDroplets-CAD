@@ -25,15 +25,16 @@ export default {
   computed: {
     ...mapFields([
       'app.gridUnit',
-      'app.squareSize'
+      'app.squareSize',
+      'app.originalGridUnit'
     ]),
     snappingDistance () {
-      return this.gridUnit / 1000
+      return this.gridUnit / this.originalGridUnit
     }
   },
   methods: {
     changeSnappingDistance (e) {
-      this.gridUnit = e.target.value * 1000
+      this.gridUnit = e.target.value * this.originalGridUnit
     }
   }
 }
