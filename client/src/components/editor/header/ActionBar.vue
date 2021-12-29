@@ -1,19 +1,8 @@
 <template>
   <div class="action-bar__wrapper">
-    <button
-      v-tooltip="'Sidebar'"
-      class="action-btn"
-      @click="() => {
-        openSidebar = !openSidebar
-      }"
-    >
-      <div>
-        <svgicon icon="system/actions/menu" width="24" height="24">
-        </svgicon>
-      </div>
+    <button v-if="isSyncing" title="syncing" :disabled="true" class="action-btn syncing">
+      <svgicon icon="system/actions/sync" width="24" height="24" color="rgba(0,0,0,.38)"></svgicon>
     </button>
-
-    <div class="separator"></div>
 
     <button v-tooltip="'Undo'" class="action-btn" :disabled="!canUndo" @click="$root.$emit('undo')">
       <svgicon icon="system/actions/undo" width="24" height="24"
@@ -119,10 +108,6 @@
       </mdc-menu>
     </mdc-menu-anchor>
 
-    <button v-if="isSyncing" title="syncing" :disabled="true" class="action-btn syncing">
-      <svgicon icon="system/actions/sync" width="24" height="24" color="rgba(0,0,0,.38)"></svgicon>
-    </button>
-
     <!-- <button v-tooltip="saveBtnTitle" class="action-btn" @click="$root.$emit('open-upload-dialog')"
       :disabled="!isLoggedIn || !hasChanges || (isLoggedIn && isLoading)"
     >
@@ -160,8 +145,7 @@ export default {
   computed: {
     ...mapFields([
       'app.edit.paint',
-      'app.edit.moveStage',
-      'app.openSidebar'
+      'app.edit.moveStage'
     ]),
 
     saveBtnTitle () {
