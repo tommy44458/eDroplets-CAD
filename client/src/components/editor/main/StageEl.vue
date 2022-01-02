@@ -101,13 +101,11 @@ export default {
       e.stopPropagation()
       e.preventDefault()
       // ###
-      console.log(e)
 
       if (e.shiftKey && !this.isActive) {
         this._addSelectedElement(this.elem)
       } else if (!e.shiftKey && !this.isActive) {
-        console.log(this.selectedElements)
-        // let cells = []
+        // let cells = []  //TODO No Work Here
         // this.selectedElements.forEach(element => {
         //   cells.push({
         //     row: Math.round(element.top / element.height),

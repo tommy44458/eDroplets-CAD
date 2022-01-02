@@ -96,12 +96,12 @@ const internalAppMutations = {
 
   /**
    *
-   * @param {number} row : Single cell
-   * @param {number} col : Singular Cell or Array
+   * @param {number} row : Row
+   * @param {number} col : Column
+   * @param {string} id : Id
    */
    [types._updateInitialPosition]: function (state, payload) {
-    state.app.selectedInitialPosition.push([payload.row, payload.col])
-    console.log(state.app.selectedInitialPosition)
+    state.app.selectedInitialPosition.push(payload)
   },
 
    /**
@@ -109,7 +109,7 @@ const internalAppMutations = {
    */
     [types._clearInitialPosition]: function (state) {
       state.app.selectedInitialPosition = []
-      console.log(state.app.selectedInitialPosition)
+      console.log('Cleared Initial Position')
     }
 }
 

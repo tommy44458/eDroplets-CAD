@@ -113,7 +113,10 @@ export default {
     ...mapState({
       selectedElements: state => state.app.selectedElements || [],
       allElements: state => state.app.selectedPage.children,
-      projectComponents: state => state.project.components
+      projectComponents: state => state.project.components,
+      matrix: state => state.app.chip.matrix,
+      selectedInitialPosition: state => state.app.selectedInitialPosition,
+      cellSize: state => state.app.gridUnit
     })
   },
   methods: {
@@ -164,11 +167,11 @@ export default {
     },
 
     mouseUp () {
-      console.log('up')
+      // console.log('up') TODO
     },
 
     mouseDown () {
-      console.log('down')
+      // console.log('down') TODO
     },
 
     mouseMoveElements (e) {
@@ -270,6 +273,7 @@ export default {
     },
 
     clearSelectionHandler () {
+      console.log('Clearing Selection')
       if (this.selectedElements.length > 0) {
         this._clearInitialPosition()
         let cells = []
@@ -370,7 +374,7 @@ export default {
       this.registerElement({pageId: this.page.id, el: element, global: e.shiftKey})
     },
 
-    selectStopHandler (selectionBox) {
+    selectStopHandler (selectionBox) { // TODO Stopped selection here, this is final selection before moving
       if ((selectionBox.top === selectionBox.bottom && selectionBox.left === selectionBox.right) ||
           (this.page.children.length === 0)) return
 
@@ -392,7 +396,6 @@ export default {
       })
 
       if (selectedElements.length > 0) {
-        console.log('select')
         let cells = []
         selectedElements.forEach(element => {
           cells.push({
@@ -402,7 +405,8 @@ export default {
           })
           this._updateInitialPosition({
             row: Math.round(element.top / element.height),
-            col: Math.round(element.left / element.width)
+            col: Math.round(element.left / element.width),
+            id: element.id
           })
         })
         let singular = false
@@ -464,6 +468,15 @@ export default {
       this.toggleDroppableCursor(!!this.dropContainer)
     },
 
+    checkConflict (cells) {
+      for (const cell of cells) {
+        if (this.matrix[cell.row][cell.col] === true) {
+          return true
+        }
+      }
+      return false
+    },
+
     moveStopHandler (moveStopData) {
       const containegg = this.getContaineggOnPoint(moveStopData.absMouseX, moveStopData.absMouseY)
       const parentId = containegg ? containegg.id : null
@@ -476,18 +489,31 @@ export default {
         mouseY: moveStopData.relMouseY
       }))
 
-        // TODO: Check text file
-        // let cells = []
-        // this.selectedElements.forEach(element => {
-        //   cells.push({
-        //     row: Math.round(element.top / element.height),
-        //     col: Math.round(element.left / element.width),
-        //     painted: true
-        //   })
-        // })
-        // let singular = false
-        // this._updateMatrix({cells, singular})
+        // TODO
+        let cells = []
+        this.selectedElements.forEach(element => {
+          cells.push({
+            row: Math.round(element.top / element.height),
+            col: Math.round(element.left / element.width),
+            id: element.id
+          })
+        })
 
+        if (this.checkConflict(cells) === true) {
+            console.log('CONFLICT!!!')
+            cells.forEach((cell) => {
+              // console.log(this.selectedInitialPosition)
+              let element = this.selectedInitialPosition.find(el => el.id === cell.id)
+              let top = element.row * this.cellSize / 10
+              let left = element.col * this.cellSize / 10
+              this.moveElement({ elId: cell.id, pageId: this.page.id, top: top, left: left })
+            })
+        } else {
+           this._clearInitialPosition()
+           cells.forEach((cell) => {
+              this._updateInitialPosition(cell)
+            })
+        }
       this.rebaseSelectedElements()
       this.toggleDroppableCursor(false)
       this.dropContainer = null

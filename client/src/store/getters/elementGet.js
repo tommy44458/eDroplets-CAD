@@ -19,6 +19,7 @@ const elementGetters = {
    [types.getSelectedEl]: (state, getters) => () => {
     return state.app.selectedElements
   }
+
 }
 
 export default elementGetters
