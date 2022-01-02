@@ -91,7 +91,7 @@ const internalAppMutations = {
         state.app.chip.matrix[cell.row][cell.col] = cell.painted
       }
     }
-    console.log(state.app.chip.matrix)
+    // console.log(state.app.chip.matrix)
   },
 
   /**
