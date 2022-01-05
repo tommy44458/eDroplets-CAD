@@ -11,10 +11,8 @@
       :zoom="zoom">
     </stage>
 
-    <sidebar-menu
-      v-if="openSidebar"
-    >
-    </sidebar-menu>
+    <sidebar-menu v-if="openSidebar"></sidebar-menu>
+
     <zoom-menu @zoomChange="zoomHandler" :zoom="zoom" class="zoom-menu"></zoom-menu>
   </div>
 </template>

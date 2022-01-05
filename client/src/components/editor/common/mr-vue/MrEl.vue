@@ -5,6 +5,7 @@
     @mousedown.exact="e => $emit('activated', e)"
     @mousedown.meta.capture="e => $emit('activated', e)"
     @mousedown.ctrl.capture="e => $emit('activated', e)"
+    @mousedown.shiftKey.capture="e => $emit('activated', e)"
   >
     <!-- IMPORTANT! KEEP SLOT AS FIRST CHILD -->
     <slot></slot>
