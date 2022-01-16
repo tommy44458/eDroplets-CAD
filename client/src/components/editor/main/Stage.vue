@@ -273,7 +273,6 @@ export default {
     },
 
     clearSelectionHandler () {
-      console.log('Clearing Selection')
       if (this.selectedElements.length > 0) {
         this._clearInitialPosition()
         let cells = []
@@ -286,6 +285,7 @@ export default {
         })
         let singular = false
         this._updateMatrix({cells, singular})
+        console.log('Clearing in StageVues')
         this._clearSelectedElements()
       }
     },
@@ -490,6 +490,7 @@ export default {
       }))
 
         // TODO
+        // console.log(this.selectedElements)
         let cells = []
         this.selectedElements.forEach(element => {
           cells.push({

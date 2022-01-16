@@ -1,6 +1,6 @@
 <script>
 import { mapState, mapMutations } from 'vuex'
-import { _clearSelectedElements, _addSelectedElement } from '@/store/types'
+import { _clearSelectedElements, _addSelectedElement, _clearInitialPosition, _updateMatrix, _updateInitialPosition } from '@/store/types'
 
 import MrEl from '@/components/editor/common/mr-vue/MrEl'
 import StageEl from './StageEl'
@@ -106,12 +106,39 @@ export default {
         this._addSelectedElement(this.elem)
       } else if (!e.shiftKey && !this.isActive) {
         // For non selected Single Element
-        this._clearSelectedElements()
+        if (this.selectedElements.length > 0) {
+          this._clearInitialPosition()
+          let cells = []
+          this.selectedElements.forEach(element => {
+            cells.push({
+              row: Math.round(element.top / element.height),
+              col: Math.round(element.left / element.width),
+              painted: true
+            })
+          })
+          let singular = false
+          this._updateMatrix({cells, singular})
+          console.log('Clearing in StageEl')
+          this._clearSelectedElements()
+      }
+      // TODO
+      let cell = {
+              row: Math.round(this.elem.top / this.elem.height),
+              col: Math.round(this.elem.left / this.elem.width),
+              painted: false
+            }
+            this._updateInitialPosition({
+              row: Math.round(this.elem.top / this.elem.height),
+              col: Math.round(this.elem.left / this.elem.width),
+              id: this.elem.id
+            })
+        let singular = true
+        this._updateMatrix({cell, singular})
         this._addSelectedElement(this.elem)
       }
     },
 
-    ...mapMutations([_clearSelectedElements, _addSelectedElement])
+    ...mapMutations([_clearSelectedElements, _addSelectedElement, _clearInitialPosition, _updateMatrix, _updateInitialPosition])
   }
 }
 </script>

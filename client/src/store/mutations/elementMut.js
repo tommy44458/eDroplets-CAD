@@ -65,6 +65,7 @@ const internalElementMutations = {
  * Resets the selectedElements aray
  */
   [types._clearSelectedElements]: function (state) {
+    console.log('Clearing Selection ' + state.app.selectedElements.length)
     state.app.selectedElements = []
   },
 
