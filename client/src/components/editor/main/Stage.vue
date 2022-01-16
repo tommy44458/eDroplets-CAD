@@ -166,19 +166,12 @@ export default {
       const offset = e.offsetEl
       const unitX = e.unitX
       const unitY = e.unitY
-      // const lastPos = e.lastElPos
-      const _time = Date.now()
+
       this.selectedElements.forEach((acEl, index) => {
         const top = unit * (unitY - offset[index][1])
         const left = unit * (unitX - offset[index][0])
         this.moveElement({ elId: acEl.id, pageId: this.page.id, top: top, left: left })
       })
-      console.log(Date.now() - _time)
-      // if (this.checkCollision(this.selectedElements, this.allElements)) {
-      //   this.selectedElements.forEach((acEl, index) => {
-      //     this.moveElement({ elId: acEl.id, pageId: this.page.id, top: lastPos[index][1], left: lastPos[index][0] })
-      //   })
-      // }
     },
 
     setChipLastPos () {
