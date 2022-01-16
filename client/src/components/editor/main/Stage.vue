@@ -53,7 +53,7 @@ import elementsFromPoint from '@/polyfills/elementsFromPoint'
 import { getComputedProp, fixElementToParentBounds } from '@/helpers/positionDimension'
 
 import { mapState, mapActions, mapMutations } from 'vuex'
-import { _clearSelectedElements, _addSelectedElements, registerElement,
+import { _clearSelectedElements, _addSelectedElements, _addSelectedElement, registerElement,
         removeElement, resizeElement, moveElement, rebaseSelectedElements, margeSelectedElements } from '@/store/types'
 
 import MrContainer from '@/components/editor/common/mr-vue/MrContainer'
@@ -379,7 +379,7 @@ export default {
       if ((selectionBox.top === selectionBox.bottom && selectionBox.left === selectionBox.right) ||
           (this.page.children.length === 0)) return
 
-      let selectedElements = []
+      // let selectedElements = []
       this.page.children.forEach(childEl => {
         const child = (childEl.global) ? {...childEl, ...this.getComponentRef(childEl), id: childEl.id} : childEl
 
@@ -392,13 +392,14 @@ export default {
             (childBottom >= selectionBox.top) && (childRight >= selectionBox.left)) ||
             ((childTop <= selectionBox.bottom) && (childRight >= selectionBox.left) &&
             (childBottom >= selectionBox.top) && (childLeft <= selectionBox.right))) {
-          selectedElements.push(child)
+          // selectedElements.push(child)
+          this._addSelectedElement(child)
         }
       })
 
-      if (selectedElements.length > 0) {
-        this._addSelectedElements(selectedElements)
-      }
+      // if (selectedElements.length > 0) {
+      //   this._addSelectedElements(selectedElements)
+      // }
     },
 
     getComponentRef (component) {
@@ -497,7 +498,7 @@ export default {
     },
 
     ...mapActions([rebaseSelectedElements, registerElement, removeElement, resizeElement, moveElement, margeSelectedElements]),
-    ...mapMutations([_clearSelectedElements, _addSelectedElements])
+    ...mapMutations([_clearSelectedElements, _addSelectedElements, _addSelectedElement])
   },
   watch: {
     dropContainer: function (newVal, oldVal) {

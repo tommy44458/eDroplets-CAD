@@ -87,7 +87,9 @@ export default {
       this.initialAbsPos = this.currentAbsPos = this.getMouseAbsPoint(e)
       this.initialRelPos = this.currentRelPos = this.getMouseRelPoint(e)
       if (e.target.dataset.mrContainer) {
-        this.$emit('clearselection')
+        if (!e.shiftKey) {
+          this.$emit('clearselection')
+        }
         this.renderSelectionArea({x: -1, y: -1}, {x: -1, y: -1})
         isMrs = this.selecting = true
       } else if (e.target.dataset.mrHandle) {
@@ -118,7 +120,7 @@ export default {
 
       // if (this.initialAbsPos !== this.currentAbsPos) {
       if (this.resizing) {
-      this.$emit('resizestop', this.resizeStopData())
+        this.$emit('resizestop', this.resizeStopData())
       } else if (this.moving) {
         this.$emit('movestop', this.moveStopData())
       } else if (this.selecting) {
