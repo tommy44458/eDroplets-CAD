@@ -32,17 +32,18 @@
       :elem="element">
     </stage-el>
 
-    <context-menu
-      v-if="openContextMenu"
-      :axis="rightClickPoint"
-      :specialState="paint || moveStage"
-      @clearState="clearState"
-      @delete="deleteHandler"
-      @copy="copyHandler"
-      @cut="cutHandler"
-      @paste="pasteHandler"
-      @combine="combineElectrodes"
-    ></context-menu>
+    <div v-if="openContextMenu" :key="keyContextMenu">
+      <context-menu
+        :axis="rightClickPoint"
+        :specialState="paint || moveStage"
+        @clearState="clearState"
+        @delete="deleteHandler"
+        @copy="copyHandler"
+        @cut="cutHandler"
+        @paste="pasteHandler"
+        @combine="combineElectrodes"
+      ></context-menu>
+    </div>
   </mr-container>
 </template>
 
@@ -82,6 +83,7 @@ export default {
 
   data: function () {
     return {
+      keyContextMenu: 0,
       rightClickPoint: {x: 0, y: 0},
       clipboard: [],
       dropContainer: null,
@@ -136,6 +138,7 @@ export default {
       this.rightClickPoint.x = mousePoint.x / this.zoom
       this.rightClickPoint.y = mousePoint.y / this.zoom
       this.openContextMenu = true
+      this.keyContextMenu++
     },
 
     clearState () {
