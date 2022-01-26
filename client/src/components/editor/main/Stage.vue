@@ -49,6 +49,8 @@
 
 
 <script>
+import { dxfToSvg } from '@/store/actions/dxf.js'
+import testDxf from 'raw-loader!@/assets/dxf/test.txt'
 import cloneDeep from 'clone-deep'
 import elementsFromPoint from '@/polyfills/elementsFromPoint'
 import { getComputedProp, fixElementToParentBounds } from '@/helpers/positionDimension'
@@ -96,7 +98,8 @@ export default {
       chipLastPos: {
         top: 0,
         left: 0
-      }
+      },
+      testDxf: testDxf
     }
   },
   computed: {
@@ -520,6 +523,10 @@ export default {
         newVal.style.borderColor = DROP_BORDER.color
       }
     }
+  },
+  mounted () {
+    console.log(this.testDxf)
+    console.log(dxfToSvg(testDxf))
   }
 }
 </script>

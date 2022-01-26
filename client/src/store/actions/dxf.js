@@ -166,6 +166,8 @@ export const dxfToSvg = function (dxfString) {
         case 'VERTEX':
             console.log('*****', dxfObject)
             break
+        default:
+          console.log('other', dxfObject.type)
       }
     }
 
@@ -192,10 +194,11 @@ export const dxfToSvg = function (dxfString) {
     var supportedEntities = [
       'LINE',
       'CIRCLE',
-    //   'ARC',
+      'ARC',
       'LWPOLYLINE',
       'SPLINE',
-      'SOLID'
+      'SOLID',
+      'POLYLINE'
     ]
 
     var counter = 0
@@ -203,6 +206,7 @@ export const dxfToSvg = function (dxfString) {
     var isEntitiesSectionActive = false
     var object = {}
     var svg = ''
+    const english = /^[A-Za-z]*$/
 
     // Normalize platform-specific newlines.
     dxfString = dxfString.replace(/\r\n/g, '\n')
@@ -218,6 +222,9 @@ export const dxfToSvg = function (dxfString) {
         if (groupCode === 'blockName' && value === 'ENTITIES') {
           isEntitiesSectionActive = true
         } else if (isEntitiesSectionActive) {
+          if (english.test(value)) {
+            console.log(value)
+          }
           if (groupCode === 'entityType') {  // New entity starts.
             if (object.type) {
               svg += dxfObjectToSvgSnippet(object)
