@@ -148,7 +148,7 @@ const projectActions = {
 
     electrods.forEach(getPos)
 
-    function getPos(item, index) {
+    function getPos (item, index) {
       dataElectrode = dataElectrode + item.name + ' ' + (parseFloat(item.left) * scale + 1000 - 1630 + 15) + ' ' + (parseFloat(item.top) * scale + 12258 + 15) + '\n'
     }
 
@@ -215,7 +215,6 @@ const projectActions = {
         electrodsShape[el.name] = []
         let path = ''
         const pathlist = el.children[0].attrs.d.split(' ')
-        console.log('***', pathlist)
         pathlist.forEach(p => {
           if (p === 'M' || p === 'L') {
             path += p
@@ -253,7 +252,7 @@ const projectActions = {
 
     electrods.forEach(getPos)
 
-    function getPos(item, index) {
+    function getPos (item, index) {
       dataElectrode = dataElectrode + item.name + ' ' + (parseFloat(item.left) * scale + 1000 - 1630 + 15) + ' ' + (parseFloat(item.top) * scale + 12258 + 15) + '\n'
     }
 
@@ -262,27 +261,35 @@ const projectActions = {
     dataElectrode = dataElectrode + '#ENDOFSEQUENCE#'
 
     const ewd = {
-      ewd: dataElectrode,
-      name: parsedRepoName
+      electrode_size: state.app.originalGridUnit,
+      unit: 4,
+      ewd_content: dataElectrode
     }
 
-    let resp = await api.cad(ewd)
-    // console.log(resp)
+    // let ret = await api.test()
+    // console.log(ret)
+
+    // let resp = {
+    //   status: 400,
+    //   ewd: ewd
+    // }
+
+    const resp = await api.nrrouter(ewd)
 
     if (resp.status === 200) {
-      const parser = new DxfParser()
-      const dxf = parser.parseSync(resp.data)
-      console.log(dxf)
-      let _svg = dxfToSvg(resp.data) + '\n'
+      // const parser = new DxfParser()
+      // const dxf = parser.parseSync(resp.data)
+      // console.log(dxf)
+      // let _svg = dxfToSvg(resp.data) + '\n'
       // 'M0 1 L0 19 L1 20 L19 20 L20 19 L20 1 L19 0 L1 0 Z'
       // pos.forEach(_pos => {
       //   let _path = '<path d="M'
       //   _path = _path + ((_pos[0]) / 100) + ' ' + ((_pos[1] + 100) / 100) + ' L' + ((_pos[0]) / 100) + ' ' + ((_pos[1] + 1900) / 100) + ' L' + ((_pos[0] + 100) / 100) + ' ' + ((_pos[1] + 2000) / 100) + ' L' + ((_pos[0] + 1900) / 100) + ' ' + ((_pos[1] + 2000) / 100) + ' L' + ((_pos[0] + 2000) / 100) + ' ' + ((_pos[1] + 1900) / 100) + ' L' + ((_pos[0] + 2000) / 100) + ' ' + ((_pos[1] + 100) / 100) + ' L' + ((_pos[0] + 1900) / 100) + ' ' + ((_pos[1] + 0) / 100) + ' L' + ((_pos[0] + 100) / 100) + ' ' + ((_pos[1] + 0) / 100) + ' Z" />'
       //   _svg = _svg + _path + '\n'
       // _svg = _svg + _path
-      console.log(_svg)
+      // console.log(_svg)
 
-      download(resp.data, parsedRepoName + '.dwg')
+      download(resp.data, parsedRepoName + '.dxf')
       commit(types._toggleLoadingStatus, false)
     } else {
       commit(types._toggleLoadingStatus, false)
@@ -372,7 +379,7 @@ const projectActions = {
 
     electrods.forEach(getPos)
 
-    function getPos(item, index) {
+    function getPos (item, index) {
       dataElectrode = dataElectrode + item.name + ' ' + (parseFloat(item.left) * scale + 1000 - 1630 + 15) + ' ' + (parseFloat(item.top) * scale + 12258 + 15) + '\n'
     }
 

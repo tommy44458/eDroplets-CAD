@@ -49,7 +49,7 @@
 
 
 <script>
-import { dxfToSvg } from '@/store/actions/dxf.js'
+// import { dxfToSvg } from '@/store/actions/dxf.js'
 import testDxf from 'raw-loader!@/assets/dxf/test.txt'
 import cloneDeep from 'clone-deep'
 import elementsFromPoint from '@/polyfills/elementsFromPoint'
@@ -525,8 +525,8 @@ export default {
     }
   },
   mounted () {
-    console.log(this.testDxf)
-    console.log(dxfToSvg(testDxf))
+    // console.log(this.testDxf)
+    // console.log(dxfToSvg(testDxf))
   }
 }
 </script>
