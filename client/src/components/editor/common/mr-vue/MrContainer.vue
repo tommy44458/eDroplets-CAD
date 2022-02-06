@@ -2,6 +2,8 @@
   <div data-mr-container="true"
     class="mr-container"
     tabindex="0"
+    @click="openContextMenu = false"
+    @click.right.stop.prevent="mouseRightClickHandler"
     @mousedown.capture="mouseDownHandler"
     @mouseup.capture="$root.$emit('paint-electrodes-disable')"
     @keydown.esc.stop.prevent="$emit('clearselection')"
@@ -64,6 +66,7 @@ export default {
   },
   computed: {
     ...mapFields([
+      'app.openContextMenu',
       'app.gridUnit',
       'app.edit.paint',
       'app.edit.moveStage'
@@ -74,15 +77,20 @@ export default {
     }
   },
   methods: {
+    mouseRightClickHandler (e) {
+      const mousePoint = this.getMouseRelPoint(e)
+      this.$emit('rightClick', mousePoint)
+    },
 
     mouseDownHandler (e) {
       this.$emit('mousedown')
       let isMrs = false
       this.initialAbsPos = this.currentAbsPos = this.getMouseAbsPoint(e)
       this.initialRelPos = this.currentRelPos = this.getMouseRelPoint(e)
-
       if (e.target.dataset.mrContainer) {
-        this.$emit('clearselection')
+        if (!e.shiftKey) {
+          this.$emit('clearselection')
+        }
         this.renderSelectionArea({x: -1, y: -1}, {x: -1, y: -1})
         isMrs = this.selecting = true
       } else if (e.target.dataset.mrHandle) {
@@ -114,7 +122,7 @@ export default {
 
       // if (this.initialAbsPos !== this.currentAbsPos) {
       if (this.resizing) {
-      this.$emit('resizestop', this.resizeStopData())
+        this.$emit('resizestop', this.resizeStopData())
       } else if (this.moving) {
         this.$emit('movestop', this.moveStopData())
       } else if (this.selecting) {
@@ -297,13 +305,12 @@ export default {
 
     moveElementBy2 (el, posX, posY) {
       const unit = this.gridUnit / 10
-
       const unitX = parseInt((posX / this.zoom) / unit)
       const unitY = parseInt((posY / this.zoom) / unit)
 
       // this.lastElPos.length = 0
       const offsetEl = []
-      const lastElPos = []
+      const lastElPos = [ ]
       this.activeElements.forEach(acEl => {
         const acElX = parseInt(acEl.left / unit)
         const acElY = parseInt(acEl.top / unit)

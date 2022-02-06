@@ -6,6 +6,7 @@
     :class="[page.classes, {stage: true}]"
     :activeElements="selectedElements"
     :allElements="allElements"
+    @rightClick="rightClickHandler"
     @arrows="arrowsHandler"
     @moving="movingHandler"
     @movestop="moveStopHandler"
@@ -33,11 +34,25 @@
       :elem="element">
     </stage-el>
 
+    <div v-if="openContextMenu" :key="keyContextMenu">
+      <context-menu
+        :axis="rightClickPoint"
+        :specialState="paint || moveStage"
+        @clearState="clearState"
+        @delete="deleteHandler"
+        @copy="copyHandler"
+        @cut="cutHandler"
+        @paste="pasteHandler"
+        @combine="combineElectrodes"
+      ></context-menu>
+    </div>
   </mr-container>
 </template>
 
 
 <script>
+// import { dxfToSvg } from '@/store/actions/dxf.js'
+import testDxf from 'raw-loader!@/assets/dxf/test.txt'
 import cloneDeep from 'clone-deep'
 import elementsFromPoint from '@/polyfills/elementsFromPoint'
 import { getComputedProp, fixElementToParentBounds } from '@/helpers/positionDimension'
@@ -50,6 +65,7 @@ import MrContainer from '@/components/editor/common/mr-vue/MrContainer'
 import StageEl from './StageEl'
 import { mapFields } from 'vuex-map-fields'
 import newElectrodeUnit from '@/factories/electrodeUnitFactory'
+import ContextMenu from '../common/ContextMenu/index.vue'
 
 const DROP_BORDER = {
   width: '2px',
@@ -59,7 +75,7 @@ const DROP_BORDER = {
 
 export default {
   name: 'stage',
-  components: { StageEl, MrContainer },
+  components: { StageEl, MrContainer, ContextMenu },
   props: ['page', 'zoom'],
   created: function () {
     this.$root.$on('combine-electrodes', this.combineElectrodes)
@@ -71,6 +87,8 @@ export default {
 
   data: function () {
     return {
+      keyContextMenu: 0,
+      rightClickPoint: {x: 0, y: 0},
       clipboard: [],
       dropContainer: null,
       currentRelPosPaint: {x: 0, y: 0},
@@ -82,17 +100,21 @@ export default {
       chipLastPos: {
         top: 0,
         left: 0
-      }
+      },
+      testDxf: testDxf
     }
   },
   computed: {
     ...mapFields([
+      'app.openContextMenu',
+      'app.squareSize',
       'app.gridUnit',
       'app.cornerSize',
       'app.stagePosTop',
       'app.stagePosLeft',
       'app.editorZoom',
       'app.edit.moveStage',
+      'app.edit.paint',
       'app.chip'
     ]),
 
@@ -120,6 +142,18 @@ export default {
     })
   },
   methods: {
+    rightClickHandler (mousePoint) {
+      this.rightClickPoint.x = mousePoint.x / this.zoom
+      this.rightClickPoint.y = mousePoint.y / this.zoom
+      this.openContextMenu = true
+      this.keyContextMenu++
+    },
+
+    clearState () {
+      this.paint = false
+      this.moveStage = false
+    },
+
     checkCollision (selectedEls, allEls) {
       const unit = this.gridUnit / 10
       const acElPos = []
@@ -176,6 +210,7 @@ export default {
 
     mouseMoveElements (e) {
       const unit = this.gridUnit / 10
+      // const unit = 200
       const offset = e.offsetEl
       const unitX = e.unitX
       const unitY = e.unitY
@@ -210,7 +245,7 @@ export default {
     addElement (e) {
       // console.log(e.x, e.y)
       // console.log(this.allElements)
-      const unit = this.gridUnit / 10
+      const unit = this.squareSize / 10
       const cornerSize = this.cornerSize
       const posX = e.x
       const posY = e.y
@@ -378,7 +413,7 @@ export default {
       if ((selectionBox.top === selectionBox.bottom && selectionBox.left === selectionBox.right) ||
           (this.page.children.length === 0)) return
 
-      let selectedElements = []
+      // let selectedElements = []
       this.page.children.forEach(childEl => {
         const child = (childEl.global) ? {...childEl, ...this.getComponentRef(childEl), id: childEl.id} : childEl
 
@@ -391,7 +426,8 @@ export default {
             (childBottom >= selectionBox.top) && (childRight >= selectionBox.left)) ||
             ((childTop <= selectionBox.bottom) && (childRight >= selectionBox.left) &&
             (childBottom >= selectionBox.top) && (childLeft <= selectionBox.right))) {
-          selectedElements.push(child)
+          // selectedElements.push(child)
+          this._addSelectedElement(child)
         }
       })
 
@@ -565,6 +601,10 @@ export default {
         newVal.style.borderColor = DROP_BORDER.color
       }
     }
+  },
+  mounted () {
+    // console.log(this.testDxf)
+    // console.log(dxfToSvg(testDxf))
   }
 }
 </script>
@@ -588,5 +628,14 @@ html.droppable * {
     0 2px 2px 0 rgba(0, 0, 0, 0.14),
     0 1px 5px 0 rgba(0, 0, 0, 0.12),
     0 3px 1px -2px rgba(0, 0, 0, 0.2);
+}
+
+button {
+  height: 200px;
+  width: 200px;
+  font-size: 50px;
+  position: fixed;
+  top: 0;
+  right: 0;
 }
 </style>

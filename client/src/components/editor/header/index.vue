@@ -1,16 +1,27 @@
 <template>
   <div class="headegg mdc-theme--background" :class="{'not-scrolled': scroll0}">
-    <a class="home-btn" href="https://www.nthu.edu.tw" target="_blank">
-      <!-- <svgicon icon="product/vuegg" width="40" height="40" :original="true"></svgicon> -->
-      <img src="/static/Edrop.png" height="40"/>
-    </a>
-
-    <input class="title-input" v-model="tmpProjectTitle" @blur="onTitleBlur"
-      title="Project title" placeholder="Project title"/>
-
-    <div class="spacer"></div>
-    <action-bar></action-bar>
     <!-- <user-menu></user-menu> -->
+    <div class="title-container">
+      <button
+        v-tooltip="'Sidebar'"
+        class="action-btn"
+        @click="() => {
+          openSidebar = !openSidebar
+        }"
+      >
+        <div>
+          <svgicon icon="system/actions/menu" width="24" height="24">
+          </svgicon>
+        </div>
+      </button>
+      <a class="home-btn" href="https://www.nthu.edu.tw" target="_blank">
+        <!-- <svgicon icon="product/vuegg" width="40" height="40" :original="true"></svgicon> -->
+        <img src="/static/Edrop.png" height="40"/>
+      </a>
+      <input class="title-input" v-model="tmpProjectTitle" @blur="onTitleBlur"
+        title="Project title" placeholder="Project title"/>
+    </div>
+    <action-bar></action-bar>
   </div>
 </template>
 
@@ -18,6 +29,7 @@
 <script>
 import { mapState, mapMutations } from 'vuex'
 import { updateProject } from '@/store/types'
+import { mapFields } from 'vuex-map-fields'
 
 import UserMenu from './UserMenu'
 import ActionBar from './ActionBar'
@@ -34,10 +46,15 @@ export default {
       tmpProjectTitle: ''
     }
   },
-  computed: mapState({
-    project: state => state ? state.project : {},
-    projectTitle: state => state ? state.project.title : ''
-  }),
+  computed: {
+    ...mapState({
+      project: state => state ? state.project : {},
+      projectTitle: state => state ? state.project.title : ''
+    }),
+    ...mapFields([
+      'app.openSidebar'
+    ])
+  },
   methods: {
     onTitleBlur () {
       if (this.tmpProjectTitle && (this.tmpProjectTitle !== this.projectTitle)) {
@@ -77,7 +94,7 @@ export default {
   flex-shrink: 0;
   flex-direction: row;
   flex-wrap: nowrap;
-  justify-content: flex-start;
+  justify-content: space-between;
   align-self: stretch;
   align-items: center;
   box-sizing: border-box;
@@ -104,6 +121,7 @@ export default {
 
 .home-btn {
   margin-right: 25px;
+  margin-left: 10px;
   border: none;
   border-radius: 50%;
   padding: 0;
@@ -121,5 +139,47 @@ export default {
   height: 56px;
   background: transparent;
   outline: none;
+}
+
+.title-container{
+  height: 50px;
+  display: flex;
+  align-items: center;
+}
+
+.action-bar__wrapper {
+  height: 100%;
+  display: flex;
+  flex-shrink: 0;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  align-self: stretch;
+  align-items: center;
+  box-sizing: border-box;
+}
+
+.action-btn {
+  height: 36px;
+  width: 36px;
+  min-width: 28px;
+  min-height: 28px;
+  padding: 1px;
+  margin: 0 6px;
+  border-radius: 100%;
+
+  background-color: transparent;
+  border: 0px none;
+  user-select: none;
+  outline: none;
+}
+.action-btn:hover {
+  background-color: rgba(43, 106, 115, 0.038);
+}
+.action-btn:active {
+  background-color: rgba(43, 106, 115, 0.38);
+}
+.action-btn * {
+  vertical-align: middle;
 }
 </style>

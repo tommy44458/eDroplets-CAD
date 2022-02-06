@@ -43,7 +43,7 @@ async function getVueggProject (owner, repo, token) {
  */
 async function generateVueSources (project) {
   try {
-    return await axios.post('/api/generate', project, {responseType: 'blob'})
+    return await axios.post('/api/generate', project, { responseType: 'blob' })
   } catch (e) {
     console.error(e)
     return false
@@ -52,7 +52,7 @@ async function generateVueSources (project) {
 
 async function test () {
   try {
-    return await axios.get('/api/test')
+    return await axios.get('http://140.114.75.22:3000/public/get')
   } catch (e) {
     console.error(e)
     return false
@@ -68,12 +68,22 @@ async function cad (ewd) {
   }
 }
 
+async function nrrouter (ewd) {
+  try {
+    return await axios.post('http://140.114.75.22:3000/public/eda/nr_router', ewd)
+  } catch (e) {
+    console.error(e)
+    return false
+  }
+}
+
 const api = {
   saveVueggProject,
   getVueggProject,
   generateVueSources,
   test,
-  cad
+  cad,
+  nrrouter
 }
 
 export default api

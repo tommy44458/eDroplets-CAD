@@ -12,6 +12,9 @@ function newState (height, width, gridUnit, cornerSize, project) {
       isSyncing: false,
       canUndo: false,
       canRedo: false,
+      openContextMenu: false,
+      openSidebar: false,
+      squareSize: gridUnit,
       pageDialog: {
         isNew: true,
         isOpen: false
@@ -20,6 +23,7 @@ function newState (height, width, gridUnit, cornerSize, project) {
       selectedElements: [],
       selectedInitialPosition: [],
       editorZoom: 0.2,
+      originalGridUnit: gridUnit,
       gridUnit: gridUnit,
       cornerSize: cornerSize,
       chip: {
