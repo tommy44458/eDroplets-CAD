@@ -3,14 +3,14 @@
         <div class="sidebar-content">
             <p>Square electrode size:</p>
             <span>
-              <input v-model.number="squareSize"/>
+              <input type="number" :min="gridUnit" :step="gridUnit" onkeydown="return false" v-model.number="squareSize"/>
               <span>um</span>
             </span>
         </div>
         <div class="sidebar-content">
             <p>Snapping grids distance:</p>
             <span>
-              <input :value="snappingDistance" @change="changeSnappingDistance"/>
+              <input type="number" min="1" step="1" onkeydown="return false" :value="snappingDistance" @change="changeSnappingDistance"/>
               <span>grids</span>
             </span>   
         </div>
