@@ -413,7 +413,7 @@ export default {
       if ((selectionBox.top === selectionBox.bottom && selectionBox.left === selectionBox.right) ||
           (this.page.children.length === 0)) return
 
-      // let selectedElements = []
+      let selectedElements = []
       this.page.children.forEach(childEl => {
         const child = (childEl.global) ? {...childEl, ...this.getComponentRef(childEl), id: childEl.id} : childEl
 
