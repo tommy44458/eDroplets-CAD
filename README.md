@@ -51,12 +51,20 @@ This is a website-based design tool for EWOD chips, users can free to draw elect
 npm run install:client
 ```
 
+(Optional)For Apple M1:
+``` bash
+# install node dependencies
+cd client
+npm run install --ignore-scripts
+npm rebuild node-sass
+```
+
 ##### 2. development
 ``` bash
 # serve client with hot reload
 npm run client
 ```
-Navigate to `localhost:7000` to serve *client* with hot-reload (development server).
+Navigate to `localhost:7070` to serve *client* with hot-reload (development server).
 
 > For detailed explanation on how things work on the client side, checkout the **[vuejs-templates/webpack](http://vuejs-templates.github.io/webpack/)** guide and docs for **[vue-loader](http://vuejs.github.io/vue-loader)**.
 

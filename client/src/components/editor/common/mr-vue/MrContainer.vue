@@ -69,8 +69,18 @@ export default {
       'app.openContextMenu',
       'app.gridUnit',
       'app.edit.paint',
-      'app.edit.moveStage'
+      'app.edit.moveStage',
+      'app.chip'
     ]),
+
+    boundary () {
+      return {
+        'top': 0,
+        'bottom': (this.chip.height / 1000),
+        'left': 0,
+        'right': (this.chip.width / 1000)
+      }
+    },
 
     mrElements () {
       return this.activeElements.map(el => document.getElementById(el.id).parentElement)
@@ -164,8 +174,7 @@ export default {
         })
         // this.$emit('resizing')
       } else if (this.moving) {
-        // this.mrElements.map(mrEl => this.moveElementBy(mrEl, offX, offY))
-        this.mrElements.map(mrEl => this.moveElementBy2(mrEl, posX, posY))
+        this.mrElements.map(mrEl => this.moveElementBy(mrEl, posX, posY))
         this.$emit('moving', this.currentAbsPos.x, this.currentAbsPos.y)
       } else {
         this.currentAbsPos = this.getMouseAbsPoint(e)
@@ -245,78 +254,32 @@ export default {
       el.style.right = (el.style.right !== 'auto') ? newRight + 'px' : 'auto'
     },
 
-    moveElementBy (el, offX, offY) {
-      const elCompStyle = window.getComputedStyle(el)
-
-      // Re-set height and width on move to preserve dimensions (due addition of bottom/right props)
-      el.style.height = el.style.height
-      el.style.width = el.style.width
-
-      el.style.top = (el.style.top !== 'auto')
-        ? this.fixPosition(el, parseInt(elCompStyle.top) + Math.round(offY / this.zoom), 'top') + 'px'
-        : 'auto'
-      el.style.left = (el.style.left !== 'auto')
-        ? this.fixPosition(el, parseInt(elCompStyle.left) + Math.round(offX / this.zoom), 'left') + 'px'
-        : 'auto'
-      el.style.bottom = (el.style.bottom !== 'auto')
-        ? this.fixPosition(el, parseInt(elCompStyle.bottom) - Math.round(offY / this.zoom), 'bottom') + 'px'
-        : 'auto'
-      el.style.right = (el.style.right !== 'auto')
-        ? this.fixPosition(el, parseInt(elCompStyle.right) - Math.round(offX / this.zoom), 'right') + 'px'
-        : 'auto'
-    },
-
-    // checkCollision (selectedEls, allEls) {
-    //   const unit = 21
-    //   const acElPos = []
-    //   const alElPos = []
-    //   selectedEls.forEach(acEl => {
-    //     const acElX = parseInt(acEl.left / unit)
-    //     const acElY = parseInt(acEl.top / unit)
-    //     if (acEl.matrix != null && acEl.matrix.length > 0) {
-    //       acEl.matrix.forEach((acRow, acI) => {
-    //         acRow.forEach((acItem, acJ) => {
-    //           acElPos.push([acElX + acJ, acElY + acI])
-    //         })
-    //       })
-    //     }
-    //   })
-    //   allEls.forEach(alEl => {
-    //     const alElX = parseInt(alEl.left / unit)
-    //     const alElY = parseInt(alEl.top / unit)
-    //     if (alEl.matrix != null && alEl.matrix.length > 0) {
-    //       alEl.matrix.forEach((alRow, alI) => {
-    //         alRow.forEach((alItem, alJ) => {
-    //           alElPos.push([alElX + alJ, alElY + alI])
-    //         })
-    //       })
-    //     }
-    //   })
-    //   console.log(acElPos, alElPos)
-    //   acElPos.forEach(acPos => {
-    //     alElPos.forEach(alPos => {
-    //       if (acPos.toString() === alPos.toString()) {
-    //         return true
-    //       }
-    //     })
-    //   })
-    //   return false
-    // },
-
-    moveElementBy2 (el, posX, posY) {
+    moveElementBy (el, posX, posY) {
       const unit = this.gridUnit / 10
       const unitX = parseInt((posX / this.zoom) / unit)
       const unitY = parseInt((posY / this.zoom) / unit)
+      if ((unitX >= this.boundary.right) ||
+          (unitY >= this.boundary.bottom) ||
+          (unitX < this.boundary.left) ||
+          (unitY < this.boundary.top)) {
+        // out of canvas
+        return false
+      }
 
-      // this.lastElPos.length = 0
       const offsetEl = []
-      const lastElPos = [ ]
-      this.activeElements.forEach(acEl => {
+      const lastElPos = []
+      for (let i = 0; i < this.activeElements.length; i++) {
+        const acEl = this.activeElements[i]
         const acElX = parseInt(acEl.left / unit)
         const acElY = parseInt(acEl.top / unit)
         lastElPos.push([acEl.left, acEl.top])
         offsetEl.push([parseInt(this.activeElements[0].left / unit) - acElX, parseInt(this.activeElements[0].top / unit) - acElY])
-      })
+        if (((unitX + (acEl.width / unit)) >= this.boundary.right) ||
+            ((unitY + (acEl.height / unit)) >= this.boundary.bottom)) {
+          // out of canvas
+          return false
+        }
+      }
 
       this.$emit('mousemove', {offsetEl, unitX, unitY, lastElPos})
     },
