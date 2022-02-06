@@ -58,7 +58,7 @@ import elementsFromPoint from '@/polyfills/elementsFromPoint'
 import { getComputedProp, fixElementToParentBounds } from '@/helpers/positionDimension'
 
 import { mapState, mapActions, mapMutations } from 'vuex'
-import { _clearSelectedElements, _addSelectedElements, registerElement, _updateMatrix, _updateInitialPosition,
+import { _clearSelectedElements, _addSelectedElement, registerElement, _updateMatrix, _updateInitialPosition,
         _clearInitialPosition, removeElement, resizeElement, moveElement, rebaseSelectedElements, margeSelectedElements } from '@/store/types'
 
 import MrContainer from '@/components/editor/common/mr-vue/MrContainer'
@@ -214,12 +214,20 @@ export default {
       const offset = e.offsetEl
       const unitX = e.unitX
       const unitY = e.unitY
-
+      // console.log(e)
+      // const lastPos = e.lastElPos
+      // const _time = Date.now()
       this.selectedElements.forEach((acEl, index) => {
         const top = unit * (unitY - offset[index][1])
         const left = unit * (unitX - offset[index][0])
         this.moveElement({ elId: acEl.id, pageId: this.page.id, top: top, left: left })
       })
+      // console.log(Date.now() - _time)
+      // if (this.checkCollision(this.selectedElements, this.allElements)) {
+      //   this.selectedElements.forEach((acEl, index) => {
+      //     this.moveElement({ elId: acEl.id, pageId: this.page.id, top: lastPos[index][1], left: lastPos[index][0] })
+      //   })
+      // }
     },
 
     setChipLastPos () {
@@ -405,7 +413,6 @@ export default {
       if ((selectionBox.top === selectionBox.bottom && selectionBox.left === selectionBox.right) ||
           (this.page.children.length === 0)) return
 
-      let selectedElements = []
       this.page.children.forEach(childEl => {
         const child = (childEl.global) ? {...childEl, ...this.getComponentRef(childEl), id: childEl.id} : childEl
 
@@ -418,14 +425,13 @@ export default {
             (childBottom >= selectionBox.top) && (childRight >= selectionBox.left)) ||
             ((childTop <= selectionBox.bottom) && (childRight >= selectionBox.left) &&
             (childBottom >= selectionBox.top) && (childLeft <= selectionBox.right))) {
-          // selectedElements.push(child)
           this._addSelectedElement(child)
         }
       })
 
-      if (selectedElements.length > 0) {
+      if (this.selectedElements.length > 0) {
         let cells = []
-        selectedElements.forEach(element => {
+        this.selectedElements.forEach(element => {
           cells.push({
             row: Math.round(element.top / element.height),
             col: Math.round(element.left / element.width),
@@ -437,9 +443,9 @@ export default {
             id: element.id
           })
         })
+
         let singular = false
         this._updateMatrix({cells, singular})
-        this._addSelectedElements(selectedElements)
       }
     },
 
@@ -574,7 +580,7 @@ export default {
     },
 
     ...mapActions([rebaseSelectedElements, registerElement, removeElement, resizeElement, moveElement, margeSelectedElements]),
-    ...mapMutations([_clearSelectedElements, _addSelectedElements, _updateMatrix, _updateInitialPosition, _clearInitialPosition])
+    ...mapMutations([_clearSelectedElements, _addSelectedElement, _updateMatrix, _updateInitialPosition, _clearInitialPosition])
   },
   watch: {
     dropContainer: function (newVal, oldVal) {
