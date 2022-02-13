@@ -9,7 +9,7 @@
       <p>
         chip grid: 
         <span>
-          <input  v-model="gridUnit" @blur="onGridBlur"
+          <input type="number" min="400" max="10000" step="200" onkeydown="return false" v-model="gridUnit" @blur="onGridBlur"
           title="grid scale" placeholder="grid scale"/>
           <span>
             um
