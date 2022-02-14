@@ -49,8 +49,10 @@
 
 
 <script>
-// import { dxfToSvg } from '@/store/actions/dxf.js'
+import { dxfToSvg } from '@/store/actions/dxf.js'
 import testDxf from 'raw-loader!@/assets/dxf/test.txt'
+import electrode from 'raw-loader!@/assets/dxf/only_one_electrode.txt'
+import wire from 'raw-loader!@/assets/dxf/only_wire.txt'
 import cloneDeep from 'clone-deep'
 import elementsFromPoint from '@/polyfills/elementsFromPoint'
 import { getComputedProp, fixElementToParentBounds } from '@/helpers/positionDimension'
@@ -99,7 +101,9 @@ export default {
         top: 0,
         left: 0
       },
-      testDxf: testDxf
+      testDxf: testDxf,
+      electrode: electrode,
+      wire: wire
     }
   },
   computed: {
@@ -526,7 +530,9 @@ export default {
   },
   mounted () {
     // console.log(this.testDxf)
-    // console.log(dxfToSvg(testDxf))
+    console.log(dxfToSvg(wire))
+    console.log('====================================')
+    console.log(dxfToSvg(electrode))
   }
 }
 </script>
