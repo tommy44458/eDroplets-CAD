@@ -9,7 +9,7 @@
       <p>
         chip grid: 
         <span>
-          <input type="number" min="400" max="10000" step="200" onkeydown="return false" v-model="gridUnit" @blur="onGridBlur"
+          <input type="number" min="400" max="10000" step="200" onkeydown="return false" v-model="gridUnit.current" @blur="onGridBlur"
           title="grid scale" placeholder="grid scale"/>
           <span>
             um
@@ -19,7 +19,7 @@
     </div>
     <div class="confirm-dialog__actions">
       <mdc-button @click="onConfirm" class="confirm-dialog__delete-btn" unelevated>Apply</mdc-button>
-      <mdc-button @click="closeDialog" v-if="parseInt(gridUnit) > 0">Cancel</mdc-button>
+      <mdc-button @click="closeDialog" v-if="parseInt(gridUnit.current) > 0">Cancel</mdc-button>
     </div>
   </dialog>
 </template>
@@ -61,7 +61,7 @@ export default {
     },
 
     onConfirm () {
-      this.newProject({height: this.chip.height, width: this.chip.width, gridUnit: this.gridUnit, cornerSize: 3})
+      this.newProject({height: this.chip.height, width: this.chip.width, gridUnit: this.gridUnit.current, cornerSize: 3})
       this.closeDialog()
     },
 

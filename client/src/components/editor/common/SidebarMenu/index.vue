@@ -3,7 +3,7 @@
         <div class="sidebar-content">
             <p>Square electrode size:</p>
             <span>
-              <input type="number" :min="gridUnit" :step="gridUnit" onkeydown="return false" v-model.number="squareSize"/>
+              <input type="number" :min="gridUnit.current" :step="gridUnit.current" onkeydown="return false" v-model.number="squareSize"/>
               <span>um</span>
             </span>
         </div>
@@ -25,16 +25,15 @@ export default {
   computed: {
     ...mapFields([
       'app.gridUnit',
-      'app.squareSize',
-      'app.originalGridUnit'
+      'app.squareSize'
     ]),
     snappingDistance () {
-      return this.gridUnit / this.originalGridUnit
+      return this.gridUnit.current / this.gridUnit.origin
     }
   },
   methods: {
     changeSnappingDistance (e) {
-      this.gridUnit = e.target.value * this.originalGridUnit
+      this.gridUnit.current = e.target.value * this.gridUnit.origin
     }
   }
 }

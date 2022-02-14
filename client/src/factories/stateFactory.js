@@ -21,8 +21,10 @@ function newState (height, width, gridUnit, cornerSize, project) {
       selectedPage: null,
       selectedElements: [],
       editorZoom: 0.2,
-      originalGridUnit: gridUnit,
-      gridUnit: gridUnit,
+      gridUnit: {
+        origin: gridUnit,
+        current: gridUnit
+      },
       cornerSize: cornerSize,
       chip: {
         height: 40000,
