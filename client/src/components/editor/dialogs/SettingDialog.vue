@@ -8,8 +8,8 @@
       </p>
       <p>
         chip grid: 
-        <span>
-          <input type="number" min="400" max="10000" step="200" onkeydown="return false" v-model="gridUnit.current" @blur="onGridBlur"
+        <span :key="keyInput">
+          <input type="number" min="500" max="5000" step="500" :value="gridUnit.current" @change="autoAdjust" @blur="onGridBlur"
           title="grid scale" placeholder="grid scale"/>
           <span>
             um
@@ -25,8 +25,8 @@
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex'
-import { newProject } from '@/store/types'
+import { mapState, mapActions, mapMutations } from 'vuex'
+import { newProject, _updateGridUnit } from '@/store/types'
 import dialogPolyfill from 'dialog-polyfill/dialog-polyfill'
 import { mapFields } from 'vuex-map-fields'
 
@@ -40,6 +40,7 @@ export default {
   },
   data () {
     return {
+      keyInput: 0
     }
   },
   computed: {
@@ -73,7 +74,21 @@ export default {
 
     },
 
-    ...mapActions([newProject])
+    autoAdjust (e) {
+      let newVal = e.target.value
+      if (newVal % 500 !== 0) {
+        let scale = Math.floor(newVal / 500)
+        if (newVal - 500 * scale < 250) {
+          newVal = 500 * scale
+        } else {
+          newVal = 500 * (scale + 1)
+        }
+      }
+      this._updateGridUnit(newVal)
+      this.keyInput++
+    },
+    ...mapActions([newProject]),
+    ...mapMutations([_updateGridUnit])
   }
 }
 </script>

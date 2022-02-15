@@ -109,7 +109,14 @@ const internalElementMutations = {
         return -1
       }
     })
-  }
+  },
+
+/**
+  Set new gridUnit
+ */
+ [types._updateGridUnit]: function (state, val) {
+  state.app.gridUnit.current = val
+}
 }
 
 const elementMutations = {
