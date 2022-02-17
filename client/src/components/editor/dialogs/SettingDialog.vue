@@ -76,13 +76,19 @@ export default {
 
     autoAdjust (e) {
       let newVal = e.target.value
-      if (newVal % 500 !== 0) {
-        let scale = Math.floor(newVal / 500)
-        if (newVal - 500 * scale < 250) {
-          newVal = 500 * scale
+      const autoAdjustScale = 100
+      if (newVal % autoAdjustScale !== 0) {
+        let scale = Math.floor(newVal / autoAdjustScale)
+        if (newVal - autoAdjustScale * scale < (autoAdjustScale / 2)) {
+          newVal = autoAdjustScale * scale
         } else {
-          newVal = 500 * (scale + 1)
+          newVal = autoAdjustScale * (scale + 1)
         }
+      }
+      if (newVal > 5000) {
+        newVal = 5000
+      } else if (newVal < 500) {
+        newVal = 500
       }
       this._updateGridUnit(newVal)
       this.keyInput++
