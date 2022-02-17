@@ -16,6 +16,9 @@
           </span>
         </span>
       </p>
+      <p v-if="invalidInput">
+          Invalid input value!
+      </p>
     </div>
     <div class="confirm-dialog__actions">
       <mdc-button @click="onConfirm" class="confirm-dialog__delete-btn" unelevated>Apply</mdc-button>
@@ -40,7 +43,8 @@ export default {
   },
   data () {
     return {
-      keyInput: 0
+      keyInput: 0,
+      invalidInput: false
     }
   },
   computed: {
@@ -75,6 +79,7 @@ export default {
     },
 
     autoAdjust (e) {
+      this.invalidInput = false
       let newVal = e.target.value
       const autoAdjustScale = 100
       if (newVal % autoAdjustScale !== 0) {
@@ -84,14 +89,19 @@ export default {
         } else {
           newVal = autoAdjustScale * (scale + 1)
         }
+        this.invalidInput = true
       }
       if (newVal > 5000) {
         newVal = 5000
+        this.invalidInput = true
       } else if (newVal < 500) {
         newVal = 500
+        this.invalidInput = true
       }
       this._updateGridUnit(newVal)
-      this.keyInput++
+      if (this.invalidInput) {
+        this.keyInput++
+      }
     },
     ...mapActions([newProject]),
     ...mapMutations([_updateGridUnit])
