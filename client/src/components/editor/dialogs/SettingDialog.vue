@@ -16,9 +16,11 @@
           </span>
         </span>
       </p>
-      <p v-if="invalidInput">
-          Invalid input value!
-      </p>
+      <span class="invalid-message" v-if="invalidInput">
+        <p>  
+          Invalid grid size input!
+        </p>
+      </span>
     </div>
     <div class="confirm-dialog__actions">
       <mdc-button @click="onConfirm" class="confirm-dialog__delete-btn" unelevated>Apply</mdc-button>
@@ -137,5 +139,9 @@ export default {
 
 .confirm-dialog__delete-btn {
   background-color: #ea493f !important;
+}
+
+.invalid-message {
+  color: red;
 }
 </style>
