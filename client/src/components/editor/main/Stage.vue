@@ -50,7 +50,8 @@
 
 <script>
 import { dxfToSvg } from '@/store/actions/dxf.js'
-import testDxf from 'raw-loader!@/assets/dxf/test.txt'
+import simple from 'raw-loader!@/assets/dxf/simple.txt'
+import empty from 'raw-loader!@/assets/dxf/empty.txt'
 import electrode from 'raw-loader!@/assets/dxf/only_one_electrode.txt'
 import wire from 'raw-loader!@/assets/dxf/only_wire.txt'
 import cloneDeep from 'clone-deep'
@@ -101,7 +102,8 @@ export default {
         top: 0,
         left: 0
       },
-      testDxf: testDxf,
+      simple: simple,
+      empty: empty,
       electrode: electrode,
       wire: wire
     }
@@ -529,10 +531,13 @@ export default {
     }
   },
   mounted () {
-    // console.log(this.testDxf)
-    console.log(dxfToSvg(wire))
-    console.log('====================================')
+    // console.log(dxfToSvg(simple))
+    // console.log('====================================')
+    // console.log(dxfToSvg(empty))
+    // console.log('====================================')
     console.log(dxfToSvg(electrode))
+    // console.log('====================================')
+    // console.log(dxfToSvg(wire))
   }
 }
 </script>

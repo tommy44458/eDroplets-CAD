@@ -222,7 +222,7 @@ export const dxfToSvg = function (dxfString) {
         if (groupCode === 'blockName' && value === 'ENTITIES') {
           isEntitiesSectionActive = true
         } else if (isEntitiesSectionActive) {
-          if (english.test(value)) {
+          if (english.test(value) && value !== 'AcDbEntity' && value !== 'AcDbTrace' && value !== 'AcDbCircle' && value !== 'AcDbVertex') {
             console.log(value)
           }
           if (groupCode === 'entityType') {  // New entity starts.
