@@ -533,9 +533,9 @@ export default {
   mounted () {
     // console.log(dxfToSvg(simple))
     // console.log('====================================')
-    // console.log(dxfToSvg(empty))
+    console.log(dxfToSvg(empty))
     // console.log('====================================')
-    console.log(dxfToSvg(electrode))
+    // console.log(dxfToSvg(electrode))
     // console.log('====================================')
     // console.log(dxfToSvg(wire))
   }
