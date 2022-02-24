@@ -49,7 +49,7 @@
 
 
 <script>
-import { dxfToSvg } from '@/store/actions/dxf.js'
+// import { dxfToSvg } from '@/store/actions/dxf.js'
 import simple from 'raw-loader!@/assets/dxf/simple.txt'
 import empty from 'raw-loader!@/assets/dxf/empty.txt'
 import electrode from 'raw-loader!@/assets/dxf/only_one_electrode.txt'
@@ -533,7 +533,7 @@ export default {
   mounted () {
     // console.log(dxfToSvg(simple))
     // console.log('====================================')
-    console.log(dxfToSvg(empty))
+    // console.log(dxfToSvg(empty))
     // console.log('====================================')
     // console.log(dxfToSvg(electrode))
     // console.log('====================================')

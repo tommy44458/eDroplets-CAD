@@ -6,7 +6,7 @@ import types from '@/store/types'
 import store from '@/store'
 import api from '@/api'
 
-import DxfParser from 'dxf-parser'
+// import DxfParser from 'dxf-parser'
 import { dxfToSvg } from './dxf'
 
 const projectActions = {
@@ -316,7 +316,7 @@ const projectActions = {
     commit(types._toggleLoadingStatus, true)
     commit(types._toggleApiStatus, true)
 
-    const parsedRepoName = state.project.title.replace(/[^a-zA-Z0-9-_]+/g, '-')
+    // const parsedRepoName = state.project.title.replace(/[^a-zA-Z0-9-_]+/g, '-')
 
     // axios.get('http://localhost:3000/api/todo', {
     // })
@@ -387,18 +387,25 @@ const projectActions = {
     dataElectrode = dataElectrode + '0,0,0,0,0,0,0,0;100\n'
     dataElectrode = dataElectrode + '#ENDOFSEQUENCE#'
 
-    const ewd = {
-      ewd: dataElectrode,
-      name: parsedRepoName
-    }
+    // const ewd = {
+    //   ewd: dataElectrode,
+    //   name: parsedRepoName
+    // }
 
-    let resp = await api.cad(ewd)
+    const ewd = {
+      electrode_size: state.app.originalGridUnit,
+      unit: 4,
+      ewd_content: dataElectrode
+    }
+    // let resp = await api.cad(ewd)
+    const resp = await api.nrrouter(ewd)
     // console.log(resp)
 
     if (resp.status === 200) {
-      const parser = new DxfParser()
-      const dxf = parser.parseSync(resp.data)
-      console.log(dxf)
+      // const parser = new DxfParser()
+      // const dxf = parser.parseSync(resp.data)
+      // console.log(dxf)
+      console.log(resp.data)
       let _svg = dxfToSvg(resp.data) + '\n'
       // 'M0 1 L0 19 L1 20 L19 20 L20 19 L20 1 L19 0 L1 0 Z'
       // pos.forEach(_pos => {

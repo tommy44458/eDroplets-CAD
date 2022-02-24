@@ -306,32 +306,26 @@ export const dxfToSvg = function (dxfString) {
   console.log('svg:', helper.toSVG())
   var parsed = helper.parsed.entities
   console.log(parsed)
-  var svg = '<svg viewBox="-750 -750 80240 66016" width="100%" height="100%">'
-  svg += '<g stroke="#000000" stroke-width="0.1%" fill="none" transform="matrix(1,0,0,-1,0,0)">'
+  // var svg = '<svg viewBox="-750 -750 80240 66016" width="100%" height="100%">'
+  var svg = '<g stroke-width="0.1%" stroke="rgb(0, 0, 0)">'
   for (let i = 0; i < parsed.length; i++) {
     const entity = parsed[i]
     switch (entity.type) {
       case 'CIRCLE':
-        svg += '<g stroke="rgb(0, 0, 0)">'
-        svg += `<circle cx="${entity.x}" cy="${entity.y}" r="${entity.r}"/>`
-        svg += '</g>'
+        svg += `<circle cx="${entity.x / 100}" cy="${entity.y / 100}" r="${entity.r / 100}"/>`
         break
       case 'POLYLINE':
-        svg += '<g stroke="rgb(0, 0, 0)">'
-        svg += `<path d="M${entity.vertices[0].x},${entity.vertices[0].y}L${entity.vertices[1].x},${entity.vertices[1].y}L${entity.vertices[2].x},${entity.vertices[2].y}L${entity.vertices[3].x},${entity.vertices[3].y}L${entity.vertices[4].x},${entity.vertices[4].y}L${entity.vertices[5].x},${entity.vertices[5].y}L${entity.vertices[6].x},${entity.vertices[6].y}L${entity.vertices[7].x},${entity.vertices[7].y}L${entity.vertices[8].x},${entity.vertices[8].y}L${entity.vertices[8].x},${entity.vertices[8].y}"/>`
-        svg += '</g>'
+        svg += `<path fill="none" d="M${entity.vertices[0].x / 100},${entity.vertices[0].y / 100}L${entity.vertices[1].x / 100},${entity.vertices[1].y / 100}L${entity.vertices[2].x / 100},${entity.vertices[2].y / 100}L${entity.vertices[3].x / 100},${entity.vertices[3].y / 100}L${entity.vertices[4].x / 100},${entity.vertices[4].y / 100}L${entity.vertices[5].x / 100},${entity.vertices[5].y / 100}L${entity.vertices[6].x / 100},${entity.vertices[6].y / 100}L${entity.vertices[7].x / 100},${entity.vertices[7].y / 100}L${entity.vertices[8].x / 100},${entity.vertices[8].y / 100}L${entity.vertices[8].x / 100},${entity.vertices[8].y / 100}"/>`
         break
       case 'SOLID':
-        svg += '<g stroke="rgb(0, 0, 0)">'
-        svg += `<path d="M${entity.corners[0].x},${entity.corners[0].y} L${entity.corners[1].x},${entity.corners[1].y} L${entity.corners[2].x} ${entity.corners[2].y} L${entity.corners[3].x} ${entity.corners[3].y} Z"/>`
-        svg += '</g>'
+        svg += `<path d="M${entity.corners[0].x / 100},${entity.corners[0].y / 100} L${entity.corners[1].x / 100},${entity.corners[1].y / 100} L${entity.corners[2].x / 100} ${entity.corners[2].y / 100} L${entity.corners[3].x / 100} ${entity.corners[3].y / 100} Z"/>`
         break
       default:
         console.log(entity.type)
         break
     }
   }
-  svg += '</g></svg>'
+  svg += '</g>'
   console.log('svg', svg)
-  // return svg
+  return svg
 }

@@ -1,7 +1,7 @@
 <template>
   <dialog class="dialog" >
     <div class="confirm-dialog__content">
-      <svg width="1000" height="500" viewBox="-100 -50 1500 750" v-html="svgContent">
+      <svg width="1000" height="600" viewBox="-225 -600 1250 500" v-html="svgContent">
       </svg>
     </div>
     <div class="confirm-dialog__actions">
