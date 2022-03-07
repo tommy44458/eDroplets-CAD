@@ -69,7 +69,7 @@ import { mapState, mapActions } from 'vuex'
 import { registerElement } from '@/store/types'
 
 import basicElements from '@/assets/BasicElements'
-import otherElements from '@/assets/otherElements'
+import otherElements from '@/assets/OtherElements'
 // import materialComponents from '@/assets/MaterialComponents'
 // import mockComponents from '@/assets/MockComponents'
 import MenuToggle from '@/components/editor/common/MenuToggle'
