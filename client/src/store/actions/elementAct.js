@@ -261,7 +261,7 @@ const elementActions = {
     if (state.app.selectedElements.length < 2) {
       return false
     }
-    const unit = state.app.gridUnit / 10
+    const unit = state.app.gridUnit.origin / 10
     const cornerSize = state.app.cornerSize
 
     commit(types.sortSelectedElement)
@@ -282,19 +282,19 @@ const elementActions = {
     const rowNumber = ((leftMax - leftMin) / unit) + 1
     const colNumber = ((topMax - topMin) / unit) + 1
 
-    const matrix = []
-
-    for (let i = 0; i < colNumber; i++) {
-      const row = []
-      for (let j = 0; j < rowNumber; j++) {
-        row.push(0)
-      }
-      matrix.push(row)
-    }
-
     let firstElec = 9999
 
-    const initMatrix = async function () {
+    const initMatrix = async function (rowNumber, colNumber) {
+      const matrix = []
+
+      for (let i = 0; i < colNumber; i++) {
+        const row = []
+        for (let j = 0; j < rowNumber; j++) {
+          row.push(0)
+        }
+        matrix.push(row)
+      }
+
       state.app.selectedElements.forEach(el => {
         const rowIndex = (el.left - leftMin) / unit
         const colIndex = (el.top - topMin) / unit
@@ -303,9 +303,11 @@ const elementActions = {
           firstElec = firstElec < rowIndex ? firstElec : rowIndex
         }
       })
+
+      return matrix
     }
 
-    await initMatrix()
+    const matrix = await initMatrix(rowNumber, colNumber)
 
     const vertex = []
     const vArray = []

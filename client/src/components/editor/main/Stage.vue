@@ -59,8 +59,8 @@ import elementsFromPoint from '@/polyfills/elementsFromPoint'
 import { getComputedProp, fixElementToParentBounds } from '@/helpers/positionDimension'
 
 import { mapState, mapActions, mapMutations } from 'vuex'
-import { _clearSelectedElements, _addSelectedElement, registerElement, _updateMatrix, _updateInitialPosition,
-        _clearInitialPosition, removeElement, resizeElement, moveElement, rebaseSelectedElements, margeSelectedElements } from '@/store/types'
+import { _clearSelectedElements, _addSelectedElement, registerElement,
+        removeElement, resizeElement, moveElement, rebaseSelectedElements, margeSelectedElements } from '@/store/types'
 
 import MrContainer from '@/components/editor/common/mr-vue/MrContainer'
 import StageEl from './StageEl'
@@ -416,15 +416,7 @@ export default {
             col: Math.round(element.left / element.width),
             painted: false
           })
-          this._updateInitialPosition({
-            row: Math.round(element.top / element.height),
-            col: Math.round(element.left / element.width),
-            id: element.id
-          })
         })
-
-        let singular = false
-        this._updateMatrix({cells, singular})
       }
     },
 
@@ -524,7 +516,7 @@ export default {
     },
 
     ...mapActions([rebaseSelectedElements, registerElement, removeElement, resizeElement, moveElement, margeSelectedElements]),
-    ...mapMutations([_clearSelectedElements, _addSelectedElement, _updateMatrix, _updateInitialPosition, _clearInitialPosition])
+    ...mapMutations([_clearSelectedElements, _addSelectedElement])
   },
   watch: {
     dropContainer: function (newVal, oldVal) {
