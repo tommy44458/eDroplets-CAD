@@ -302,7 +302,7 @@ export default {
     // },
 
     moveElementBy2 (el, posX, posY) {
-      const unit = this.gridUnit / 10
+      const unit = this.gridUnit.current / 10
       const unitX = parseInt((posX / this.zoom) / unit)
       const unitY = parseInt((posY / this.zoom) / unit)
 

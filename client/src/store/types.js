@@ -94,6 +94,8 @@ export const _saveComponentRef = '_saveComponentRef'
 export const _updateComponentRef = '_updateComponentRef'
 export const _removeComponentRef = '_removeComponentRef'
 
+export const _updateGridUnit = '_updateGridUnit'
+
 const types = {
 // GETTERS
   getPageIndexById,
@@ -180,7 +182,9 @@ const types = {
 
   _saveComponentRef,
   _updateComponentRef,
-  _removeComponentRef
+  _removeComponentRef,
+
+  _updateGridUnit
 }
 
 export default types
