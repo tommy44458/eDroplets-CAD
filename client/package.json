@@ -29,7 +29,6 @@
     "dxf-parser": "^1.0.0-alpha.1",
     "es6-promisify": "^5.0.0",
     "fs": "0.0.1-security",
-    "fsevents": "^1.2.9",
     "jquery": "^3.6.0",
     "localforage": "^1.7.1",
     "normalize.css": "^7.0.0",
