@@ -7,7 +7,67 @@ import store from '@/store'
 import api from '@/api'
 
 // import DxfParser from 'dxf-parser'
-import { dxfToSvg } from './dxf'
+
+const generateEWD = function (state) {
+  const scale = (80000 / 8000)
+  let electrods = state.project.pages[0].children
+
+  let dataElectrode = ''
+    dataElectrode = dataElectrode + 'contactpad circle r 750\n'
+
+    const electrodsShape = {}
+    electrods.forEach(el => {
+      // console.log(el)
+      if (!(el.name in electrodsShape)) {
+        electrodsShape[el.name] = []
+        let path = ''
+        const pathlist = el.children[0].attrs.d.split(' ')
+        pathlist.forEach(p => {
+          if (p === 'M' || p === 'L') {
+            path += p
+          } else if (p !== '' && p !== 'Z') {
+            path += parseInt(p * scale) + ' '
+          } else {
+            path += 'Z\n'
+          }
+        })
+        for (let i = 0; i < pathlist.length - 1; i = i + 3) {
+          if (pathlist[i] !== '') {
+            electrodsShape[el.name].push([parseInt(pathlist[i] * scale), parseInt(pathlist[i + 1] * scale)])
+          }
+        }
+        dataElectrode = dataElectrode + el.name + ' path ' + path
+      }
+    })
+    // dataElectrode = dataElectrode + "square path M0 100 L0 1900 L100 2000 L1900 2000 L2000 1900 L2000 100 L1900 0 L100 0 Z\n";
+    dataElectrode = dataElectrode + '#ENDOFDEFINITION#\n'
+    let tx = 0
+    let ty = 0
+    for (var i = 0; i < 8; i++) {
+      tx = 0
+      for (var j = 0; j < 32; j++) {
+        dataElectrode = dataElectrode + 'contactpad ' + tx + ' ' + ty + '\n'
+        tx = tx + 2540
+      }
+      if (ty === 7620) {
+        ty = 56896
+      } else {
+        ty = ty + 2540
+      }
+    }
+
+    electrods.forEach(getPos)
+
+    function getPos (item, index) {
+      dataElectrode = dataElectrode + item.name + ' ' + (parseFloat(item.left) * scale + 1000 - 1630 + 15) + ' ' + (parseFloat(item.top) * scale + 12258 + 15) + '\n'
+    }
+
+    dataElectrode = dataElectrode + '#ENDOFLAYOUT#\n'
+    dataElectrode = dataElectrode + '0,0,0,0,0,0,0,0;100\n'
+    dataElectrode = dataElectrode + '#ENDOFSEQUENCE#'
+
+    return dataElectrode
+}
 
 const projectActions = {
   /**
@@ -83,84 +143,14 @@ const projectActions = {
    *
    * @return {download} : [project-name].gg file containing the vuegg project definition
    */
-  [types.downloadProject]: async function ({ state, dispatch, commit }) {
+  [types.downloadProjectEWD]: async function ({ state, dispatch, commit }) {
     commit(types._toggleLoadingStatus, true)
-    const scale = (80000 / 8000)
-
     const parsedRepoName = state.project.title.replace(/[^a-zA-Z0-9-_]+/g, '-')
 
-    // console.log('**************************')
-    // let resp = await api.test()
-    // console.log(resp)
-
-    // customer
-    console.log(JSON.stringify(state.project))
-
-    // const projectB64 = btoa(JSON.stringify(state.project))
-    // download(projectB64, parsedRepoName + '.ewd', 'appliction/json')
-
-    let electrods = state.project.pages[0].children
-
-    let dataElectrode = ''
-    dataElectrode = dataElectrode + 'contactpad circle r 750\n'
-
-    const electrodsShape = {}
-    electrods.forEach(el => {
-      // console.log(el)
-      if (!(el.name in electrodsShape)) {
-        electrodsShape[el.name] = []
-        let path = ''
-        const pathlist = el.children[0].attrs.d.split(' ')
-        pathlist.forEach(p => {
-          if (p === 'M' || p === 'L') {
-            path += p
-          } else if (p !== '' && p !== 'Z') {
-            path += parseInt(p * scale) + ' '
-          } else {
-            path += 'Z\n'
-          }
-        })
-        for (let i = 0; i < pathlist.length - 1; i = i + 3) {
-          if (pathlist[i] !== '') {
-            electrodsShape[el.name].push([parseInt(pathlist[i] * scale), parseInt(pathlist[i + 1] * scale)])
-          }
-        }
-        console.log(path)
-        dataElectrode = dataElectrode + el.name + ' path ' + path
-      }
-    })
-    // dataElectrode = dataElectrode + "square path M0 100 L0 1900 L100 2000 L1900 2000 L2000 1900 L2000 100 L1900 0 L100 0 Z\n";
-    dataElectrode = dataElectrode + '#ENDOFDEFINITION#\n'
-    let tx = 0
-    let ty = 0
-    for (var i = 0; i < 8; i++) {
-      tx = 0
-      for (var j = 0; j < 32; j++) {
-        dataElectrode = dataElectrode + 'contactpad ' + tx + ' ' + ty + '\n'
-        tx = tx + 2540
-      }
-      if (ty === 7620) {
-        ty = 56896
-      } else {
-        ty = ty + 2540
-      }
-    }
-
-    electrods.forEach(getPos)
-
-    function getPos (item, index) {
-      dataElectrode = dataElectrode + item.name + ' ' + (parseFloat(item.left) * scale + 1000 - 1630 + 15) + ' ' + (parseFloat(item.top) * scale + 12258 + 15) + '\n'
-    }
-
-    dataElectrode = dataElectrode + '#ENDOFLAYOUT#\n'
-    dataElectrode = dataElectrode + '0,0,0,0,0,0,0,0;100\n'
-    dataElectrode = dataElectrode + '#ENDOFSEQUENCE#'
-
-    console.log(dataElectrode)
+    const dataElectrode = generateEWD(state)
 
     // const projectB64 = btoa(data)
     download(dataElectrode, parsedRepoName + '.ewd')
-
     commit(types._toggleLoadingStatus, false)
   },
 
@@ -169,12 +159,10 @@ const projectActions = {
    *
    * @return {download} : [project-name].gg file containing the vuegg project definition
    */
-  [types.downloadProject2]: async function ({ state, dispatch, commit }) {
+  [types.downloadProjectEDP]: async function ({ state, dispatch, commit }) {
     commit(types._toggleLoadingStatus, true)
 
     const parsedRepoName = state.project.title.replace(/[^a-zA-Z0-9-_]+/g, '-')
-
-    // customer
 
     const projectB64 = btoa(JSON.stringify(state.project))
     download(projectB64, parsedRepoName + '.edp', 'appliction/json')
@@ -186,109 +174,24 @@ const projectActions = {
    *
    * @return {download} : [project-name].gg file containing the vuegg project definition
    */
-  [types.downloadProject3]: async function ({ state, dispatch, commit }) {
+  [types.downloadProjectDXF]: async function ({ state, dispatch, commit }) {
     commit(types._toggleLoadingStatus, true)
     commit(types._toggleApiStatus, true)
 
     const parsedRepoName = state.project.title.replace(/[^a-zA-Z0-9-_]+/g, '-')
 
-    // axios.get('http://localhost:3000/api/todo', {
-    // })
-    // .then(function (response) {
-    //   console.log(response)
-    // })
-    // .catch(function (error) {
-    //   console.log(error)
-    // })
-
-    const scale = (80000 / 8000)
-
-    let electrods = state.project.pages[0].children
-
-    let dataElectrode = ''
-    dataElectrode = dataElectrode + 'contactpad circle r 750\n'
-
-    const electrodsShape = {}
-    electrods.forEach(el => {
-      // console.log(el)
-      if (!(el.name in electrodsShape)) {
-        electrodsShape[el.name] = []
-        let path = ''
-        const pathlist = el.children[0].attrs.d.split(' ')
-        pathlist.forEach(p => {
-          if (p === 'M' || p === 'L') {
-            path += p
-          } else if (p !== '' && p !== 'Z') {
-            path += parseInt(p * scale) + ' '
-          } else {
-            path += 'Z\n'
-          }
-        })
-        for (let i = 0; i < pathlist.length - 1; i = i + 3) {
-          if (pathlist[i] !== '') {
-            electrodsShape[el.name].push([parseInt(pathlist[i] * scale), parseInt(pathlist[i + 1] * scale)])
-          }
-        }
-        console.log(path)
-        dataElectrode = dataElectrode + el.name + ' path ' + path
-      }
-    })
-    // dataElectrode = dataElectrode + "square path M0 100 L0 1900 L100 2000 L1900 2000 L2000 1900 L2000 100 L1900 0 L100 0 Z\n";
-    dataElectrode = dataElectrode + '#ENDOFDEFINITION#\n'
-    let tx = 0
-    let ty = 0
-    for (var i = 0; i < 8; i++) {
-      tx = 0
-      for (var j = 0; j < 32; j++) {
-        dataElectrode = dataElectrode + 'contactpad ' + tx + ' ' + ty + '\n'
-        tx = tx + 2540
-      }
-      if (ty === 7620) {
-        ty = 56896
-      } else {
-        ty = ty + 2540
-      }
-    }
-
-    electrods.forEach(getPos)
-
-    function getPos (item, index) {
-      dataElectrode = dataElectrode + item.name + ' ' + (parseFloat(item.left) * scale + 1000 - 1630 + 15) + ' ' + (parseFloat(item.top) * scale + 12258 + 15) + '\n'
-    }
-
-    dataElectrode = dataElectrode + '#ENDOFLAYOUT#\n'
-    dataElectrode = dataElectrode + '0,0,0,0,0,0,0,0;100\n'
-    dataElectrode = dataElectrode + '#ENDOFSEQUENCE#'
+    const dataElectrode = generateEWD(state)
 
     const ewd = {
       electrode_size: state.app.originalGridUnit,
       unit: 4,
+      output_format: 'dxf',
       ewd_content: dataElectrode
     }
-
-    // let ret = await api.test()
-    // console.log(ret)
-
-    // let resp = {
-    //   status: 400,
-    //   ewd: ewd
-    // }
 
     const resp = await api.nrrouter(ewd)
 
     if (resp.status === 200) {
-      // const parser = new DxfParser()
-      // const dxf = parser.parseSync(resp.data)
-      // console.log(dxf)
-      // let _svg = dxfToSvg(resp.data) + '\n'
-      // 'M0 1 L0 19 L1 20 L19 20 L20 19 L20 1 L19 0 L1 0 Z'
-      // pos.forEach(_pos => {
-      //   let _path = '<path d="M'
-      //   _path = _path + ((_pos[0]) / 100) + ' ' + ((_pos[1] + 100) / 100) + ' L' + ((_pos[0]) / 100) + ' ' + ((_pos[1] + 1900) / 100) + ' L' + ((_pos[0] + 100) / 100) + ' ' + ((_pos[1] + 2000) / 100) + ' L' + ((_pos[0] + 1900) / 100) + ' ' + ((_pos[1] + 2000) / 100) + ' L' + ((_pos[0] + 2000) / 100) + ' ' + ((_pos[1] + 1900) / 100) + ' L' + ((_pos[0] + 2000) / 100) + ' ' + ((_pos[1] + 100) / 100) + ' L' + ((_pos[0] + 1900) / 100) + ' ' + ((_pos[1] + 0) / 100) + ' L' + ((_pos[0] + 100) / 100) + ' ' + ((_pos[1] + 0) / 100) + ' Z" />'
-      //   _svg = _svg + _path + '\n'
-      // _svg = _svg + _path
-      // console.log(_svg)
-
       download(resp.data, parsedRepoName + '.dxf')
       commit(types._toggleLoadingStatus, false)
     } else {
@@ -298,126 +201,26 @@ const projectActions = {
   },
 
   /**
-   * Downloads the current vuegg project definition as a .zip file with the vuejs sources
+   * Downloads the current vuegg project definition as a .gg (base64 json) file
    *
-   * @return {download} [project-name].zip file containing the vuejs sources of the vuegg project
+   * @return {download} : [project-name].gg file containing the vuegg project definition
    */
-  [types.downloadVueSources]: async function ({ state, dispatch, commit }) {
-    commit(types._toggleBlockLoadingStatus, true)
-
-    let resp = await api.generateVueSources(state.project)
-    const parsedProjectName = state.project.title.replace(/[^a-zA-Z0-9-_]+/g, '-')
-    download(resp.data, parsedProjectName + '.zip', resp.data.type)
-
-    commit(types._toggleBlockLoadingStatus, false)
-  },
-
-  [types.getSVG]: async function ({ state, dispatch, commit }) {
+   [types.getSVG]: async function ({ state, dispatch, commit }) {
     commit(types._toggleLoadingStatus, true)
     commit(types._toggleApiStatus, true)
 
-    // const parsedRepoName = state.project.title.replace(/[^a-zA-Z0-9-_]+/g, '-')
-
-    // axios.get('http://localhost:3000/api/todo', {
-    // })
-    // .then(function (response) {
-    //   console.log(response)
-    // })
-    // .catch(function (error) {
-    //   console.log(error)
-    // })
-
-    const scale = (80000 / 8000)
-
-    let electrods = state.project.pages[0].children
-
-    let dataElectrode = ''
-    dataElectrode = dataElectrode + 'contactpad circle r 750\n'
-
-    const electrodsShape = {}
-    electrods.forEach(el => {
-      // console.log(el)
-      if (!(el.name in electrodsShape)) {
-        electrodsShape[el.name] = []
-        let path = ''
-        const pathlist = el.children[0].attrs.d.split(' ')
-        console.log('***', pathlist)
-        pathlist.forEach(p => {
-          if (p === 'M' || p === 'L') {
-            path += p
-          } else if (p !== '' && p !== 'Z') {
-            path += parseInt(p * scale) + ' '
-          } else {
-            path += 'Z\n'
-          }
-        })
-        for (let i = 0; i < pathlist.length - 1; i = i + 3) {
-          if (pathlist[i] !== '') {
-            electrodsShape[el.name].push([parseInt(pathlist[i] * scale), parseInt(pathlist[i + 1] * scale)])
-          }
-        }
-        console.log(path)
-        dataElectrode = dataElectrode + el.name + ' path ' + path
-      }
-    })
-    // dataElectrode = dataElectrode + "square path M0 100 L0 1900 L100 2000 L1900 2000 L2000 1900 L2000 100 L1900 0 L100 0 Z\n";
-    dataElectrode = dataElectrode + '#ENDOFDEFINITION#\n'
-    let tx = 0
-    let ty = 0
-    for (var i = 0; i < 8; i++) {
-      tx = 0
-      for (var j = 0; j < 32; j++) {
-        dataElectrode = dataElectrode + 'contactpad ' + tx + ' ' + ty + '\n'
-        tx = tx + 2540
-      }
-      if (ty === 7620) {
-        ty = 56896
-      } else {
-        ty = ty + 2540
-      }
-    }
-
-    electrods.forEach(getPos)
-
-    function getPos (item, index) {
-      dataElectrode = dataElectrode + item.name + ' ' + (parseFloat(item.left) * scale + 1000 - 1630 + 15) + ' ' + (parseFloat(item.top) * scale + 12258 + 15) + '\n'
-    }
-
-    dataElectrode = dataElectrode + '#ENDOFLAYOUT#\n'
-    dataElectrode = dataElectrode + '0,0,0,0,0,0,0,0;100\n'
-    dataElectrode = dataElectrode + '#ENDOFSEQUENCE#'
-
-    // const ewd = {
-    //   ewd: dataElectrode,
-    //   name: parsedRepoName
-    // }
+    const dataElectrode = generateEWD(state)
 
     const ewd = {
       electrode_size: state.app.originalGridUnit,
       unit: 4,
+      output_format: 'svg',
       ewd_content: dataElectrode
     }
-    // let resp = await api.cad(ewd)
+
     const resp = await api.nrrouter(ewd)
-    // console.log(resp)
-
     if (resp.status === 200) {
-      // const parser = new DxfParser()
-      // const dxf = parser.parseSync(resp.data)
-      // console.log(dxf)
-      console.log(resp.data)
-      let _svg = dxfToSvg(resp.data) + '\n'
-      // 'M0 1 L0 19 L1 20 L19 20 L20 19 L20 1 L19 0 L1 0 Z'
-      // pos.forEach(_pos => {
-      //   let _path = '<path d="M'
-      //   _path = _path + ((_pos[0]) / 100) + ' ' + ((_pos[1] + 100) / 100) + ' L' + ((_pos[0]) / 100) + ' ' + ((_pos[1] + 1900) / 100) + ' L' + ((_pos[0] + 100) / 100) + ' ' + ((_pos[1] + 2000) / 100) + ' L' + ((_pos[0] + 1900) / 100) + ' ' + ((_pos[1] + 2000) / 100) + ' L' + ((_pos[0] + 2000) / 100) + ' ' + ((_pos[1] + 1900) / 100) + ' L' + ((_pos[0] + 2000) / 100) + ' ' + ((_pos[1] + 100) / 100) + ' L' + ((_pos[0] + 1900) / 100) + ' ' + ((_pos[1] + 0) / 100) + ' L' + ((_pos[0] + 100) / 100) + ' ' + ((_pos[1] + 0) / 100) + ' Z" />'
-      //   _svg = _svg + _path + '\n'
-      // _svg = _svg + _path
-      // console.log(_svg)
-      // svgContent = _svg
-      commit(types._toggleSvg, _svg)
-
-      // download(resp.data, parsedRepoName + '.dwg')
+      commit(types._toggleSvg, resp.data)
       commit(types._toggleLoadingStatus, false)
     } else {
       commit(types._toggleLoadingStatus, false)

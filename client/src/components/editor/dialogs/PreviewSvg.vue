@@ -1,13 +1,8 @@
 <template>
-  <dialog class="dialog" >
-    <div class="confirm-dialog__content">
-      <svg width="1000" height="600" viewBox="-225 -600 1250 500" v-html="svgContent">
-      </svg>
-    </div>
-    <div class="confirm-dialog__actions">
-      <!-- <mdc-button @click="onConfirm" class="confirm-dialog__delete-btn" unelevated>Delete</mdc-button> -->
-      <mdc-button @click="closeDialog">Confirm</mdc-button>
-    </div>
+  <dialog class="dialog" @click="closeDialog" >
+    <!-- <div class="confirm-dialog__content" > -->
+    <svg style="height: 100%;" viewBox="0 0 787 458" v-html="svgContent" />
+    <!-- </div> -->
   </dialog>
 </template>
 
@@ -68,11 +63,13 @@ export default {
 
 <style scoped>
 dialog {
-  height: 92% !important;
-  width: 70% !important;
+  height: 85% !important;
+  width: 50% !important;
+  text-align: center;
 }
 
 .confirm-dialog__title {
+  text-align: center;
   font-size: 24px;
   font-weight: 500;
   padding: 24px 24px 0;
@@ -82,8 +79,8 @@ dialog {
 }
 
 .confirm-dialog__content {
-  padding: 20px 24px 24px;
-  color: rgba(0,0,0,.54);
+  padding: 5px;
+  color: rgba(255, 255, 255, 0.54);
 }
 .confirm-dialog__content .confirm-dialog__input{
   width: 100%;

@@ -24,10 +24,9 @@ export const logIn = 'logIn'
 export const logOut = 'logOut'
 export const checkAuth = 'checkAuth'
 
-export const downloadProject = 'downloadProject'
-// customer
-export const downloadProject2 = 'downloadProject2'
-export const downloadProject3 = 'downloadProject3'
+export const downloadProjectEWD = 'downloadProjectEWD'
+export const downloadProjectEDP = 'downloadProjectEDP'
+export const downloadProjectDXF = 'downloadProjectDXF'
 export const getSVG = 'getSVG'
 
 export const uploadProjectToGH = 'uploadProjectToGH'
@@ -117,10 +116,9 @@ const types = {
   checkAuth,
 
   downloadVueSources,
-  downloadProject,
-  // customer
-  downloadProject2,
-  downloadProject3,
+  downloadProjectEWD,
+  downloadProjectEDP,
+  downloadProjectDXF,
   getSVG,
   uploadVueSourcesToGH,
   uploadProjectToGH,
