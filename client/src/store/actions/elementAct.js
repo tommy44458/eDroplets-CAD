@@ -1,5 +1,6 @@
 /* eslint-disable eqeqeq */
 import types from '@/store/types'
+import newElectrodeUnit from '@/factories/electrodeUnitFactory'
 import componentFactory from '@/factories/componentFactory'
 import { setElId, getChildNode, calcRelativePoint } from '@/helpers/recursiveMethods'
 import { fixElementToParentBounds, getComputedProp } from '@/helpers/positionDimension'
@@ -261,9 +262,9 @@ const elementActions = {
     if (state.app.selectedElements.length < 2) {
       return false
     }
+
     const unit = state.app.gridUnit.origin / 10
     const cornerSize = state.app.cornerSize
-
     commit(types.sortSelectedElement)
 
     let topMax = -1
@@ -276,7 +277,6 @@ const elementActions = {
       leftMin = el.left < leftMin ? el.left : leftMin
       topMax = el.top > topMax ? el.top : topMax
       leftMax = el.left > leftMax ? el.left : leftMax
-      console.log(el)
     })
 
     const rowNumber = ((leftMax - leftMin) / unit) + 1
@@ -578,6 +578,43 @@ const elementActions = {
     })
 
     dispatch(types.registerElement, {pageId: page.id, el, global: el.global})
+    return true
+  },
+
+  [types.separateElement]: async function ({ getters, commit, state, dispatch }, payload) {
+    if (state.app.selectedElements.length !== 1) {
+      return false
+    }
+
+    const unit = state.app.gridUnit.origin / 10
+    const cornerSize = state.app.cornerSize
+
+    const matrix = state.app.selectedElements[0].classes.matrix
+
+    const rowNumber = matrix.length
+    const colNumber = matrix[0].length
+    const topMax = state.app.selectedElements[0].top
+    const leftMax = state.app.selectedElements[0].left
+
+    let parent = getters.getPageById(payload.pageId)
+    dispatch(types.removeElement, {page: parent, elId: state.app.selectedElements[0].id})
+
+    for (let i = 0; i < rowNumber; i++) {
+      for (let j = 0; j < colNumber; j++) {
+        if (matrix[i][j] === -1) {
+          let element = newElectrodeUnit('base', unit, cornerSize)
+
+          const height = unit - cornerSize
+          const width = unit - cornerSize
+          const top = topMax + unit * i
+          const left = leftMax + unit * j
+
+          const fixedElement = fixElementToParentBounds({top, left, height, width}, parent)
+          element = {...element, ...fixedElement}
+          dispatch(types.registerElement, {pageId: payload.pageId, el: element, global: global})
+        }
+      }
+    }
     return true
   },
 

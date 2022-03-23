@@ -42,6 +42,7 @@
         @cut="cutHandler"
         @paste="pasteHandler"
         @combine="combineElectrodes"
+        @separate="separateElementHandler"
       ></context-menu>
     </div>
   </mr-container>
@@ -60,7 +61,7 @@ import { getComputedProp, fixElementToParentBounds } from '@/helpers/positionDim
 
 import { mapState, mapActions, mapMutations } from 'vuex'
 import { _clearSelectedElements, _addSelectedElement, registerElement,
-        removeElement, resizeElement, moveElement, rebaseSelectedElements, margeSelectedElements } from '@/store/types'
+        removeElement, resizeElement, moveElement, rebaseSelectedElements, margeSelectedElements, separateElement } from '@/store/types'
 
 import MrContainer from '@/components/editor/common/mr-vue/MrContainer'
 import StageEl from './StageEl'
@@ -278,7 +279,6 @@ export default {
 
         const fixedElement = fixElementToParentBounds({top, left, height, width}, this.page)
         element = {...element, ...fixedElement}
-
         this.registerElement({pageId: this.page.id, el: element, global: e.shiftKey})
         this.currentRelPosPaint.x = posX
         this.currentRelPosPaint.y = posY
@@ -292,6 +292,21 @@ export default {
       } else {
         this.$toasted.show(
           'Electrode combining failed',
+          {
+            position: 'bottom-right',
+            duration: 3000
+          },
+        )
+      }
+    },
+
+    async separateElementHandler () {
+      const combineSuccess = await this.separateElement({pageId: this.page.id})
+      if (combineSuccess) {
+        this.deleteHandler()
+      } else {
+        this.$toasted.show(
+          'Electrode separating failed',
           {
             position: 'bottom-right',
             duration: 3000
@@ -515,7 +530,7 @@ export default {
         : document.documentElement.classList.remove('droppable')
     },
 
-    ...mapActions([rebaseSelectedElements, registerElement, removeElement, resizeElement, moveElement, margeSelectedElements]),
+    ...mapActions([rebaseSelectedElements, registerElement, removeElement, resizeElement, moveElement, margeSelectedElements, separateElement]),
     ...mapMutations([_clearSelectedElements, _addSelectedElement])
   },
   watch: {

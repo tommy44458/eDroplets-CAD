@@ -48,6 +48,7 @@ export const moveElement = 'moveElement'
 export const changeElementParent = 'changeElementParent'
 export const removeElement = 'removeElement'
 export const margeSelectedElements = 'margeSelectedElements'
+export const separateElement = 'separateElement'
 export const rebaseSelectedElements = 'rebaseSelectedElements'
 
 // MUTATIONS
@@ -138,6 +139,7 @@ const types = {
   changeElementParent,
   removeElement,
   margeSelectedElements,
+  separateElement,
   rebaseSelectedElements,
 
 // MUTATIONS
