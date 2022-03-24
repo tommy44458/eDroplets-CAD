@@ -301,10 +301,8 @@ export default {
     },
 
     async separateElementHandler () {
-      const combineSuccess = await this.separateElement({pageId: this.page.id})
-      if (combineSuccess) {
-        this.deleteHandler()
-      } else {
+      const separateSuccess = await this.separateElement()
+      if (!separateSuccess) {
         this.$toasted.show(
           'Electrode separating failed',
           {

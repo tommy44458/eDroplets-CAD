@@ -263,6 +263,8 @@ const elementActions = {
       return false
     }
 
+    // dispatch(types.separateElement)
+
     const unit = state.app.gridUnit.origin / 10
     const cornerSize = state.app.cornerSize
     commit(types.sortSelectedElement)
@@ -582,36 +584,40 @@ const elementActions = {
   },
 
   [types.separateElement]: async function ({ getters, commit, state, dispatch }, payload) {
-    if (state.app.selectedElements.length !== 1) {
+    if (state.app.selectedElements.length < 1) {
       return false
     }
-
     const unit = state.app.gridUnit.origin / 10
     const cornerSize = state.app.cornerSize
+    const elementCount = state.app.selectedElements.length
+    const selectedElements = state.app.selectedElements
+    for (let elementIdx = 0; elementIdx < elementCount; elementIdx++) {
+      const matrix = selectedElements[elementIdx].classes.matrix
 
-    const matrix = state.app.selectedElements[0].classes.matrix
+      const rowNumber = matrix.length
+      const colNumber = matrix[0].length
+      const topMax = selectedElements[elementIdx].top
+      const leftMax = selectedElements[elementIdx].left
 
-    const rowNumber = matrix.length
-    const colNumber = matrix[0].length
-    const topMax = state.app.selectedElements[0].top
-    const leftMax = state.app.selectedElements[0].left
+      if (rowNumber === 1 && colNumber === 1) continue
 
-    let parent = getters.getPageById(payload.pageId)
-    dispatch(types.removeElement, {page: parent, elId: state.app.selectedElements[0].id})
+      const page = state.app.selectedPage
+      dispatch(types.removeElement, {page: page, elId: selectedElements[elementIdx].id})
 
-    for (let i = 0; i < rowNumber; i++) {
-      for (let j = 0; j < colNumber; j++) {
-        if (matrix[i][j] === -1) {
-          let element = newElectrodeUnit('base', unit, cornerSize)
+      for (let i = 0; i < rowNumber; i++) {
+        for (let j = 0; j < colNumber; j++) {
+          if (matrix[i][j] === -1) {
+            let element = newElectrodeUnit('base', unit, cornerSize)
 
-          const height = unit - cornerSize
-          const width = unit - cornerSize
-          const top = topMax + unit * i
-          const left = leftMax + unit * j
+            const height = unit - cornerSize
+            const width = unit - cornerSize
+            const top = topMax + unit * i
+            const left = leftMax + unit * j
 
-          const fixedElement = fixElementToParentBounds({top, left, height, width}, parent)
-          element = {...element, ...fixedElement}
-          dispatch(types.registerElement, {pageId: payload.pageId, el: element, global: global})
+            const fixedElement = fixElementToParentBounds({top, left, height, width}, page)
+            element = {...element, ...fixedElement}
+            dispatch(types.registerElement, {pageId: page.id, el: element, global: global})
+          }
         }
       }
     }
