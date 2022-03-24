@@ -104,6 +104,7 @@ const elementActions = {
 
     let egglement = setElId(el, payload.pageId)
     commit(types.createEgglement, {parent, egglement})
+    return egglement
   },
 
 /**
@@ -263,7 +264,7 @@ const elementActions = {
       return false
     }
 
-    // dispatch(types.separateElement)
+    await dispatch(types.separateElement)
 
     const unit = state.app.gridUnit.origin / 10
     const cornerSize = state.app.cornerSize
@@ -310,7 +311,6 @@ const elementActions = {
     }
 
     const matrix = await initMatrix(rowNumber, colNumber)
-
     const vertex = []
     const vArray = []
 
@@ -565,7 +565,7 @@ const elementActions = {
     const page = state.app.selectedPage
 
     const el = state.app.selectedElements[0]
-
+    console.log(el)
     commit(types.updateElement, {
       egglement: el,
       name: el.id.split('.')[1],
@@ -578,7 +578,6 @@ const elementActions = {
         'matrix': matrix
       }
     })
-
     dispatch(types.registerElement, {pageId: page.id, el, global: el.global})
     return true
   },
@@ -591,18 +590,24 @@ const elementActions = {
     const cornerSize = state.app.cornerSize
     const elementCount = state.app.selectedElements.length
     const selectedElements = state.app.selectedElements
+
+    let toSelect = []
     for (let elementIdx = 0; elementIdx < elementCount; elementIdx++) {
-      const matrix = selectedElements[elementIdx].classes.matrix
+      const selectedElement = selectedElements[elementIdx]
+      const matrix = selectedElement.classes.matrix
 
       const rowNumber = matrix.length
       const colNumber = matrix[0].length
-      const topMax = selectedElements[elementIdx].top
-      const leftMax = selectedElements[elementIdx].left
+      const topMax = selectedElement.top
+      const leftMax = selectedElement.left
 
-      if (rowNumber === 1 && colNumber === 1) continue
+      if (rowNumber === 1 && colNumber === 1) {
+        toSelect.push(selectedElement)
+        continue
+      }
 
       const page = state.app.selectedPage
-      dispatch(types.removeElement, {page: page, elId: selectedElements[elementIdx].id})
+      dispatch(types.removeElement, {page: page, elId: selectedElement.id})
 
       for (let i = 0; i < rowNumber; i++) {
         for (let j = 0; j < colNumber; j++) {
@@ -616,11 +621,17 @@ const elementActions = {
 
             const fixedElement = fixElementToParentBounds({top, left, height, width}, page)
             element = {...element, ...fixedElement}
-            dispatch(types.registerElement, {pageId: page.id, el: element, global: global})
+            element = await dispatch(types.registerElement, {pageId: page.id, el: element, global: global})
+            // let parentId = payload.elId.substring(0, payload.elId.lastIndexOf('.'))
+            // let parent = getChildNode(payload.page, parentId)
+            // let eggIndex = parent.children.findIndex(egg => egg.id === payload.elId)
+            // let element = parent.children[eggIndex]
+            toSelect.push(element)
           }
         }
       }
     }
+    commit(types._addSelectedElements, toSelect)
     return true
   },
 
