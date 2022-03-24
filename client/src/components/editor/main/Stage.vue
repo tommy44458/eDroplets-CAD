@@ -61,7 +61,7 @@ import { getComputedProp, fixElementToParentBounds } from '@/helpers/positionDim
 
 import { mapState, mapActions, mapMutations } from 'vuex'
 import { _clearSelectedElements, _addSelectedElement, registerElement,
-        removeElement, resizeElement, moveElement, rebaseSelectedElements, margeSelectedElements, separateElement } from '@/store/types'
+        removeElement, resizeElement, moveElement, rebaseSelectedElements, margeSelectedElements, separateElement, updateElement } from '@/store/types'
 
 import MrContainer from '@/components/editor/common/mr-vue/MrContainer'
 import StageEl from './StageEl'
@@ -236,15 +236,16 @@ export default {
       this.stagePosLeft = this.chipLastPos.left + _x
     },
 
-    addElement (e) {
+    async addElement (e) {
       // console.log(e.x, e.y)
       // console.log(this.allElements)
       const unit = this.squareSize / 10
+      const originUnit = this.gridUnit.origin / 10
       const cornerSize = this.cornerSize
       const posX = e.x
       const posY = e.y
 
-      if (Math.floor((posX / this.zoom) / unit) === Math.floor((this.currentRelPosPaint.x / this.zoom) / unit) && Math.floor((posX / this.zoom) / unit) === Math.floor((this.currentRelPosPaint.y / this.zoom) / unit)) {
+      if (Math.floor((posX / this.zoom) / originUnit) === Math.floor((this.currentRelPosPaint.x / this.zoom) / originUnit) && Math.floor((posX / this.zoom) / originUnit) === Math.floor((this.currentRelPosPaint.y / this.zoom) / originUnit)) {
         return false
       }
 
@@ -254,7 +255,7 @@ export default {
           el.classes.matrix.forEach((row, i) => {
             row.forEach((item, j) => {
               if (el.classes.matrix[i][j] !== 0) {
-                if ((posX / this.zoom) >= (el.left + (j * unit)) && (posX / this.zoom) <= (el.left + (j * unit) + unit) && (posY / this.zoom) >= (el.top + (i * unit)) && (posY / this.zoom) <= (el.top + (i * unit) + unit)) {
+                if ((posX / this.zoom) >= (el.left + (j * originUnit)) && (posX / this.zoom) <= (el.left + (j * originUnit) + originUnit) && (posY / this.zoom) >= (el.top + (i * originUnit)) && (posY / this.zoom) <= (el.top + (i * originUnit) + originUnit)) {
                   canAdd = false
                 }
               }
@@ -264,7 +265,9 @@ export default {
       })
 
       if (canAdd) {
-        let element = newElectrodeUnit('base', unit, cornerSize)
+        const elementType = (unit !== originUnit) ? 'merged' : 'base'
+
+        let element = newElectrodeUnit(elementType, unit, cornerSize)
 
         const height = getComputedProp('height', element, this.page)
         const width = getComputedProp('width', element, this.page)
@@ -279,9 +282,28 @@ export default {
 
         const fixedElement = fixElementToParentBounds({top, left, height, width}, this.page)
         element = {...element, ...fixedElement}
-        this.registerElement({pageId: this.page.id, el: element, global: e.shiftKey})
+        element = await this.registerElement({pageId: this.page.id, el: element, global: e.shiftKey})
         this.currentRelPosPaint.x = posX
         this.currentRelPosPaint.y = posY
+
+        if (elementType !== 'base') {
+          const matrix = []
+          const rowNumber = (width + cornerSize) / originUnit
+          const colNumber = (height + cornerSize) / originUnit
+          for (let i = 0; i < rowNumber; i++) {
+            const row = []
+            for (let j = 0; j < colNumber; j++) {
+              row.push(-1)
+            }
+            matrix.push(row)
+          }
+          this.updateElement({
+            egglement: element,
+            classes: {
+              'matrix': matrix
+            }
+          })
+        }
       }
     },
 
@@ -529,7 +551,7 @@ export default {
     },
 
     ...mapActions([rebaseSelectedElements, registerElement, removeElement, resizeElement, moveElement, margeSelectedElements, separateElement]),
-    ...mapMutations([_clearSelectedElements, _addSelectedElement])
+    ...mapMutations([_clearSelectedElements, _addSelectedElement, updateElement])
   },
   watch: {
     dropContainer: function (newVal, oldVal) {
