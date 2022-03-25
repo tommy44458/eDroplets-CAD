@@ -14,10 +14,14 @@
           </svgicon>
         </div>
       </button>
-      <a class="home-btn" href="https://www.nthu.edu.tw" target="_blank">
+      <div class="home-btn" style="display: flex; align-items: center;" >
         <!-- <svgicon icon="product/vuegg" width="40" height="40" :original="true"></svgicon> -->
-        <img src="/static/Edrop.png" height="40"/>
-      </a>
+        <p style="font-size:24px; font-weight: bold; color: #005587; text-align: center;">
+          eDrops
+        <!-- <img src="/static/edrop_logo.png" height="40"/> -->
+        </p>
+        <img src="/static/edrop_logo.png" height="40"/>
+      </div>
       <input class="title-input" v-model="tmpProjectTitle" @blur="onTitleBlur"
         title="Project title" placeholder="Project title"/>
     </div>
@@ -81,13 +85,13 @@ export default {
 
 .headegg {
   z-index: 1000;
-  height: 50px;
+  height: 60px;
   width: 100%;
   background: #FAEDCD;
   border: 1px solid #A06933;
   /* calc(100% - 240px); */
   /* color: rgba(0,0,0,0.66); */
-  padding: 0 25px 0 25px;
+  padding: 5px 25px 5px 25px;
   /* margin-right: 0; */
   /* border: none; */
   display: flex;
