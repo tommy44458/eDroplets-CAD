@@ -258,6 +258,17 @@ export default {
                 if ((posX / this.zoom) >= (el.left + (j * originUnit)) && (posX / this.zoom) <= (el.left + (j * originUnit) + originUnit) && (posY / this.zoom) >= (el.top + (i * originUnit)) && (posY / this.zoom) <= (el.top + (i * originUnit) + originUnit)) {
                   canAdd = false
                 }
+                if (unit !== originUnit) {
+                  if (((posX / this.zoom) + unit - originUnit) >= (el.left + (j * originUnit)) && ((posX / this.zoom) + unit - originUnit) <= (el.left + (j * originUnit) + originUnit) && ((posY / this.zoom) + unit - originUnit) >= (el.top + (i * originUnit)) && ((posY / this.zoom) + unit - originUnit) <= (el.top + (i * originUnit) + originUnit)) {
+                    canAdd = false
+                  }
+                  if (((posX / this.zoom) + unit - originUnit) >= (el.left + (j * originUnit)) && ((posX / this.zoom) + unit - originUnit) <= (el.left + (j * originUnit) + originUnit) && (posY / this.zoom) >= (el.top + (i * originUnit)) && (posY / this.zoom) <= (el.top + (i * originUnit) + originUnit)) {
+                    canAdd = false
+                  }
+                  if ((posX / this.zoom) >= (el.left + (j * originUnit)) && (posX / this.zoom) <= (el.left + (j * originUnit) + originUnit) && ((posY / this.zoom) + unit - originUnit) >= (el.top + (i * originUnit)) && ((posY / this.zoom) + unit - originUnit) <= (el.top + (i * originUnit) + originUnit)) {
+                    canAdd = false
+                  }
+                }
               }
             })
           })
