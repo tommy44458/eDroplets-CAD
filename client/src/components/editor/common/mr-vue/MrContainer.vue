@@ -60,7 +60,9 @@ export default {
       selecting: false,
       moving: false,
       resizing: false,
-      handle: null
+      handle: null,
+      initialPos: [],
+      lastActiveEl: []
       // lastElPos: []
     }
   },
@@ -86,6 +88,7 @@ export default {
       let isMrs = false
       this.initialAbsPos = this.currentAbsPos = this.getMouseAbsPoint(e)
       this.initialRelPos = this.currentRelPos = this.getMouseRelPoint(e)
+
       if (e.target.dataset.mrContainer) {
         if (!e.shiftKey) {
           this.$emit('clearselection')
@@ -306,16 +309,24 @@ export default {
       const unitX = parseInt((posX / this.zoom) / unit)
       const unitY = parseInt((posY / this.zoom) / unit)
 
-      // this.lastElPos.length = 0
+      let setInitialPos = false
+      if (!this.lastActiveEl || this.lastActiveEl !== this.activeElements) {
+        this.initialPos.length = 0
+        setInitialPos = true
+      }
       const offsetEl = []
-      const lastElPos = [ ]
+      const lastElPos = []
       this.activeElements.forEach(acEl => {
         const acElX = parseInt(acEl.left / unit)
         const acElY = parseInt(acEl.top / unit)
         lastElPos.push([acEl.left, acEl.top])
+        if (setInitialPos) {
+          this.initialPos.push([acEl.left, acEl.top])
+        }
         offsetEl.push([parseInt(this.activeElements[0].left / unit) - acElX, parseInt(this.activeElements[0].top / unit) - acElY])
       })
 
+      this.lastActiveEl = this.activeElements
       this.$emit('mousemove', {offsetEl, unitX, unitY, lastElPos})
     },
 
@@ -382,7 +393,8 @@ export default {
         relMouseX: Math.round(this.currentRelPos.x / this.zoom),
         relMouseY: Math.round(this.currentRelPos.y / this.zoom),
         absMouseX: this.currentAbsPos.x,
-        absMouseY: this.currentAbsPos.y
+        absMouseY: this.currentAbsPos.y,
+        initialPos: this.initialPos
       }
     },
 

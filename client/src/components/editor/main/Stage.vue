@@ -192,13 +192,13 @@ export default {
       })
       // console.log(acElPos, alElPos)
       let collision = false
-      // acElPos.forEach(acPos => {
-      //   alElPos.forEach(alPos => {
-      //     if (acPos.toString() === alPos.toString()) {
-      //       collision = true
-      //     }
-      //   })
-      // })
+      acElPos.forEach(acPos => {
+        alElPos.forEach(alPos => {
+          if (acPos.toString() === alPos.toString()) {
+            collision = true
+          }
+        })
+      })
       return collision
     },
 
@@ -520,6 +520,13 @@ export default {
     },
 
     moveStopHandler (moveStopData) {
+      if (this.checkCollision(this.selectedElements, this.allElements)) {
+        this.selectedElements.forEach((acEl, index) => {
+          this.moveElement({ elId: acEl.id, pageId: this.page.id, top: moveStopData.initialPos[index][1], left: moveStopData.initialPos[index][0] })
+        })
+        return
+      }
+
       const containegg = this.getContaineggOnPoint(moveStopData.absMouseX, moveStopData.absMouseY)
       const parentId = containegg ? containegg.id : null
 
