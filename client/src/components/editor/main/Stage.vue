@@ -315,6 +315,9 @@ export default {
             }
           })
         }
+        if (this.checkCollision([element], this.allElements.filter(el => el.id !== element.id))) {
+          this.removeElement({page: this.page, elId: element.id})
+        }
       }
     },
 
