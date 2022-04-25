@@ -146,7 +146,6 @@ export default {
   },
   methods: {
     rightClickHandler (mousePoint) {
-      console.log(this.selectedElements)
       this.rightClickPoint = mousePoint
       this.openContextMenu = true
       this.keyContextMenu++
@@ -237,23 +236,23 @@ export default {
       //   }
       // })
 
-      const unitX = parseInt((e.x / this.zoom) / unit)
-      const unitY = parseInt((e.y / this.zoom) / unit)
+      const unitX = parseInt((posX / this.zoom) / unit)
+      const unitY = parseInt((posY / this.zoom) / unit)
       const top = unit * unitY
       const left = unit * unitX
 
-      // console.log(this.chip.matrix)
+      const chipX = Math.floor((posX / this.zoom) / originUnit)
+      const chipY = Math.floor((posY / this.zoom) / originUnit)
+
       for (let i = 0; i < unit / originUnit; i++) {
         for (let j = 0; j < unit / originUnit; j++) {
-          if (this.chip.matrix[top / originUnit + i][left / originUnit + j]) {
-            // console.log(i, j)
-            // console.log(top / originUnit + i)
-            // console.log(left / originUnit + j)
-            // console.log('Collision')
+          if (this.chip.matrix[chipY + i][chipX + j]) {
+            console.log('Collision')
             canAdd = false
           }
         }
       }
+      console.log(this.chip.matrix)
 
       if (canAdd) {
         const elementType = (unit !== originUnit) ? 'merged' : 'base'
@@ -294,6 +293,7 @@ export default {
               'matrix': matrix
             }
           })
+
           for (let i = 0; i < unit / originUnit; i++) {
             for (let j = 0; j < unit / originUnit; j++) {
               this.chip.matrix[top / originUnit + i][left / originUnit + j] = 1
@@ -394,6 +394,13 @@ export default {
             el.top = top + el.top - pasteTop
             el.left = left + el.left - pasteLeft
             this.registerElement({pageId: this.page.id, el, global: el.global})
+            for (let i = 0; i < el.classes.matrix.length; i++) {
+              for (let j = 0; j < el.classes.matrix[i].length; j++) {
+                if (el.classes.matrix[i][j] !== 0) {
+                  this.chip.matrix[el.top * 10 / this.gridUnit.current + i][el.left * 10 / this.gridUnit.current + j] = 1
+                }
+              }
+            }
           })
         } else {
           this.$toasted.show(
