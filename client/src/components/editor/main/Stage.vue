@@ -517,7 +517,14 @@ export default {
     moveStopHandler (moveStopData) {
       if (moveStopData.initialPos.length > 0 && this.checkCollision(this.selectedElements)) {
         this.selectedElements.forEach((acEl, index) => {
-          this.moveElement({ elId: acEl.id, pageId: this.page.id, top: moveStopData.initialPos[index][1], left: moveStopData.initialPos[index][0] })
+          const initialTop = moveStopData.initialPos[index][1]
+          const initialLeft = moveStopData.initialPos[index][0]
+          for (let i = 0; i < acEl.classes.matrix.length; i++) {
+            for (let j = 0; j < acEl.classes.matrix[i].length; j++) {
+              this.chip.matrix[initialTop * 10 / this.gridUnit.current + i][initialLeft * 10 / this.gridUnit.current + j] = 1
+            }
+          }
+          this.moveElement({ elId: acEl.id, pageId: this.page.id, top: initialTop, left: initialLeft })
         })
         return
       }
@@ -539,6 +546,8 @@ export default {
           }
         }
       })
+
+      // console.log(this.chip.matrix)
 
       this.rebaseSelectedElements()
       this.toggleDroppableCursor(false)
