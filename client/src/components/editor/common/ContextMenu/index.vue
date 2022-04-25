@@ -30,6 +30,9 @@ export default {
       default () {
         return { x: null, y: null }
       }
+    },
+    zoom: {
+      type: Number
     }
   },
   data: function () {
@@ -48,8 +51,8 @@ export default {
   },
   computed: {
     style () {
-      let x = this.axis.x
-      let y = this.axis.y
+      let x = this.axis.x / this.zoom
+      let y = this.axis.y / this.zoom
       let menuHeight = this.menu.length * 32
       let menuWidth = this.menu.width
       return {

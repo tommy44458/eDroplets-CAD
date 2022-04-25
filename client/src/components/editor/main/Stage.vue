@@ -1,7 +1,7 @@
 <template>
   <mr-container
     :id="page.id"
-    :zoom="zoom"
+    :zoom="zoom" 
     :style="pageStyles"
     :class="[page.classes, {stage: true}]"
     :activeElements="selectedElements"
@@ -16,7 +16,7 @@
     @delete="deleteHandler"
     @copy="copyHandler"
     @cut="cutHandler"
-    @paste="pasteHandler"
+    @paste="pasteHandler($event)"
     @drop="dropHandler"
     @undo="$root.$emit('undo')"
     @redo="$root.$emit('redo')"
@@ -35,12 +35,13 @@
     <div v-if="openContextMenu" :key="keyContextMenu">
       <context-menu
         :axis="rightClickPoint"
+        :zoom="zoom" 
         :specialState="paint || moveStage"
         @clearState="clearState"
         @delete="deleteHandler"
         @copy="copyHandler"
         @cut="cutHandler"
-        @paste="pasteHandler"
+        @paste="pasteHandler(rightClickPoint)"
         @combine="combineElectrodes"
         @separate="separateElementHandler"
       ></context-menu>
@@ -93,7 +94,7 @@ export default {
       rightClickPoint: {x: 0, y: 0},
       clipboard: [],
       dropContainer: null,
-      currentRelPosPaint: {x: 0, y: 0},
+      currentRelPosPoint: {x: 0, y: 0},
       defaultBorder: {
         width: '',
         style: '',
@@ -145,8 +146,7 @@ export default {
   },
   methods: {
     rightClickHandler (mousePoint) {
-      this.rightClickPoint.x = mousePoint.x / this.zoom
-      this.rightClickPoint.y = mousePoint.y / this.zoom
+      this.rightClickPoint = mousePoint
       this.openContextMenu = true
       this.keyContextMenu++
     },
@@ -157,14 +157,17 @@ export default {
     },
 
     checkCollision (selectedEls) {
-      let collision = false
-      const unit = this.gridUnit.current / 10
-      selectedEls.forEach(acEl => {
-        if (this.chip.matrix[acEl.top / unit][acEl.left / unit]) {
-          collision = true
-        }
-      })
-      return collision
+      if (selectedEls.length > 0) {
+        let collision = false
+        const unit = this.gridUnit.current / 10
+        selectedEls.forEach(acEl => {
+          if (this.chip.matrix[acEl.top / unit][acEl.left / unit]) {
+            console.log('Collision!!')
+            collision = true
+          }
+        })
+        return collision
+      }
     },
 
     mouseMoveElements (e) {
@@ -209,11 +212,11 @@ export default {
       const posX = e.x
       const posY = e.y
 
-      if (Math.floor((posX / this.zoom) / originUnit) === Math.floor((this.currentRelPosPaint.x / this.zoom) / originUnit) && Math.floor((posX / this.zoom) / originUnit) === Math.floor((this.currentRelPosPaint.y / this.zoom) / originUnit)) {
+      if (Math.floor((posX / this.zoom) / originUnit) === Math.floor((this.currentRelPosPoint.x / this.zoom) / originUnit) && Math.floor((posX / this.zoom) / originUnit) === Math.floor((this.currentRelPosPoint.y / this.zoom) / originUnit)) {
         return false
       }
 
-      // let canAdd = true
+      let canAdd = true
       // this.allElements.forEach(el => {
       //   if (el.classes.matrix != null && el.classes.matrix.length > 0) {
       //     el.classes.matrix.forEach((row, i) => {
@@ -233,57 +236,59 @@ export default {
       const top = unit * unitY
       const left = unit * unitX
 
-      console.log(this.chip.matrix)
+      // console.log(this.chip.matrix)
       for (let i = 0; i < unit / originUnit; i++) {
         for (let j = 0; j < unit / originUnit; j++) {
           if (this.chip.matrix[top / originUnit + i][left / originUnit + j]) {
-            console.log(i, j)
-            console.log(top / originUnit + i)
-            console.log(left / originUnit + j)
-            console.log('Collision')
-            return false
+            // console.log(i, j)
+            // console.log(top / originUnit + i)
+            // console.log(left / originUnit + j)
+            // console.log('Collision')
+            canAdd = false
           }
         }
       }
 
-      const elementType = (unit !== originUnit) ? 'merged' : 'base'
+      if (canAdd) {
+        const elementType = (unit !== originUnit) ? 'merged' : 'base'
 
-      let element = newElectrodeUnit(elementType, unit, cornerSize)
+        let element = newElectrodeUnit(elementType, unit, cornerSize)
 
-      const height = getComputedProp('height', element, this.page)
-      const width = getComputedProp('width', element, this.page)
-      // const unitX = parseInt((e.x / this.zoom) / unit)
-      // const unitY = parseInt((e.y / this.zoom) / unit)
-      // const top = unit * unitY
-      // const left = unit * unitX
+        const height = getComputedProp('height', element, this.page)
+        const width = getComputedProp('width', element, this.page)
+        // const unitX = parseInt((e.x / this.zoom) / unit)
+        // const unitY = parseInt((e.y / this.zoom) / unit)
+        // const top = unit * unitY
+        // const left = unit * unitX
 
-      // Correct drop positions based on the editorZoom
-      // top = Math.round(top / this.zoom)
-      // left = Math.round(left / this.zoom)
+        // Correct drop positions based on the editorZoom
+        // top = Math.round(top / this.zoom)
+        // left = Math.round(left / this.zoom)
 
-      const fixedElement = fixElementToParentBounds({top, left, height, width}, this.page)
-      element = {...element, ...fixedElement}
-      element = await this.registerElement({pageId: this.page.id, el: element, global: e.shiftKey})
-      this.currentRelPosPaint.x = posX
-      this.currentRelPosPaint.y = posY
+        const fixedElement = fixElementToParentBounds({top, left, height, width}, this.page)
+        element = {...element, ...fixedElement}
+        element = await this.registerElement({pageId: this.page.id, el: element, global: e.shiftKey})
+        this.currentRelPosPoint.x = posX
+        this.currentRelPosPoint.y = posY
 
-      if (elementType !== 'base') {
-        const matrix = []
-        const rowNumber = (width + cornerSize) / originUnit
-        const colNumber = (height + cornerSize) / originUnit
-        for (let i = 0; i < rowNumber; i++) {
-          const row = []
-          for (let j = 0; j < colNumber; j++) {
-            row.push(-1)
+        if (elementType !== 'base') {
+          const matrix = []
+          const rowNumber = (width + cornerSize) / originUnit
+          const colNumber = (height + cornerSize) / originUnit
+          for (let i = 0; i < rowNumber; i++) {
+            const row = []
+            for (let j = 0; j < colNumber; j++) {
+              row.push(-1)
+            }
+            matrix.push(row)
           }
-          matrix.push(row)
+          this.updateElement({
+            egglement: element,
+            classes: {
+              'matrix': matrix
+            }
+          })
         }
-        this.updateElement({
-          egglement: element,
-          classes: {
-            'matrix': matrix
-          }
-        })
       }
     },
 
@@ -342,11 +347,31 @@ export default {
       }
     },
 
-    pasteHandler () {
+    pasteHandler (e) {
       if (this.clipboard.length > 0) {
+        const unit = this.gridUnit.origin / 10
+        const unitX = parseInt((e.x / this.zoom) / unit)
+        const unitY = parseInt((e.y / this.zoom) / unit)
+        const top = unit * unitY
+        const left = unit * unitX
+
+        let canAdd = true
         this.clipboard.map(el => {
-          this.registerElement({pageId: this.page.id, el, global: el.global})
+          const testPos = [{top: top, left: left}]
+          if (this.checkCollision(testPos)) canAdd = false
         })
+
+        if (canAdd) {
+          this.clipboard.map(el => {
+            el.top = top
+            el.left = left
+            const height = getComputedProp('height', el, this.page)
+            const width = getComputedProp('width', el, this.page)
+            const fixedElement = fixElementToParentBounds({top, left, height, width}, this.page)
+            el = {...el, ...fixedElement}
+            this.registerElement({pageId: this.page.id, el, global: el.global})
+          })
+        }
       }
     },
 
@@ -489,7 +514,7 @@ export default {
     },
 
     moveStopHandler (moveStopData) {
-      if (this.checkCollision(this.selectedElements)) {
+      if (moveStopData.initialPos.length > 0 && this.checkCollision(this.selectedElements)) {
         this.selectedElements.forEach((acEl, index) => {
           this.moveElement({ elId: acEl.id, pageId: this.page.id, top: moveStopData.initialPos[index][1], left: moveStopData.initialPos[index][0] })
         })
@@ -500,7 +525,6 @@ export default {
       const parentId = containegg ? containegg.id : null
 
       moveStopData.moveElData.map(moveData => {
-        console.log(moveData)
         this.moveElement({
         ...moveData,
         pageId: this.page.id,
@@ -514,7 +538,6 @@ export default {
           }
         }
       })
-      console.log(this.chip.matrix)
 
       this.rebaseSelectedElements()
       this.toggleDroppableCursor(false)
