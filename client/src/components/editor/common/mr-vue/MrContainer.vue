@@ -325,11 +325,11 @@ export default {
         if (setInitialPos) {
           for (let i = 0; i < acEl.classes.matrix.length; i++) {
             for (let j = 0; j < acEl.classes.matrix[i].length; j++) {
-              this.chip.matrix[acElY + i][acElX + j] = 0
+              if (acEl.classes.matrix[i][j] !== 0) {
+                this.chip.matrix[acElY + i][acElX + j] = 0
+              }
             }
           }
-          console.log('Move remove')
-          console.log(this.chip.matrix)
           this.initialPos.push([acEl.left, acEl.top])
         }
         offsetEl.push([parseInt(this.activeElements[0].left / unit) - acElX, parseInt(this.activeElements[0].top / unit) - acElY])

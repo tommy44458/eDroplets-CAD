@@ -105,8 +105,6 @@ const elementActions = {
     commit(types.createEgglement, {parent, egglement})
 
     state.app.chip.matrix[egglement.top * 10 / state.app.gridUnit.origin][egglement.left * 10 / state.app.gridUnit.origin] = 1
-    console.log('Register')
-    console.log(state.app.chip.matrix)
 
     return egglement
   },

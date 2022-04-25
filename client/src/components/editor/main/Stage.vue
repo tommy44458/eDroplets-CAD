@@ -146,6 +146,7 @@ export default {
   },
   methods: {
     rightClickHandler (mousePoint) {
+      console.log(this.selectedElements)
       this.rightClickPoint = mousePoint
       this.openContextMenu = true
       this.keyContextMenu++
@@ -158,12 +159,17 @@ export default {
 
     checkCollision (selectedEls) {
       if (selectedEls.length > 0) {
-        let collision = false
         const unit = this.gridUnit.current / 10
+        let collision = false
         selectedEls.forEach(acEl => {
-          if (this.chip.matrix[acEl.top / unit][acEl.left / unit]) {
-            console.log('Collision!!')
-            collision = true
+          for (let i = 0; i < acEl.classes.matrix.length; i++) {
+            for (let j = 0; j < acEl.classes.matrix[i].length; j++) {
+              if (acEl.classes.matrix[i][j] !== 0) {
+                if (this.chip.matrix[acEl.top / unit + i][acEl.left / unit + j] === 1) {
+                  collision = true
+                }
+              }
+            }
           }
         })
         return collision
@@ -293,7 +299,6 @@ export default {
               this.chip.matrix[top / originUnit + i][left / originUnit + j] = 1
             }
           }
-          console.log(this.chip.matrix)
         }
       }
     },
@@ -301,7 +306,6 @@ export default {
     async combineElectrodes () {
       const combineSuccess = await this.margeSelectedElements()
       if (combineSuccess) {
-        // this.deleteHandler()
         if (this.selectedElements.length > 0) {
           this.selectedElements.map(el => this.removeElement({page: this.page, elId: el.id}))
         }
@@ -338,11 +342,11 @@ export default {
         this.selectedElements.map(el => {
           for (let i = 0; i < el.classes.matrix.length; i++) {
             for (let j = 0; j < el.classes.matrix[i].length; j++) {
-              this.chip.matrix[el.top * 10 / this.gridUnit.current + i][el.left * 10 / this.gridUnit.current + j] = 0
+              if (el.classes.matrix[i][j] !== 0) {
+                this.chip.matrix[el.top * 10 / this.gridUnit.current + i][el.left * 10 / this.gridUnit.current + j] = 0
+              }
             }
           }
-          console.log('Remove')
-          console.log(this.chip.matrix)
           this.removeElement({page: this.page, elId: el.id})
         })
       }
@@ -377,11 +381,12 @@ export default {
         const pasteTop = this.clipboard[0].top
         const pasteLeft = this.clipboard[0].left
         this.clipboard.map(el => {
-          const testPos = [{
+          const testEl = [{
+            ...el,
             top: top + el.top - pasteTop,
             left: left + el.left - pasteLeft
           }]
-          if (this.checkCollision(testPos)) canAdd = false
+          if (this.checkCollision(testEl)) canAdd = false
         })
 
         if (canAdd) {
@@ -548,11 +553,11 @@ export default {
             const initialLeft = moveStopData.initialPos[index][0]
             for (let i = 0; i < acEl.classes.matrix.length; i++) {
               for (let j = 0; j < acEl.classes.matrix[i].length; j++) {
-                this.chip.matrix[initialTop * 10 / this.gridUnit.current + i][initialLeft * 10 / this.gridUnit.current + j] = 1
+                if (acEl.classes.matrix[i][j] !== 0) {
+                  this.chip.matrix[initialTop * 10 / this.gridUnit.current + i][initialLeft * 10 / this.gridUnit.current + j] = 1
+                }
               }
             }
-            console.log('Move conflict add')
-            console.log(this.chip.matrix)
             this.moveElement({ elId: acEl.id, pageId: this.page.id, top: initialTop, left: initialLeft })
           })
         }
@@ -570,13 +575,21 @@ export default {
         mouseX: moveStopData.relMouseX,
         mouseY: moveStopData.relMouseY
         })
-        for (let i = 0; i < (moveData.height + this.cornerSize) * 10 / this.gridUnit.current; i++) {
-          for (let j = 0; j < (moveData.width + this.cornerSize) * 10 / this.gridUnit.current; j++) {
-            this.chip.matrix[moveData.top * 10 / this.gridUnit.current + i][moveData.left * 10 / this.gridUnit.current + j] = 1
+        // for (let i = 0; i < (moveData.height + this.cornerSize) * 10 / this.gridUnit.current; i++) {
+        //   for (let j = 0; j < (moveData.width + this.cornerSize) * 10 / this.gridUnit.current; j++) {
+        //     this.chip.matrix[moveData.top * 10 / this.gridUnit.current + i][moveData.left * 10 / this.gridUnit.current + j] = 1
+        //   }
+        // }
+      })
+
+      this.selectedElements.map(el => {
+        for (let i = 0; i < el.classes.matrix.length; i++) {
+          for (let j = 0; j < el.classes.matrix[i].length; j++) {
+            if (el.classes.matrix[i][j] !== 0) {
+              this.chip.matrix[el.top * 10 / this.gridUnit.current + i][el.left * 10 / this.gridUnit.current + j] = 1
+            }
           }
         }
-        console.log('Move add')
-        console.log(this.chip.matrix)
       })
 
       this.rebaseSelectedElements()
