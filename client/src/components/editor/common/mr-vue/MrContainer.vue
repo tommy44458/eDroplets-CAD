@@ -71,7 +71,8 @@ export default {
       'app.openContextMenu',
       'app.gridUnit',
       'app.edit.paint',
-      'app.edit.moveStage'
+      'app.edit.moveStage',
+      'app.chip'
     ]),
 
     mrElements () {
@@ -321,6 +322,11 @@ export default {
         const acElY = parseInt(acEl.top / unit)
         lastElPos.push([acEl.left, acEl.top])
         if (setInitialPos) {
+          for (let i = 0; i < acEl.classes.matrix.length; i++) {
+            for (let j = 0; j < acEl.classes.matrix[i].length; j++) {
+              this.chip.matrix[acElY + i][acElX + j] = 0
+            }
+          }
           this.initialPos.push([acEl.left, acEl.top])
         }
         offsetEl.push([parseInt(this.activeElements[0].left / unit) - acElX, parseInt(this.activeElements[0].top / unit) - acElY])
@@ -387,7 +393,14 @@ export default {
               : parseInt(el.style.bottom),
             right: (el.style.right.indexOf('%') !== -1 || el.style.right === 'auto')
               ? el.style.right
-              : parseInt(el.style.right)
+              : parseInt(el.style.right),
+            height: (el.style.height.indexOf('%') !== -1 || el.style.height === 'auto')
+              ? el.style.height
+              : parseInt(el.style.height),
+            width: (el.style.width.indexOf('%') !== -1 || el.style.width === 'auto')
+              ? el.style.width
+              : parseInt(el.style.width)
+
           }
         }),
         relMouseX: Math.round(this.currentRelPos.x / this.zoom),

@@ -41,6 +41,13 @@ const commonElementMutations = {
     if (payload.path !== 'undefined' && payload.egglement.children.length > 0) {
       if (payload.path) payload.egglement.children[0].attrs.d = payload.path
     }
+    if (payload.classes) {
+      for (let i = 0; i < payload.classes.matrix.length; i++) {
+        for (let j = 0; j < payload.classes.matrix[i].length; j++) {
+          state.app.chip.matrix[payload.egglement.top * 10 / state.app.gridUnit.origin + i][payload.egglement.left * 10 / state.app.gridUnit.origin + j] = 1
+        }
+      }
+    }
   },
 
 /**

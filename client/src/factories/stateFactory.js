@@ -1,6 +1,16 @@
 import newProject from './projectFactory'
 
 function newState (height, width, gridUnit, cornerSize, project) {
+  const h = height / gridUnit
+  const w = width / gridUnit
+  const _matrix = []
+  for (let i = 0; i < h; i++) {
+    const row = []
+    for (let j = 0; j < w; j++) {
+        row.push(0)
+    }
+    _matrix.push(row)
+  }
   return {
     app: {
       svgContent: '',
@@ -27,6 +37,7 @@ function newState (height, width, gridUnit, cornerSize, project) {
       },
       cornerSize: cornerSize,
       chip: {
+        matrix: _matrix,
         height: 40000,
         width: 80000
       },

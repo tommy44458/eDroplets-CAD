@@ -156,48 +156,13 @@ export default {
       this.moveStage = false
     },
 
-    checkCollision (selectedEls, allEls) {
-      const unit = this.gridUnit.current / 10
-      const acElPos = []
-      const alElPos = []
-      selectedEls.forEach(acEl => {
-        const acElX = parseInt(acEl.left / unit)
-        const acElY = parseInt(acEl.top / unit)
-        if (acEl.classes.matrix != null && acEl.classes.matrix.length > 0) {
-          acEl.classes.matrix.forEach((acRow, acI) => {
-            acRow.forEach((acItem, acJ) => {
-              acElPos.push([acElX + acJ, acElY + acI])
-            })
-          })
-        }
-      })
-      allEls.forEach(alEl => {
-        let isSelected = false
-        selectedEls.forEach(acEl => {
-          if (alEl.id === acEl.id) {
-            isSelected = true
-          }
-        })
-        if (!isSelected) {
-          const alElX = parseInt(alEl.left / unit)
-          const alElY = parseInt(alEl.top / unit)
-          if (alEl.classes.matrix != null && alEl.classes.matrix.length > 0) {
-            alEl.classes.matrix.forEach((alRow, alI) => {
-              alRow.forEach((alItem, alJ) => {
-                alElPos.push([alElX + alJ, alElY + alI])
-              })
-            })
-          }
-        }
-      })
-      // console.log(acElPos, alElPos)
+    checkCollision (selectedEls) {
       let collision = false
-      acElPos.forEach(acPos => {
-        alElPos.forEach(alPos => {
-          if (acPos.toString() === alPos.toString()) {
-            collision = true
-          }
-        })
+      const unit = this.gridUnit.current / 10
+      selectedEls.forEach(acEl => {
+        if (this.chip.matrix[acEl.top / unit][acEl.left / unit]) {
+          collision = true
+        }
       })
       return collision
     },
@@ -238,7 +203,6 @@ export default {
 
     async addElement (e) {
       // console.log(e.x, e.y)
-      // console.log(this.allElements)
       const unit = this.squareSize / 10
       const originUnit = this.gridUnit.origin / 10
       const cornerSize = this.cornerSize
@@ -249,75 +213,77 @@ export default {
         return false
       }
 
-      let canAdd = true
-      this.allElements.forEach(el => {
-        if (el.classes.matrix != null && el.classes.matrix.length > 0) {
-          el.classes.matrix.forEach((row, i) => {
-            row.forEach((item, j) => {
-              if (el.classes.matrix[i][j] !== 0) {
-                if ((posX / this.zoom) >= (el.left + (j * originUnit)) && (posX / this.zoom) <= (el.left + (j * originUnit) + originUnit) && (posY / this.zoom) >= (el.top + (i * originUnit)) && (posY / this.zoom) <= (el.top + (i * originUnit) + originUnit)) {
-                  canAdd = false
-                }
-                if (unit !== originUnit) {
-                  if (((posX / this.zoom) + unit - originUnit) >= (el.left + (j * originUnit)) && ((posX / this.zoom) + unit - originUnit) <= (el.left + (j * originUnit) + originUnit) && ((posY / this.zoom) + unit - originUnit) >= (el.top + (i * originUnit)) && ((posY / this.zoom) + unit - originUnit) <= (el.top + (i * originUnit) + originUnit)) {
-                    canAdd = false
-                  }
-                  if (((posX / this.zoom) + unit - originUnit) >= (el.left + (j * originUnit)) && ((posX / this.zoom) + unit - originUnit) <= (el.left + (j * originUnit) + originUnit) && (posY / this.zoom) >= (el.top + (i * originUnit)) && (posY / this.zoom) <= (el.top + (i * originUnit) + originUnit)) {
-                    canAdd = false
-                  }
-                  if ((posX / this.zoom) >= (el.left + (j * originUnit)) && (posX / this.zoom) <= (el.left + (j * originUnit) + originUnit) && ((posY / this.zoom) + unit - originUnit) >= (el.top + (i * originUnit)) && ((posY / this.zoom) + unit - originUnit) <= (el.top + (i * originUnit) + originUnit)) {
-                    canAdd = false
-                  }
-                }
-              }
-            })
-          })
-        }
-      })
+      // let canAdd = true
+      // this.allElements.forEach(el => {
+      //   if (el.classes.matrix != null && el.classes.matrix.length > 0) {
+      //     el.classes.matrix.forEach((row, i) => {
+      //       row.forEach((item, j) => {
+      //         if (el.classes.matrix[i][j] !== 0) {
+      //           if ((posX / this.zoom) >= (el.left + (j * originUnit)) && (posX / this.zoom) <= (el.left + (j * originUnit) + originUnit) && (posY / this.zoom) >= (el.top + (i * originUnit)) && (posY / this.zoom) <= (el.top + (i * originUnit) + originUnit)) {
+      //             canAdd = false
+      //           }
+      //         }
+      //       })
+      //     })
+      //   }
+      // })
 
-      if (canAdd) {
-        const elementType = (unit !== originUnit) ? 'merged' : 'base'
+      const unitX = parseInt((e.x / this.zoom) / unit)
+      const unitY = parseInt((e.y / this.zoom) / unit)
+      const top = unit * unitY
+      const left = unit * unitX
 
-        let element = newElectrodeUnit(elementType, unit, cornerSize)
-
-        const height = getComputedProp('height', element, this.page)
-        const width = getComputedProp('width', element, this.page)
-        const unitX = parseInt((e.x / this.zoom) / unit)
-        const unitY = parseInt((e.y / this.zoom) / unit)
-        const top = unit * unitY
-        const left = unit * unitX
-
-        // Correct drop positions based on the editorZoom
-        // top = Math.round(top / this.zoom)
-        // left = Math.round(left / this.zoom)
-
-        const fixedElement = fixElementToParentBounds({top, left, height, width}, this.page)
-        element = {...element, ...fixedElement}
-        element = await this.registerElement({pageId: this.page.id, el: element, global: e.shiftKey})
-        this.currentRelPosPaint.x = posX
-        this.currentRelPosPaint.y = posY
-
-        if (elementType !== 'base') {
-          const matrix = []
-          const rowNumber = (width + cornerSize) / originUnit
-          const colNumber = (height + cornerSize) / originUnit
-          for (let i = 0; i < rowNumber; i++) {
-            const row = []
-            for (let j = 0; j < colNumber; j++) {
-              row.push(-1)
-            }
-            matrix.push(row)
+      console.log(this.chip.matrix)
+      for (let i = 0; i < unit / originUnit; i++) {
+        for (let j = 0; j < unit / originUnit; j++) {
+          if (this.chip.matrix[top / originUnit + i][left / originUnit + j]) {
+            console.log(i, j)
+            console.log(top / originUnit + i)
+            console.log(left / originUnit + j)
+            console.log('Collision')
+            return false
           }
-          this.updateElement({
-            egglement: element,
-            classes: {
-              'matrix': matrix
-            }
-          })
         }
-        if (this.checkCollision([element], this.allElements.filter(el => el.id !== element.id))) {
-          this.removeElement({page: this.page, elId: element.id})
+      }
+
+      const elementType = (unit !== originUnit) ? 'merged' : 'base'
+
+      let element = newElectrodeUnit(elementType, unit, cornerSize)
+
+      const height = getComputedProp('height', element, this.page)
+      const width = getComputedProp('width', element, this.page)
+      // const unitX = parseInt((e.x / this.zoom) / unit)
+      // const unitY = parseInt((e.y / this.zoom) / unit)
+      // const top = unit * unitY
+      // const left = unit * unitX
+
+      // Correct drop positions based on the editorZoom
+      // top = Math.round(top / this.zoom)
+      // left = Math.round(left / this.zoom)
+
+      const fixedElement = fixElementToParentBounds({top, left, height, width}, this.page)
+      element = {...element, ...fixedElement}
+      element = await this.registerElement({pageId: this.page.id, el: element, global: e.shiftKey})
+      this.currentRelPosPaint.x = posX
+      this.currentRelPosPaint.y = posY
+
+      if (elementType !== 'base') {
+        const matrix = []
+        const rowNumber = (width + cornerSize) / originUnit
+        const colNumber = (height + cornerSize) / originUnit
+        for (let i = 0; i < rowNumber; i++) {
+          const row = []
+          for (let j = 0; j < colNumber; j++) {
+            row.push(-1)
+          }
+          matrix.push(row)
         }
+        this.updateElement({
+          egglement: element,
+          classes: {
+            'matrix': matrix
+          }
+        })
       }
     },
 
@@ -523,7 +489,7 @@ export default {
     },
 
     moveStopHandler (moveStopData) {
-      if (this.checkCollision(this.selectedElements, this.allElements)) {
+      if (this.checkCollision(this.selectedElements)) {
         this.selectedElements.forEach((acEl, index) => {
           this.moveElement({ elId: acEl.id, pageId: this.page.id, top: moveStopData.initialPos[index][1], left: moveStopData.initialPos[index][0] })
         })
@@ -533,13 +499,22 @@ export default {
       const containegg = this.getContaineggOnPoint(moveStopData.absMouseX, moveStopData.absMouseY)
       const parentId = containegg ? containegg.id : null
 
-      moveStopData.moveElData.map(moveData => this.moveElement({
+      moveStopData.moveElData.map(moveData => {
+        console.log(moveData)
+        this.moveElement({
         ...moveData,
         pageId: this.page.id,
         parentId,
         mouseX: moveStopData.relMouseX,
         mouseY: moveStopData.relMouseY
-      }))
+        })
+        for (let i = 0; i < (moveData.height + this.cornerSize) * 10 / this.gridUnit.current; i++) {
+          for (let j = 0; j < (moveData.width + this.cornerSize) * 10 / this.gridUnit.current; j++) {
+            this.chip.matrix[moveData.top * 10 / this.gridUnit.current + i][moveData.left * 10 / this.gridUnit.current + j] = 1
+          }
+        }
+      })
+      console.log(this.chip.matrix)
 
       this.rebaseSelectedElements()
       this.toggleDroppableCursor(false)

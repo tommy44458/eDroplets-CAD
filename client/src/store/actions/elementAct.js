@@ -74,10 +74,9 @@ const elementActions = {
  *
  * @see {@link [types.createEgglement]}
  */
-  [types.registerElement]: function ({ getters, commit }, payload) {
+  [types.registerElement]: function ({ state, getters, commit }, payload) {
     let parent = getters.getPageById(payload.pageId)
     let el = payload.el
-
     if (el.componegg) {
       if (payload.global) {
         el = componentFactory.compInst(payload.el)
@@ -104,6 +103,9 @@ const elementActions = {
 
     let egglement = setElId(el, payload.pageId)
     commit(types.createEgglement, {parent, egglement})
+
+    state.app.chip.matrix[egglement.top * 10 / state.app.gridUnit.origin][egglement.left * 10 / state.app.gridUnit.origin] = 1
+
     return egglement
   },
 
@@ -116,7 +118,7 @@ const elementActions = {
  * @param {string} payload.elId : Id of the element to be updated
  * @see {@link [types.deleteEgglement]}
  */
-  [types.removeElement]: function ({ getters, commit }, payload) {
+  [types.removeElement]: function ({ state, getters, commit }, payload) {
     commit(types._clearSelectedElements)
 
     let parentId = payload.elId.substring(0, payload.elId.lastIndexOf('.'))
@@ -124,6 +126,13 @@ const elementActions = {
     let eggIndex = parent.children.findIndex(egg => egg.id === payload.elId)
 
     let element = parent.children[eggIndex]
+
+    for (let i = 0; i < element.classes.matrix.length; i++) {
+      for (let j = 0; j < element.classes.matrix[i].length; j++) {
+        state.app.chip.matrix[element.top * 10 / state.app.gridUnit.origin + i][element.left * 10 / state.app.gridUnit.origin + j] = 0
+      }
+    }
+
     if (element.componegg) {
       if (element.global || element.external) {
         let compIndex = getters.getComponentRefIndexByName(element.name)
