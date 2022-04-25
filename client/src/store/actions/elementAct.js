@@ -105,6 +105,8 @@ const elementActions = {
     commit(types.createEgglement, {parent, egglement})
 
     state.app.chip.matrix[egglement.top * 10 / state.app.gridUnit.origin][egglement.left * 10 / state.app.gridUnit.origin] = 1
+    console.log('Register')
+    console.log(state.app.chip.matrix)
 
     return egglement
   },
@@ -118,7 +120,7 @@ const elementActions = {
  * @param {string} payload.elId : Id of the element to be updated
  * @see {@link [types.deleteEgglement]}
  */
-  [types.removeElement]: function ({ state, getters, commit }, payload) {
+  [types.removeElement]: function ({ getters, commit }, payload) {
     commit(types._clearSelectedElements)
 
     let parentId = payload.elId.substring(0, payload.elId.lastIndexOf('.'))
@@ -126,12 +128,6 @@ const elementActions = {
     let eggIndex = parent.children.findIndex(egg => egg.id === payload.elId)
 
     let element = parent.children[eggIndex]
-
-    for (let i = 0; i < element.classes.matrix.length; i++) {
-      for (let j = 0; j < element.classes.matrix[i].length; j++) {
-        state.app.chip.matrix[element.top * 10 / state.app.gridUnit.origin + i][element.left * 10 / state.app.gridUnit.origin + j] = 0
-      }
-    }
 
     if (element.componegg) {
       if (element.global || element.external) {
@@ -574,7 +570,7 @@ const elementActions = {
     const page = state.app.selectedPage
 
     const el = state.app.selectedElements[0]
-    console.log(el)
+    // console.log(el)
     commit(types.updateElement, {
       egglement: el,
       name: el.id.split('.')[1],

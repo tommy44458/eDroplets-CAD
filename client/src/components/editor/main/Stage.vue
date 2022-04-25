@@ -288,6 +288,12 @@ export default {
               'matrix': matrix
             }
           })
+          for (let i = 0; i < unit / originUnit; i++) {
+            for (let j = 0; j < unit / originUnit; j++) {
+              this.chip.matrix[top / originUnit + i][left / originUnit + j] = 1
+            }
+          }
+          console.log(this.chip.matrix)
         }
       }
     },
@@ -295,7 +301,10 @@ export default {
     async combineElectrodes () {
       const combineSuccess = await this.margeSelectedElements()
       if (combineSuccess) {
-        this.deleteHandler()
+        // this.deleteHandler()
+        if (this.selectedElements.length > 0) {
+          this.selectedElements.map(el => this.removeElement({page: this.page, elId: el.id}))
+        }
       } else {
         this.$toasted.show(
           'Electrode combining failed',
@@ -326,7 +335,16 @@ export default {
 
     deleteHandler () {
       if (this.selectedElements.length > 0) {
-        this.selectedElements.map(el => this.removeElement({page: this.page, elId: el.id}))
+        this.selectedElements.map(el => {
+          for (let i = 0; i < el.classes.matrix.length; i++) {
+            for (let j = 0; j < el.classes.matrix[i].length; j++) {
+              this.chip.matrix[el.top * 10 / this.gridUnit.current + i][el.left * 10 / this.gridUnit.current + j] = 0
+            }
+          }
+          console.log('Remove')
+          console.log(this.chip.matrix)
+          this.removeElement({page: this.page, elId: el.id})
+        })
       }
     },
 
@@ -372,6 +390,14 @@ export default {
             el.left = left + el.left - pasteLeft
             this.registerElement({pageId: this.page.id, el, global: el.global})
           })
+        } else {
+          this.$toasted.show(
+            'Electrode pasting failed',
+            {
+              position: 'bottom-right',
+              duration: 3000
+            },
+          )
         }
       }
     },
@@ -515,17 +541,21 @@ export default {
     },
 
     moveStopHandler (moveStopData) {
-      if (moveStopData.initialPos.length > 0 && this.checkCollision(this.selectedElements)) {
-        this.selectedElements.forEach((acEl, index) => {
-          const initialTop = moveStopData.initialPos[index][1]
-          const initialLeft = moveStopData.initialPos[index][0]
-          for (let i = 0; i < acEl.classes.matrix.length; i++) {
-            for (let j = 0; j < acEl.classes.matrix[i].length; j++) {
-              this.chip.matrix[initialTop * 10 / this.gridUnit.current + i][initialLeft * 10 / this.gridUnit.current + j] = 1
+      if (this.checkCollision(this.selectedElements)) {
+        if (moveStopData.initialPos.length > 0) {
+          this.selectedElements.forEach((acEl, index) => {
+            const initialTop = moveStopData.initialPos[index][1]
+            const initialLeft = moveStopData.initialPos[index][0]
+            for (let i = 0; i < acEl.classes.matrix.length; i++) {
+              for (let j = 0; j < acEl.classes.matrix[i].length; j++) {
+                this.chip.matrix[initialTop * 10 / this.gridUnit.current + i][initialLeft * 10 / this.gridUnit.current + j] = 1
+              }
             }
-          }
-          this.moveElement({ elId: acEl.id, pageId: this.page.id, top: initialTop, left: initialLeft })
-        })
+            console.log('Move conflict add')
+            console.log(this.chip.matrix)
+            this.moveElement({ elId: acEl.id, pageId: this.page.id, top: initialTop, left: initialLeft })
+          })
+        }
         return
       }
 
@@ -545,9 +575,9 @@ export default {
             this.chip.matrix[moveData.top * 10 / this.gridUnit.current + i][moveData.left * 10 / this.gridUnit.current + j] = 1
           }
         }
+        console.log('Move add')
+        console.log(this.chip.matrix)
       })
-
-      // console.log(this.chip.matrix)
 
       this.rebaseSelectedElements()
       this.toggleDroppableCursor(false)

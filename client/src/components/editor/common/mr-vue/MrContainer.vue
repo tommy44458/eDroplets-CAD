@@ -127,6 +127,7 @@ export default {
         this.$emit('resizestop', this.resizeStopData())
       } else if (this.moving) {
         this.$emit('movestop', this.moveStopData())
+        this.initialPos.length = 0
       } else if (this.selecting) {
         this.$emit('selectstop', this.selectStopData())
       }
@@ -310,23 +311,20 @@ export default {
       const unitX = parseInt((posX / this.zoom) / unit)
       const unitY = parseInt((posY / this.zoom) / unit)
 
-      let setInitialPos = false
-      if (!this.lastActiveEl || this.lastActiveEl !== this.activeElements) {
-        this.initialPos.length = 0
-        setInitialPos = true
-      }
       const offsetEl = []
       const lastElPos = []
       this.activeElements.forEach(acEl => {
         const acElX = parseInt(acEl.left / unit)
         const acElY = parseInt(acEl.top / unit)
         lastElPos.push([acEl.left, acEl.top])
-        if (setInitialPos) {
+        if (!this.initialPos.length) {
           for (let i = 0; i < acEl.classes.matrix.length; i++) {
             for (let j = 0; j < acEl.classes.matrix[i].length; j++) {
               this.chip.matrix[acElY + i][acElX + j] = 0
             }
           }
+          console.log('Move remove')
+          console.log(this.chip.matrix)
           this.initialPos.push([acEl.left, acEl.top])
         }
         offsetEl.push([parseInt(this.activeElements[0].left / unit) - acElX, parseInt(this.activeElements[0].top / unit) - acElY])
