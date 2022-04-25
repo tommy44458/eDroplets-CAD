@@ -356,19 +356,20 @@ export default {
         const left = unit * unitX
 
         let canAdd = true
+        const pasteTop = this.clipboard[0].top
+        const pasteLeft = this.clipboard[0].left
         this.clipboard.map(el => {
-          const testPos = [{top: top, left: left}]
+          const testPos = [{
+            top: top + el.top - pasteTop,
+            left: left + el.left - pasteLeft
+          }]
           if (this.checkCollision(testPos)) canAdd = false
         })
 
         if (canAdd) {
           this.clipboard.map(el => {
-            el.top = top
-            el.left = left
-            const height = getComputedProp('height', el, this.page)
-            const width = getComputedProp('width', el, this.page)
-            const fixedElement = fixElementToParentBounds({top, left, height, width}, this.page)
-            el = {...el, ...fixedElement}
+            el.top = top + el.top - pasteTop
+            el.left = left + el.left - pasteLeft
             this.registerElement({pageId: this.page.id, el, global: el.global})
           })
         }
