@@ -311,13 +311,18 @@ export default {
       const unitX = parseInt((posX / this.zoom) / unit)
       const unitY = parseInt((posY / this.zoom) / unit)
 
+      let setInitialPos = false
+      if (!this.initialPos.length) {
+        setInitialPos = true
+      }
+
       const offsetEl = []
       const lastElPos = []
       this.activeElements.forEach(acEl => {
         const acElX = parseInt(acEl.left / unit)
         const acElY = parseInt(acEl.top / unit)
         lastElPos.push([acEl.left, acEl.top])
-        if (!this.initialPos.length) {
+        if (setInitialPos) {
           for (let i = 0; i < acEl.classes.matrix.length; i++) {
             for (let j = 0; j < acEl.classes.matrix[i].length; j++) {
               this.chip.matrix[acElY + i][acElX + j] = 0
