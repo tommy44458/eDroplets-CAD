@@ -210,7 +210,6 @@ export default {
     },
 
     async addElement (e) {
-      // console.log(e.x, e.y)
       const unit = this.squareSize / 10
       const originUnit = this.gridUnit.origin / 10
       const cornerSize = this.cornerSize
@@ -222,19 +221,6 @@ export default {
       }
 
       let canAdd = true
-      // this.allElements.forEach(el => {
-      //   if (el.classes.matrix != null && el.classes.matrix.length > 0) {
-      //     el.classes.matrix.forEach((row, i) => {
-      //       row.forEach((item, j) => {
-      //         if (el.classes.matrix[i][j] !== 0) {
-      //           if ((posX / this.zoom) >= (el.left + (j * originUnit)) && (posX / this.zoom) <= (el.left + (j * originUnit) + originUnit) && (posY / this.zoom) >= (el.top + (i * originUnit)) && (posY / this.zoom) <= (el.top + (i * originUnit) + originUnit)) {
-      //             canAdd = false
-      //           }
-      //         }
-      //       })
-      //     })
-      //   }
-      // })
 
       const unitX = parseInt((posX / this.zoom) / unit)
       const unitY = parseInt((posY / this.zoom) / unit)
@@ -247,17 +233,17 @@ export default {
       for (let i = 0; i < unit / originUnit; i++) {
         for (let j = 0; j < unit / originUnit; j++) {
           if (this.chip.matrix[chipY + i][chipX + j]) {
-            console.log('Collision')
+            // console.log('Collision')
             canAdd = false
           }
         }
       }
-      console.log(this.chip.matrix)
+      // console.log(this.chip.matrix)
 
       if (canAdd) {
         const elementType = (unit !== originUnit) ? 'merged' : 'base'
 
-        let element = newElectrodeUnit(elementType, unit, cornerSize)
+        let element = newElectrodeUnit(elementType, unit, cornerSize, top, left)
 
         const height = getComputedProp('height', element, this.page)
         const width = getComputedProp('width', element, this.page)
@@ -553,21 +539,26 @@ export default {
     },
 
     moveStopHandler (moveStopData) {
+      this.selectedElements.forEach((acEl, index) => {
+        for (let i = 0; i < acEl.classes.matrix.length; i++) {
+          for (let j = 0; j < acEl.classes.matrix[i].length; j++) {
+            if (acEl.classes.matrix[i][j] !== 0) {
+              this.chip.matrix[acEl.initialPos.top * 10 / this.gridUnit.current + i][acEl.initialPos.left * 10 / this.gridUnit.current + j] = 0
+            }
+          }
+        }
+      })
       if (this.checkCollision(this.selectedElements)) {
-        if (moveStopData.initialPos.length > 0) {
           this.selectedElements.forEach((acEl, index) => {
-            const initialTop = moveStopData.initialPos[index][1]
-            const initialLeft = moveStopData.initialPos[index][0]
             for (let i = 0; i < acEl.classes.matrix.length; i++) {
               for (let j = 0; j < acEl.classes.matrix[i].length; j++) {
                 if (acEl.classes.matrix[i][j] !== 0) {
-                  this.chip.matrix[initialTop * 10 / this.gridUnit.current + i][initialLeft * 10 / this.gridUnit.current + j] = 1
+                  this.chip.matrix[acEl.initialPos.top * 10 / this.gridUnit.current + i][acEl.initialPos.left * 10 / this.gridUnit.current + j] = 1
                 }
               }
             }
-            this.moveElement({ elId: acEl.id, pageId: this.page.id, top: initialTop, left: initialLeft })
+            this.moveElement({ elId: acEl.id, pageId: this.page.id, top: acEl.initialPos.top, left: acEl.initialPos.left })
           })
-        }
         return
       }
 
@@ -582,14 +573,16 @@ export default {
         mouseX: moveStopData.relMouseX,
         mouseY: moveStopData.relMouseY
         })
-        // for (let i = 0; i < (moveData.height + this.cornerSize) * 10 / this.gridUnit.current; i++) {
-        //   for (let j = 0; j < (moveData.width + this.cornerSize) * 10 / this.gridUnit.current; j++) {
-        //     this.chip.matrix[moveData.top * 10 / this.gridUnit.current + i][moveData.left * 10 / this.gridUnit.current + j] = 1
-        //   }
-        // }
       })
 
       this.selectedElements.map(el => {
+        this.updateElement({
+          egglement: el,
+          initialPos: {
+            'top': el.top,
+            'left': el.left
+          }
+        })
         for (let i = 0; i < el.classes.matrix.length; i++) {
           for (let j = 0; j < el.classes.matrix[i].length; j++) {
             if (el.classes.matrix[i][j] !== 0) {

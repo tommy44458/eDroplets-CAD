@@ -60,10 +60,7 @@ export default {
       selecting: false,
       moving: false,
       resizing: false,
-      handle: null,
-      initialPos: [],
-      lastActiveEl: []
-      // lastElPos: []
+      handle: null
     }
   },
   computed: {
@@ -127,7 +124,6 @@ export default {
         this.$emit('resizestop', this.resizeStopData())
       } else if (this.moving) {
         this.$emit('movestop', this.moveStopData())
-        this.initialPos.length = 0
       } else if (this.selecting) {
         this.$emit('selectstop', this.selectStopData())
       }
@@ -311,31 +307,15 @@ export default {
       const unitX = parseInt((posX / this.zoom) / unit)
       const unitY = parseInt((posY / this.zoom) / unit)
 
-      let setInitialPos = false
-      if (!this.initialPos.length) {
-        setInitialPos = true
-      }
-
       const offsetEl = []
       const lastElPos = []
       this.activeElements.forEach(acEl => {
         const acElX = parseInt(acEl.left / unit)
         const acElY = parseInt(acEl.top / unit)
         lastElPos.push([acEl.left, acEl.top])
-        if (setInitialPos) {
-          for (let i = 0; i < acEl.classes.matrix.length; i++) {
-            for (let j = 0; j < acEl.classes.matrix[i].length; j++) {
-              if (acEl.classes.matrix[i][j] !== 0) {
-                this.chip.matrix[acElY + i][acElX + j] = 0
-              }
-            }
-          }
-          this.initialPos.push([acEl.left, acEl.top])
-        }
         offsetEl.push([parseInt(this.activeElements[0].left / unit) - acElX, parseInt(this.activeElements[0].top / unit) - acElY])
       })
 
-      this.lastActiveEl = this.activeElements
       this.$emit('mousemove', {offsetEl, unitX, unitY, lastElPos})
     },
 
@@ -396,21 +376,13 @@ export default {
               : parseInt(el.style.bottom),
             right: (el.style.right.indexOf('%') !== -1 || el.style.right === 'auto')
               ? el.style.right
-              : parseInt(el.style.right),
-            height: (el.style.height.indexOf('%') !== -1 || el.style.height === 'auto')
-              ? el.style.height
-              : parseInt(el.style.height),
-            width: (el.style.width.indexOf('%') !== -1 || el.style.width === 'auto')
-              ? el.style.width
-              : parseInt(el.style.width)
-
+              : parseInt(el.style.right)
           }
         }),
         relMouseX: Math.round(this.currentRelPos.x / this.zoom),
         relMouseY: Math.round(this.currentRelPos.y / this.zoom),
         absMouseX: this.currentAbsPos.x,
-        absMouseY: this.currentAbsPos.y,
-        initialPos: this.initialPos
+        absMouseY: this.currentAbsPos.y
       }
     },
 

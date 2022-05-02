@@ -615,12 +615,12 @@ const elementActions = {
       for (let i = 0; i < rowNumber; i++) {
         for (let j = 0; j < colNumber; j++) {
           if (matrix[i][j] === -1) {
-            let element = newElectrodeUnit('base', unit, cornerSize)
-
             const height = unit - cornerSize
             const width = unit - cornerSize
             const top = topMax + unit * i
             const left = leftMax + unit * j
+
+            let element = newElectrodeUnit('base', unit, cornerSize, top, left)
 
             const fixedElement = fixElementToParentBounds({top, left, height, width}, page)
             element = {...element, ...fixedElement}

@@ -1,5 +1,5 @@
 
-function newElectrodeUnit (name, gridUnit, cornerSize) {
+function newElectrodeUnit (name, gridUnit, cornerSize, top, left) {
   const _matrix = [
     [1]
   ]
@@ -45,8 +45,12 @@ function newElectrodeUnit (name, gridUnit, cornerSize) {
               'd': dPath
             }
         }
-    ]
-}
+    ],
+    'initialPos': {
+      'top': top,
+      'left': left
+    }
+  }
 }
 
 export default newElectrodeUnit
