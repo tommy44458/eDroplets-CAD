@@ -62,7 +62,7 @@ import { getComputedProp, fixElementToParentBounds } from '@/helpers/positionDim
 
 import { mapState, mapActions, mapMutations } from 'vuex'
 import { _clearSelectedElements, _addSelectedElement, registerElement,
-        removeElement, resizeElement, moveElement, rebaseSelectedElements, margeSelectedElements, separateElement, updateElement } from '@/store/types'
+        removeElement, resizeElement, moveElement, rebaseSelectedElements, margeSelectedElements, separateElement, updateElement, _updateChipMatrix } from '@/store/types'
 
 import MrContainer from '@/components/editor/common/mr-vue/MrContainer'
 import StageEl from './StageEl'
@@ -164,7 +164,7 @@ export default {
           for (let i = 0; i < acEl.classes.matrix.length; i++) {
             for (let j = 0; j < acEl.classes.matrix[i].length; j++) {
               if (acEl.classes.matrix[i][j] !== 0) {
-                if (this.chip.matrix[acEl.top / unit + i][acEl.left / unit + j] === 1) {
+                if (this.chip.matrix[acEl.top / unit + i][acEl.left / unit + j]) {
                   collision = true
                 }
               }
@@ -238,7 +238,6 @@ export default {
           }
         }
       }
-      // console.log(this.chip.matrix)
 
       if (canAdd) {
         const elementType = (unit !== originUnit) ? 'merged' : 'base'
@@ -247,14 +246,6 @@ export default {
 
         const height = getComputedProp('height', element, this.page)
         const width = getComputedProp('width', element, this.page)
-        // const unitX = parseInt((e.x / this.zoom) / unit)
-        // const unitY = parseInt((e.y / this.zoom) / unit)
-        // const top = unit * unitY
-        // const left = unit * unitX
-
-        // Correct drop positions based on the editorZoom
-        // top = Math.round(top / this.zoom)
-        // left = Math.round(left / this.zoom)
 
         const fixedElement = fixElementToParentBounds({top, left, height, width}, this.page)
         element = {...element, ...fixedElement}
@@ -279,13 +270,11 @@ export default {
               'matrix': matrix
             }
           })
-
-          for (let i = 0; i < unit / originUnit; i++) {
-            for (let j = 0; j < unit / originUnit; j++) {
-              this.chip.matrix[top / originUnit + i][left / originUnit + j] = 1
-            }
-          }
         }
+        this._updateChipMatrix({
+          egglement: element,
+          add: true
+        })
       }
     },
 
@@ -326,13 +315,10 @@ export default {
     deleteHandler () {
       if (this.selectedElements.length > 0) {
         this.selectedElements.map(el => {
-          for (let i = 0; i < el.classes.matrix.length; i++) {
-            for (let j = 0; j < el.classes.matrix[i].length; j++) {
-              if (el.classes.matrix[i][j] !== 0) {
-                this.chip.matrix[el.top * 10 / this.gridUnit.current + i][el.left * 10 / this.gridUnit.current + j] = 0
-              }
-            }
-          }
+          this._updateChipMatrix({
+            egglement: el,
+            add: false
+          })
           this.removeElement({page: this.page, elId: el.id})
         })
       }
@@ -380,13 +366,10 @@ export default {
             el.top = top + el.top - pasteTop
             el.left = left + el.left - pasteLeft
             this.registerElement({pageId: this.page.id, el, global: el.global})
-            for (let i = 0; i < el.classes.matrix.length; i++) {
-              for (let j = 0; j < el.classes.matrix[i].length; j++) {
-                if (el.classes.matrix[i][j] !== 0) {
-                  this.chip.matrix[el.top * 10 / this.gridUnit.current + i][el.left * 10 / this.gridUnit.current + j] = 1
-                }
-              }
-            }
+            this._updateChipMatrix({
+              egglement: el,
+              add: true
+            })
           })
         } else {
           this.$toasted.show(
@@ -451,6 +434,10 @@ export default {
       element = {...element, ...fixedElement}
 
       this.registerElement({pageId: this.page.id, el: element, global: e.shiftKey})
+      this._updateChipMatrix({
+        egglement: element,
+        add: true
+      })
     },
 
     selectStopHandler (selectionBox) {
@@ -539,7 +526,7 @@ export default {
     },
 
     moveStopHandler (moveStopData) {
-      this.selectedElements.forEach((acEl, index) => {
+      this.selectedElements.forEach(acEl => {
         for (let i = 0; i < acEl.classes.matrix.length; i++) {
           for (let j = 0; j < acEl.classes.matrix[i].length; j++) {
             if (acEl.classes.matrix[i][j] !== 0) {
@@ -549,7 +536,7 @@ export default {
         }
       })
       if (this.checkCollision(this.selectedElements)) {
-          this.selectedElements.forEach((acEl, index) => {
+          this.selectedElements.forEach(acEl => {
             for (let i = 0; i < acEl.classes.matrix.length; i++) {
               for (let j = 0; j < acEl.classes.matrix[i].length; j++) {
                 if (acEl.classes.matrix[i][j] !== 0) {
@@ -583,13 +570,10 @@ export default {
             'left': el.left
           }
         })
-        for (let i = 0; i < el.classes.matrix.length; i++) {
-          for (let j = 0; j < el.classes.matrix[i].length; j++) {
-            if (el.classes.matrix[i][j] !== 0) {
-              this.chip.matrix[el.top * 10 / this.gridUnit.current + i][el.left * 10 / this.gridUnit.current + j] = 1
-            }
-          }
-        }
+        this._updateChipMatrix({
+          egglement: el,
+          add: true
+        })
       })
 
       this.rebaseSelectedElements()
@@ -623,7 +607,7 @@ export default {
     },
 
     ...mapActions([rebaseSelectedElements, registerElement, removeElement, resizeElement, moveElement, margeSelectedElements, separateElement]),
-    ...mapMutations([_clearSelectedElements, _addSelectedElement, updateElement])
+    ...mapMutations([_clearSelectedElements, _addSelectedElement, updateElement, _updateChipMatrix])
   },
   watch: {
     dropContainer: function (newVal, oldVal) {
@@ -642,15 +626,6 @@ export default {
         newVal.style.borderColor = DROP_BORDER.color
       }
     }
-  },
-  mounted () {
-    // console.log(dxfToSvg(simple))
-    // console.log('====================================')
-    // console.log(dxfToSvg(empty))
-    // console.log('====================================')
-    // console.log(dxfToSvg(electrode))
-    // console.log('====================================')
-    // console.log(dxfToSvg(wire))
   }
 }
 </script>

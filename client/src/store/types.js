@@ -96,6 +96,8 @@ export const _removeComponentRef = '_removeComponentRef'
 
 export const _updateGridUnit = '_updateGridUnit'
 
+export const _updateChipMatrix = '_updateChipMatrix'
+
 const types = {
 // GETTERS
   getPageIndexById,
@@ -184,7 +186,8 @@ const types = {
   _updateComponentRef,
   _removeComponentRef,
 
-  _updateGridUnit
+  _updateGridUnit,
+  _updateChipMatrix
 }
 
 export default types

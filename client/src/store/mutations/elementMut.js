@@ -114,11 +114,31 @@ const internalElementMutations = {
   },
 
 /**
-  Set new gridUnit
+ * Set new gridUnit
  */
  [types._updateGridUnit]: function (state, val) {
   state.app.gridUnit.current = val
-}
+  },
+
+/**
+ * Update chip matrix
+ *
+ * @param {object} payload.egglement : Egglement to update
+ * @param {boolean} payload.add : If true, add the element to the matrix. Otherwise, remove it
+ */
+  [types._updateChipMatrix]: function (state, payload) {
+    for (let i = 0; i < payload.egglement.classes.matrix.length; i++) {
+      for (let j = 0; j < payload.egglement.classes.matrix[i].length; j++) {
+        if (payload.egglement.classes.matrix[i][j] !== 0) {
+          if (payload.add) {
+            state.app.chip.matrix[payload.egglement.top * 10 / state.app.gridUnit.origin + i][payload.egglement.left * 10 / state.app.gridUnit.origin + j] = 1
+          } else {
+            state.app.chip.matrix[payload.egglement.top * 10 / state.app.gridUnit.origin + i][payload.egglement.left * 10 / state.app.gridUnit.origin + j] = 0
+          }
+        }
+      }
+    }
+  }
 }
 
 const elementMutations = {

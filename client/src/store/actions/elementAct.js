@@ -104,8 +104,6 @@ const elementActions = {
     let egglement = setElId(el, payload.pageId)
     commit(types.createEgglement, {parent, egglement})
 
-    state.app.chip.matrix[egglement.top * 10 / state.app.gridUnit.origin][egglement.left * 10 / state.app.gridUnit.origin] = 1
-
     return egglement
   },
 
