@@ -230,13 +230,8 @@ export default {
       const chipX = Math.floor((posX / this.zoom) / originUnit)
       const chipY = Math.floor((posY / this.zoom) / originUnit)
 
-      for (let i = 0; i < unit / originUnit; i++) {
-        for (let j = 0; j < unit / originUnit; j++) {
-          if (this.chip.matrix[chipY + i][chipX + j]) {
-            // console.log('Collision')
-            canAdd = false
-          }
-        }
+      if (this.chip.matrix[chipY][chipX]) {
+        canAdd = false
       }
 
       if (canAdd) {
@@ -270,6 +265,11 @@ export default {
               'matrix': matrix
             }
           })
+          if (this.checkCollision([element])) {
+            console.log('Check collision2')
+            this.removeElement({page: this.page, elId: element.id})
+            return false
+          }
         }
         this._updateChipMatrix({
           egglement: element,
