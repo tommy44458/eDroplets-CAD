@@ -180,21 +180,12 @@ export default {
       const offset = e.offsetEl
       const unitX = e.unitX
       const unitY = e.unitY
-      const topLeftEl = e.topLeftEl
-      const topRightEl = e.topRightEl
+      const offsetX = e.offsetX
+      const offsetY = e.offsetY
+
       this.selectedElements.forEach((acEl, index) => {
-        let top = unit * (unitY - offset[index][1])
-        let left = unit * (unitX - offset[index][0])
-        if (topLeftEl.top >= 0 && topLeftEl.left >= 0 && topLeftEl.top !== Number.MAX_SAFE_INTEGER && topLeftEl.left !== Number.MAX_SAFE_INTEGER) {
-          if (offset.length < 2) {
-            top -= topLeftEl.top
-            left -= topLeftEl.left
-          }
-        }
-        if (topRightEl.top >= 0 && topRightEl.left >= 0 && topRightEl.top !== Number.MAX_SAFE_INTEGER && topRightEl.left !== Number.MAX_SAFE_INTEGER) {
-          top -= topRightEl.top
-          left += topRightEl.left
-        }
+        let top = unit * (unitY - offset[index][1] + offsetY)
+        let left = unit * (unitX - offset[index][0] + offsetX)
         this.moveElement({ elId: acEl.id, pageId: this.page.id, top: top, left: left })
       })
     },

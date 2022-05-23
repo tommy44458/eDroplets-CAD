@@ -53,8 +53,8 @@ export default {
 
   data: function () {
     return {
-      topLeftEl: {left: Number.MAX_SAFE_INTEGER, top: Number.MAX_SAFE_INTEGER},
-      topRightEl: {left: Number.MAX_SAFE_INTEGER, top: Number.MAX_SAFE_INTEGER},
+      offsetX: null,
+      offsetY: null,
       initialAbsPos: {x: 0, y: 0},
       initialRelPos: {x: 0, y: 0},
       currentAbsPos: {x: 0, y: 0},
@@ -106,31 +106,14 @@ export default {
       }
 
       if (isMrs) {
-        if (this.topLeftEl.left === Number.MAX_SAFE_INTEGER && this.topLeftEl.top === Number.MAX_SAFE_INTEGER && this.topRightEl.left === Number.MAX_SAFE_INTEGER && this.topRightEl.top === Number.MAX_SAFE_INTEGER) {
+        if (this.activeElements.length > 0 && this.offsetX === null && this.offsetY === null) {
           const unit = this.gridUnit.current / 10
           const posX = this.currentRelPos.x
           const posY = this.currentRelPos.y
           const unitX = parseInt((posX / this.zoom) / unit)
           const unitY = parseInt((posY / this.zoom) / unit)
-          if (this.activeElements.length > 0) {
-            this.topRightEl.left = this.topLeftEl.left = this.activeElements[0].left
-            this.topRightEl.top = this.topLeftEl.top = this.activeElements[0].top
-            this.activeElements.forEach(el => {
-              if (el.left < this.topLeftEl.left) {
-                this.topLeftEl.left = el.left
-              }
-              if (el.left > this.topRightEl.left) {
-                this.topRightEl.left = el.left
-              }
-              if (el.top < this.topLeftEl.top) {
-                this.topRightEl.top = this.topLeftEl.top = el.top
-              }
-            })
-          }
-          this.topLeftEl.left = unitX * unit - this.topLeftEl.left
-          this.topLeftEl.top = unitY * unit - this.topLeftEl.top
-          this.topRightEl.left = this.topRightEl.left - unitX * unit
-          this.topRightEl.top = unitY * unit - this.topRightEl.top
+          this.offsetX = parseInt(this.activeElements[0].left / unit) - unitX
+          this.offsetY = parseInt(this.activeElements[0].top / unit) - unitY
         }
         document.documentElement.addEventListener('mousemove', this.mouseMoveHandler, true)
         document.documentElement.addEventListener('mouseup', this.mouseUpHandler, true)
@@ -160,8 +143,8 @@ export default {
       this.resizing = false
       this.selecting = false
       this.handle = null
-      this.topLeftEl = {left: Number.MAX_SAFE_INTEGER, top: Number.MAX_SAFE_INTEGER}
-      this.topRightEl = {left: Number.MAX_SAFE_INTEGER, top: Number.MAX_SAFE_INTEGER}
+      this.offsetX = null
+      this.offsetY = null
 
       document.documentElement.removeEventListener('mousemove', this.mouseMoveHandler, true)
       document.documentElement.removeEventListener('mouseup', this.mouseUpHandler, true)
@@ -344,11 +327,12 @@ export default {
         const acElX = parseInt(acEl.left / unit)
         const acElY = parseInt(acEl.top / unit)
         lastElPos.push([acEl.left, acEl.top])
+        // offsetEl.push([unitX - acElX, unitY - acElY])
         offsetEl.push([parseInt(this.activeElements[0].left / unit) - acElX, parseInt(this.activeElements[0].top / unit) - acElY])
       })
-      const topLeftEl = this.topLeftEl
-      const topRightEl = this.topRightEl
-      this.$emit('mousemove', {offsetEl, unitX, unitY, lastElPos, topLeftEl, topRightEl})
+      const offsetX = this.offsetX
+      const offsetY = this.offsetY
+      this.$emit('mousemove', {offsetEl, unitX, unitY, lastElPos, offsetX, offsetY})
     },
 
     fixPosition (el, val, prop) {
