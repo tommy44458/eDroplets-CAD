@@ -177,24 +177,26 @@ export default {
 
     mouseMoveElements (e) {
       const unit = this.gridUnit.current / 10
-      // const unit = 200
       const offset = e.offsetEl
       const unitX = e.unitX
       const unitY = e.unitY
-      // console.log(e)
-      // const lastPos = e.lastElPos
-      // const _time = Date.now()
+      const topLeftEl = e.topLeftEl
+      const topRightEl = e.topRightEl
       this.selectedElements.forEach((acEl, index) => {
-        const top = unit * (unitY - offset[index][1])
-        const left = unit * (unitX - offset[index][0])
+        let top = unit * (unitY - offset[index][1])
+        let left = unit * (unitX - offset[index][0])
+        if (topLeftEl.top >= 0 && topLeftEl.left >= 0 && topLeftEl.top !== Number.MAX_SAFE_INTEGER && topLeftEl.left !== Number.MAX_SAFE_INTEGER) {
+          if (offset.length < 2) {
+            top -= topLeftEl.top
+            left -= topLeftEl.left
+          }
+        }
+        if (topRightEl.top >= 0 && topRightEl.left >= 0 && topRightEl.top !== Number.MAX_SAFE_INTEGER && topRightEl.left !== Number.MAX_SAFE_INTEGER) {
+          top -= topRightEl.top
+          left += topRightEl.left
+        }
         this.moveElement({ elId: acEl.id, pageId: this.page.id, top: top, left: left })
       })
-      // console.log(Date.now() - _time)
-      // if (this.checkCollision(this.selectedElements, this.allElements)) {
-      //   this.selectedElements.forEach((acEl, index) => {
-      //     this.moveElement({ elId: acEl.id, pageId: this.page.id, top: lastPos[index][1], left: lastPos[index][0] })
-      //   })
-      // }
     },
 
     setChipLastPos () {
