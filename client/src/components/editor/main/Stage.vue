@@ -225,7 +225,7 @@ export default {
 
       for (let i = 0; i < unit / originUnit; i++) {
         for (let j = 0; j < unit / originUnit; j++) {
-          if (this.chip.matrix[chipY + i][chipX + j]) {
+          if (this.chip.matrix[chipY + i][chipX + j] || this.chip.matrix[chipY + i][chipX + j] === undefined) {
             canAdd = false
           }
         }

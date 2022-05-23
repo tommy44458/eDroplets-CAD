@@ -327,7 +327,6 @@ export default {
         const acElX = parseInt(acEl.left / unit)
         const acElY = parseInt(acEl.top / unit)
         lastElPos.push([acEl.left, acEl.top])
-        // offsetEl.push([unitX - acElX, unitY - acElY])
         offsetEl.push([parseInt(this.activeElements[0].left / unit) - acElX, parseInt(this.activeElements[0].top / unit) - acElY])
       })
       const offsetX = this.offsetX
