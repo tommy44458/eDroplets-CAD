@@ -170,6 +170,38 @@ const projectActions = {
   },
 
   /**
+   * Downloads the current project routing result and electrode position
+   * Used for GUI
+   *
+   * @return {download} : [project-name].ecc file containing routing result and electrode position
+   */
+  [types.downloadProjectECC]: async function ({ state, dispatch, commit }) {
+    commit(types._toggleLoadingStatus, true)
+    commit(types._toggleApiStatus, true)
+
+    const parsedRepoName = state.project.title.replace(/[^a-zA-Z0-9-_]+/g, '-')
+
+    const dataElectrode = generateEWD(state)
+
+    const ewd = {
+      electrode_size: state.app.originalGridUnit,
+      unit: 4,
+      output_format: 'ecc_pattern',
+      ewd_content: dataElectrode
+    }
+
+    const resp = await api.nrrouter(ewd)
+
+    if (resp.status === 200) {
+      download(resp.data, parsedRepoName + '.ecc')
+      commit(types._toggleLoadingStatus, false)
+    } else {
+      commit(types._toggleLoadingStatus, false)
+      commit(types._toggleApiStatus, false)
+    }
+  },
+
+  /**
    * Downloads the current vuegg project definition as a .gg (base64 json) file
    *
    * @return {download} : [project-name].gg file containing the vuegg project definition

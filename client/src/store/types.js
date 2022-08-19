@@ -26,6 +26,7 @@ export const checkAuth = 'checkAuth'
 
 export const downloadProjectEWD = 'downloadProjectEWD'
 export const downloadProjectEDP = 'downloadProjectEDP'
+export const downloadProjectECC = 'downloadProjectECC'
 export const downloadProjectDXF = 'downloadProjectDXF'
 export const getSVG = 'getSVG'
 
@@ -121,6 +122,7 @@ const types = {
   downloadVueSources,
   downloadProjectEWD,
   downloadProjectEDP,
+  downloadProjectECC,
   downloadProjectDXF,
   getSVG,
   uploadVueSourcesToGH,

@@ -103,6 +103,7 @@
         <mdc-menu-divider></mdc-menu-divider>
         <mdc-menu-item>Ewd file (.ewd)</mdc-menu-item>
         <mdc-menu-item>EDrop Project (.edp)</mdc-menu-item>
+        <mdc-menu-item>EDrop Control Config (.ecc)</mdc-menu-item>
         <mdc-menu-item>Dwg file(.dwg)</mdc-menu-item>
         <!-- <mdc-menu-item>Vue sources (.zip)</mdc-menu-item> -->
       </mdc-menu>
@@ -129,7 +130,7 @@
 
 <script>
 import { mapState, mapActions } from 'vuex'
-import { downloadProjectEWD, downloadProjectEDP, downloadProjectDXF, downloadVueSources, loadVueggProject } from '@/store/types'
+import { downloadProjectEWD, downloadProjectEDP, downloadProjectECC, downloadProjectDXF, downloadVueSources, loadVueggProject } from '@/store/types'
 import { mapFields } from 'vuex-map-fields'
 
 import '@/assets/icons/system/actions'
@@ -179,12 +180,14 @@ export default {
       const PROJECT = 1
       const PROJECT2 = 2
       const PROJECT3 = 3
+      const PROJECT4 = 4
       // const SOURCES = 2
 
       switch (selected.index) {
         case PROJECT: this.downloadProjectEWD(); break
         case PROJECT2: this.downloadProjectEDP(); break
-        case PROJECT3:
+        case PROJECT3: this.downloadProjectECC(); break
+        case PROJECT4:
           this.download3Status = this.downloadProjectDXF()
         break
         // case SOURCES: this.downloadVueSources(); break
@@ -216,7 +219,7 @@ export default {
       reader.readAsText(file)
     },
 
-    ...mapActions([downloadProjectEWD, downloadProjectEDP, downloadProjectDXF, downloadVueSources, loadVueggProject])
+    ...mapActions([downloadProjectEWD, downloadProjectEDP, downloadProjectECC, downloadProjectDXF, downloadVueSources, loadVueggProject])
   },
   mounted () {
     this.$root.$emit('open-setting-dialog')
