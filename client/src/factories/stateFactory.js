@@ -11,6 +11,11 @@ function newState (height, width, gridUnit, cornerSize, project) {
     }
     _matrix.push(row)
   }
+  if (project) {
+    project.pages[0].children.forEach(el => {
+      _matrix[el.top / (gridUnit / 10)][el.left / (gridUnit / 10)] = 1
+    })
+  }
   return {
     app: {
       svgContent: '',
