@@ -159,13 +159,13 @@ const projectActions = {
    *
    * @return {download} : [project-name].gg file containing the vuegg project definition
    */
-  [types.downloadProjectEDP]: async function ({ state, dispatch, commit }) {
+  [types.downloadProjectEWDS]: async function ({ state, dispatch, commit }) {
     commit(types._toggleLoadingStatus, true)
 
     const parsedRepoName = state.project.title.replace(/[^a-zA-Z0-9-_]+/g, '-')
 
     const projectB64 = btoa(JSON.stringify(state.project))
-    download(projectB64, parsedRepoName + '.edp', 'appliction/json')
+    download(projectB64, parsedRepoName + '.ewds', 'appliction/json')
     commit(types._toggleLoadingStatus, false)
   },
 
@@ -226,9 +226,11 @@ const projectActions = {
     if (resp.status === 200) {
       download(resp.data, parsedRepoName + '.dxf')
       commit(types._toggleLoadingStatus, false)
+      return true
     } else {
       commit(types._toggleLoadingStatus, false)
       commit(types._toggleApiStatus, false)
+      return false
     }
   },
 
@@ -254,9 +256,11 @@ const projectActions = {
     if (resp.status === 200) {
       commit(types._toggleSvg, resp.data)
       commit(types._toggleLoadingStatus, false)
+      return true
     } else {
       commit(types._toggleLoadingStatus, false)
       commit(types._toggleApiStatus, false)
+      return false
     }
   },
 

@@ -40,11 +40,6 @@ export default {
       this.$el.showModal()
     },
 
-    onConfirm () {
-      this.resetProject()
-      this.closeDialog()
-    },
-
     closeDialog () {
       this.$el.close()
     },

@@ -3,7 +3,7 @@
     <!-- <user-menu></user-menu> -->
     <div class="title-container">
       <button
-        v-tooltip="'Sidebar'"
+        v-tooltip="'Other canvas options'"
         class="action-btn"
         @click="() => {
           openSidebar = !openSidebar

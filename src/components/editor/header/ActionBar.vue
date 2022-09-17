@@ -87,7 +87,7 @@
         <mdc-menu-item disabled>Open project:</mdc-menu-item>
         <mdc-menu-divider></mdc-menu-divider>
         <mdc-menu-item>
-          <input type="file" ref="inputOpenLocal" @change="openLocalFile" :value="fileValue" accept=".gg"/>
+          <input type="file" ref="inputOpenLocal" @change="openLocalFile" :value="fileValue" accept=".ewds"/>
           Computer
         </mdc-menu-item>
         <!-- <mdc-menu-item>GitHub</mdc-menu-item> -->
@@ -101,10 +101,10 @@
       <mdc-menu ref="downloadMenu" @select="onSelectDownload">
         <mdc-menu-item disabled>Download:</mdc-menu-item>
         <mdc-menu-divider></mdc-menu-divider>
-        <mdc-menu-item>Ewd file (.ewd)</mdc-menu-item>
-        <mdc-menu-item>EDrop Project (.edp)</mdc-menu-item>
-        <mdc-menu-item>EDrop Control Config (.ecc)</mdc-menu-item>
-        <mdc-menu-item>Dwg file(.dwg)</mdc-menu-item>
+        <mdc-menu-item>Ewds file (.ewds)</mdc-menu-item>
+        <!-- <mdc-menu-item>EDrop Project (.edp)</mdc-menu-item> -->
+        <!-- <mdc-menu-item>EDrop Control Config (.ecc)</mdc-menu-item> -->
+        <mdc-menu-item>Dxf file (.dxf)</mdc-menu-item>
         <!-- <mdc-menu-item>Vue sources (.zip)</mdc-menu-item> -->
       </mdc-menu>
     </mdc-menu-anchor>
@@ -130,7 +130,7 @@
 
 <script>
 import { mapState, mapActions } from 'vuex'
-import { resetProject, downloadProjectEWD, downloadProjectEDP, downloadProjectECC, downloadProjectDXF, downloadVueSources, loadVueggProject } from '@/store/types'
+import { resetProject, downloadProjectEWD, downloadProjectEWDS, downloadProjectECC, downloadProjectDXF, downloadVueSources, loadVueggProject } from '@/store/types'
 import { mapFields } from 'vuex-map-fields'
 
 import '@/assets/icons/system/actions'
@@ -180,20 +180,24 @@ export default {
       this.$refs.downloadMenu.show()
     },
     onSelectDownload (selected) {
-      const PROJECT = 1
-      const PROJECT2 = 2
-      const PROJECT3 = 3
-      const PROJECT4 = 4
-      // const SOURCES = 2
-
       switch (selected.index) {
-        case PROJECT: this.downloadProjectEWD(); break
-        case PROJECT2: this.downloadProjectEDP(); break
-        case PROJECT3: this.downloadProjectECC(); break
-        case PROJECT4:
-          this.download3Status = this.downloadProjectDXF()
-        break
-        // case SOURCES: this.downloadVueSources(); break
+        case 1:
+            this.downloadProjectEWDS()
+            break
+        case 2:
+            if (!this.downloadProjectDXF()) {
+                this.$root.$emit('open-api-fail-dialog')
+            }
+            break
+        default:
+            break
+        // case 1: this.downloadProjectEWD(); break
+        // case 2: this.downloadProjectEWDS(); break
+        // case 3: this.downloadProjectECC(); break
+        // case 4:
+        //   this.downloadProjectDXF()
+        // break
+        // // case SOURCES: this.downloadVueSources(); break
       }
     },
 
@@ -222,34 +226,17 @@ export default {
       reader.readAsText(file)
     },
 
-    ...mapActions([resetProject, downloadProjectEWD, downloadProjectEDP, downloadProjectECC, downloadProjectDXF, downloadVueSources, loadVueggProject])
+    ...mapActions([resetProject, downloadProjectEWD, downloadProjectEWDS, downloadProjectECC, downloadProjectDXF, downloadVueSources, loadVueggProject])
   },
   mounted () {
-    console.log(this.project)
-    setTimeout(() => {
-        console.log(this.gridUnit)
-    }, 1000)
-    // console.log(this.gridUnit)
-    // if (!this.project.gridUnit) {
-    //     this.gridUnit = {
-    //         current: 2000,
-    //         origin: 2000
-    //     }
-    //     this.resetProject()
-    //     console.log('resetProject')
-    // }
-    // console.log(this.project)
-    // if (!this.project.gridUnit) {
-    //     this.$root.$emit('open-setting-dialog')
-    // }
   },
   watch: {
-    apiStatus: function (val) {
-      console.log(val)
-      if (!val) {
-        this.$root.$emit('open-api-fail-dialog')
-      }
-    }
+    // apiStatus: function (val) {
+    //   console.log(val)
+    //   if (!val) {
+    //     this.$root.$emit('open-api-fail-dialog')
+    //   }
+    // }
   }
 }
 </script>

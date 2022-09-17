@@ -1,8 +1,8 @@
 <template>
-  <dialog class="dialog" @click="closeDialog" >
-    <!-- <div class="confirm-dialog__content" > -->
-    <svg style="height: 100%;" viewBox="0 0 787 458" v-html="svgContent" />
-    <!-- </div> -->
+  <dialog class="dialog" @click="closeDialog">
+    <div class="confirm-dialog__content" >
+        <svg style="text-align: center;" viewBox="0 0 787 458" v-html="svgContent" />
+    </div>
   </dialog>
 </template>
 
@@ -35,7 +35,9 @@ export default {
         dialogPolyfill.registerDialog(this.$el)
       }
       this.$el.showModal()
-      this.getSVG()
+      if (!this.getSVG()) {
+        this.$root.$emit('open-api-fail-dialog')
+      }
     },
 
     onConfirm () {
@@ -53,9 +55,6 @@ export default {
     console.log(this.svgContent)
   },
   watch: {
-    // svgContent: function (val) {
-    //   console.log('*********')
-    // }
   }
 }
 </script>
@@ -63,8 +62,8 @@ export default {
 
 <style scoped>
 dialog {
-  height: 85% !important;
-  width: 50% !important;
+  height: 100% !important;
+  width: 100% !important;
   text-align: center;
 }
 

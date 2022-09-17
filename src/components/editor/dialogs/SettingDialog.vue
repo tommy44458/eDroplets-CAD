@@ -1,16 +1,27 @@
 <template>
   <dialog>
-    <p class="confirm-dialog__title">New EWOD chip</p>
+    <p class="confirm-dialog__title">New Canvas</p>
     <div class="confirm-dialog__content">
       <p>
-        If you create a new EWOD chip, all local changes will be lost!<br />
-        ... using the new setting.
+        A new canvas will be created with <br />
+        specified grid size below.<br />
+        Note that all the electrodes on the<br />
+        existing canvas will not be saved!<br />
       </p>
       <p>
-        chip grid: 
+        Canvas Grid:
         <span :key="keyInput">
-          <input type="number" min="500" max="5000" step="500" :value="gridUnit.current" @change="autoAdjust" @blur="onGridBlur"
-          title="grid scale" placeholder="grid scale"/>
+          <input
+            style="width: 100px;"
+            type="number"
+            min="500"
+            max="5000"
+            step="500"
+            :value="gridUnit.current"
+            @change="autoAdjust"
+            @blur="onGridBlur"
+            title="grid scale"
+            placeholder="grid scale"/>
           <span>
             um
           </span>
