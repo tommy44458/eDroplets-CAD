@@ -22,8 +22,13 @@
         </p>
         <img src="/static/edrop_logo.png" height="40"/>
       </div>
-      <input class="title-input" v-model="tmpProjectTitle" @blur="onTitleBlur"
-        title="Project title" placeholder="Project title"/>
+      <input
+        class="title-input"
+        v-model="tmpProjectTitle"
+        @blur="onTitleBlur"
+        title="Project title"
+        placeholder="Project title"
+      />
     </div>
     <action-bar></action-bar>
   </div>
@@ -140,6 +145,7 @@ export default {
 .title-input {
   flex-grow: 1;
   border: 0;
+  width: 300px;
   height: 56px;
   background: transparent;
   outline: none;

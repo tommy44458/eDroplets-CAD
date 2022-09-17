@@ -1,94 +1,85 @@
-## About edrop-design-tool
+# vuegg-client
 
-This is a website-based design tool for EWOD chips, users can free to draw electrodes with various shapes and get the routing result via the cloud-based algorithm.
+> vuegg UI
 
-## Actions
+## Build Setup
 
-### Select
-* **Mouse down + Drag + Mouse up**: Draw a selection area
-* **Ctrl [or Meta] + Click**: Select outer-most item, or parent container
-* **Ctrl [or Meta] + Shift + Click**: Add [outer-most] item to selection
-* **Esc**: Clear selection
-
-### Move
-* **Mouse drag & drop**: The standard way
-* **ArrowKeys**: Moves the selected elements 1px
-* **Shift + ArrowKeys**: Moves the selected elements 10px
-
-### Copy / Cut / paste
-* **Ctrl [or Meta] + C**: Copy selection
-* **Ctrl [or Meta] + X**: Cut selection
-* **Ctrl [or Meta] + V**: paste selection
-
-### Delete
-* **Delete [or Backspace]**: Deletes selection
-
-### Undo / Redo
-* **Ctrl [or Meta] + Z / click icon**: Undo last action
-* **Ctrl [or Meta] + Shift + Z / Click icon**: Redo last action
-
-### Move chip
-* **Click icon**: Start/Stop chip moving mode
-
-### Paint
-* **Click icon**: Start/Stop electrode painting mode (add electrode unit in mouse point) 
-
-### Combine
-* **Click icon**: Combine the selected electrodes
-
-### Download
-* **Click icon**: Download .ewd, .edp, .dwg(routing result)
-
-<br>
-
-## Run edrop-design-tool locally
-
-### Step-by-step setup
-
-##### 1. installation
 ``` bash
-# install node dependencies
-npm run install:client
-```
+# install dependencies
+npm install
 
-##### 2. development
-``` bash
-# serve client with hot reload
-npm run client
-```
-Navigate to `localhost:7000` to serve *client* with hot-reload (development server).
+# serve with hot reload at localhost:8080
+npm run dev
 
-> For detailed explanation on how things work on the client side, checkout the **[vuejs-templates/webpack](http://vuejs-templates.github.io/webpack/)** guide and docs for **[vue-loader](http://vuejs.github.io/vue-loader)**.
-
-> For development *server* will only generate vuejs projects (it won't be serving *client* resources). Auto-restart capabilities possible thanks to **[nodemon](https://github.com/remy/nodemon)**.
-
-> The above commands should be run in separate terminal instances.
-
-##### 3. production
-``` bash
-# build client for production with minification
+# build for production with minification
 npm run build
 
-# start server at localhost:5000
-npm run start
+# build for production and view the bundle analyzer report
+npm run build --report
+
+# run unit tests
+npm run unit
+
+# run e2e tests
+npm run e2e
+
+# run all tests
+npm test
 ```
-Navigate to `localhost:5000` to serve (a production-ready) edrop-design-tool.
 
-## Code
+For detailed explanation on how things work, checkout the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
 
-<img src="/readme_pic.png"/>
+---
 
-### Vuex
-For managing all parameters of the app.
-* **State**: all app config
-* **Action**: add electrode, reset chip, download .ewd, etc.
-* **Mutation**: change electrode attribute, etc.
-* **Getter**: aget electrode index , etc.
+---
 
-### Factory
-For defining parameters required by components.
-* **State**: app config (zoom in/out, edit status, selected electrodes, etc.)
-* **Project**: chip config (chip layers, size, grid, etc.)
-* **Page**: layer config (canvas grid line, electrodes, etc.)
-* **ElectrodeUnit**: electrode config (shape matrix, svg path, etc.)
 
+## Development notes
+
+**Basic Elements**
+* Props: **egglement**, [**wrappegg**, **containegg**]
+
+* *Renders directly on the page.*
+
+> Any HTML5 elements (div, button, input...)
+
+**Vuegg components**
+* Wrapper props: **egglement**, **componegg**, **containegg**
+
+* Children props: **egglement**, [**wrappegg**, **componegg**, **containegg**]
+
+* *For render information see in-line and global components*
+
+> Any component build with the set of *Basic Elements*. Usually a 'div' element containing other basic elements or components (vuegg-powered or external).
+
+**External components**
+* Wrapper props: **external**, **componegg**
+
+* Children props: (none)
+
+* *For render information see in-line and global components*
+
+> Components from external libraries/packages (ie. vue-mdc-adapter)
+
+
+### Components render types
+
+**In-line components**
+> Full definition generated *in-line* in the page.
+
+> Can edit position and dimensions from main editor.
+(Styles, classes, children edition from component editor) *TODO.
+
+> DOES NOT SAVE A COMPONENT DEFINITION IN PROJECT LEVEL.
+
+
+**Global components**
+> Full definition generated in its own component file; instance generated in the page.
+
+> Can edit only position in main editor. (Styles, classes, children edition in component editor) *TODO.
+
+> SAVES A COMPONENT DEFINITION GLOBALLY (project level). This also applies for external components (due to dependencies)
+
+
+
+*TODO, a vuegg-componegg edition view to modify the global component reference, and apply changes to all instances of that component.

@@ -19,7 +19,7 @@ import 'vue-directive-tooltip/css/index.css'
 
 import global_ from './global'
 
-localforage.config({ name: 'vuegg' })
+localforage.config({ name: 'edrops-cad' })
 
 Vue.use(VueSVGIcon)
 Vue.use(VueMDCAdapter)

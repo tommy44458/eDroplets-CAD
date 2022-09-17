@@ -57,7 +57,7 @@ function newState (height, width, gridUnit, cornerSize, project) {
       isAuthorized: false,
       authenticatedUser: null
     },
-    project: project || newProject('ewod chip project', gridUnit, height, width)
+    project: project || newProject('Digital Microfluidics Chip Design Tool', gridUnit, height, width)
   }
 }
 

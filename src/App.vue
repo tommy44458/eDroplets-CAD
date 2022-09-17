@@ -2,13 +2,13 @@
   <div id="app" class="mdc-theme--background">
     <div class="viewport-splash_wrapper">
       <div class="viewport-splash_content">
-        <img src="/static/Edrop.png" height="140"/>
+        <img src="/static/edrop_logo.png" height="140"/>
         <h3>Sorry about that!</h3>
         <p>
-          It looks like your screen is too small to use vuegg properly,
+          It looks like your screen is too small to use ewod cad properly,
           please increase your browser size or visit on a larger device.
         </p>
-        <p><b>NOTE</b>: As for today, vuegg does not support touch devices.</p>
+        <p><b>NOTE</b>: As for today, ewod cad does not support touch devices.</p>
       </div>
     </div>
     <router-view></router-view>
