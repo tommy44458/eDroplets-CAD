@@ -275,22 +275,16 @@ const projectActions = {
    * @param {string|null} [content] : (pc-origin) The content of the selected file
    */
   [types.loadVueggProject]: async function ({ state, dispatch, commit }, { origin, userName, repoName, content }) {
-    console.time('loadVueggProject')
     commit(types._toggleBlockLoadingStatus, true)
     let project
-    console.time('loadVueggProject-switch')
     switch (origin) {
       case 'local': project = await localforage.getItem('local-checkpoint'); break
       case 'pc': project = content; break
       default: project = await localforage.getItem('local-checkpoint')
     }
-    console.timeEnd('loadVueggProject-switch')
 
     if (project) {
-      console.time('loadVueggProject-if-project')
-      console.time('loadVueggProject-project-JSON')
       const _project = JSON.parse(atob(project))
-      console.timeEnd('loadVueggProject-project-JSON')
       if (!_project.gridUnit || !_project.chip) {
         store.replaceState(newState(
             parseInt(state.app.chip.height),
@@ -301,15 +295,11 @@ const projectActions = {
         ))
         commit(types.addProject)
       } else {
-        console.time('loadVueggProject-if-checkAuth')
         store.replaceState(newState(parseInt(_project.chip.height), parseInt(_project.chip.width), parseInt(_project.gridUnit), 3, _project))
         commit(types.addProject)
         await dispatch(types.checkAuth)
-        console.timeEnd('loadVueggProject-if-checkAuth')
       }
-      console.timeEnd('loadVueggProject-if-project')
     } else {
-        console.time('loadVueggProject-no-project')
         store.replaceState(newState(
             parseInt(state.app.chip.height),
             parseInt(state.app.chip.width),
@@ -319,10 +309,8 @@ const projectActions = {
         ))
         commit(types.addProject)
         // await dispatch(types.checkAuth)
-        console.timeEnd('loadVueggProject-no-project')
     }
     commit(types._toggleBlockLoadingStatus, false)
-    console.timeEnd('loadVueggProject')
   },
 
   /**

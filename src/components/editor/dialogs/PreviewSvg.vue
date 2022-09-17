@@ -62,8 +62,10 @@ export default {
 
 <style scoped>
 dialog {
-  height: 100% !important;
-  width: 100% !important;
+    min-width: 300px;
+    min-height: 300px;
+  height: 50% !important;
+  width: 50% !important;
   text-align: center;
 }
 
