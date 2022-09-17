@@ -298,7 +298,17 @@ const projectActions = {
 
     if (project) {
       const _project = JSON.parse(atob(project))
-      store.replaceState(newState(parseInt(_project.chip.height), parseInt(_project.chip.width), parseInt(_project.gridUnit), 3, _project))
+      if (!_project.gridUnit || !_project.chip) {
+        store.replaceState(newState(
+            parseInt(state.app.chip.height),
+            parseInt(state.app.chip.width),
+            parseInt(2000),
+            3,
+            null
+        ))
+      } else {
+        store.replaceState(newState(parseInt(_project.chip.height), parseInt(_project.chip.width), parseInt(_project.gridUnit), 3, _project))
+      }
       commit(types.addProject)
       if (origin === 'github') localforage.setItem('gh-repo-name', repoName)
 
