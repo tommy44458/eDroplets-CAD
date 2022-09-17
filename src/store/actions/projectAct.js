@@ -276,23 +276,10 @@ const projectActions = {
    */
   [types.loadVueggProject]: async function ({ state, dispatch, commit }, { origin, userName, repoName, content }) {
     commit(types._toggleBlockLoadingStatus, true)
-
     let project
     switch (origin) {
       case 'local': project = await localforage.getItem('local-checkpoint'); break
       case 'pc': project = content; break
-      case 'github':
-        // const token = await localforage.getItem('gh-token')
-        const owner = userName || state.oauth.authenticatedUser.login
-        const repo = repoName || state.project.title.replace(/[^a-zA-Z0-9-_]+/g, '-')
-
-        // let ghFile = await api.getVueggProject(owner, repo, token)
-        let ghFile = await api.getVueggProject(owner, repo)
-
-        ghFile
-          ? project = ghFile.data.data.content
-          : showSnackbar(owner + '/' + repo + ' is not a valid repository')
-        break
       default: project = await localforage.getItem('local-checkpoint')
     }
 
@@ -306,13 +293,12 @@ const projectActions = {
             3,
             null
         ))
+        commit(types.addProject)
       } else {
         store.replaceState(newState(parseInt(_project.chip.height), parseInt(_project.chip.width), parseInt(_project.gridUnit), 3, _project))
+        commit(types.addProject)
+        await dispatch(types.checkAuth)
       }
-      commit(types.addProject)
-      if (origin === 'github') localforage.setItem('gh-repo-name', repoName)
-
-      await dispatch(types.checkAuth)
     } else {
         store.replaceState(newState(
             parseInt(state.app.chip.height),
@@ -322,7 +308,7 @@ const projectActions = {
             null
         ))
         commit(types.addProject)
-        await dispatch(types.checkAuth)
+        // await dispatch(types.checkAuth)
     }
     commit(types._toggleBlockLoadingStatus, false)
   },
