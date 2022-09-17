@@ -64,8 +64,8 @@ export default {
 dialog {
     min-width: 300px;
     min-height: 300px;
-  height: 50% !important;
-  width: 50% !important;
+  height: 70% !important;
+  width: 70% !important;
   text-align: center;
 }
 
