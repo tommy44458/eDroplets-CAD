@@ -8,7 +8,7 @@
 
 <script>
 import { mapState, mapActions } from 'vuex'
-import { clearProject, getSVG } from '@/store/types'
+import { resetProject, getSVG } from '@/store/types'
 import dialogPolyfill from 'dialog-polyfill/dialog-polyfill'
 
 export default {
@@ -39,7 +39,7 @@ export default {
     },
 
     onConfirm () {
-      this.clearProject()
+      this.resetProject()
       this.closeDialog()
     },
 
@@ -47,7 +47,7 @@ export default {
       this.$el.close()
     },
 
-    ...mapActions([clearProject, getSVG])
+    ...mapActions([resetProject, getSVG])
   },
   mounted () {
     console.log(this.svgContent)

@@ -16,7 +16,7 @@
 
 <script>
 import { mapState, mapActions } from 'vuex'
-import { clearProject } from '@/store/types'
+import { resetProject } from '@/store/types'
 import dialogPolyfill from 'dialog-polyfill/dialog-polyfill'
 
 export default {
@@ -41,7 +41,7 @@ export default {
     },
 
     onConfirm () {
-      this.clearProject()
+      this.resetProject()
       this.closeDialog()
     },
 
@@ -49,7 +49,7 @@ export default {
       this.$el.close()
     },
 
-    ...mapActions([clearProject])
+    ...mapActions([resetProject])
   }
 }
 </script>

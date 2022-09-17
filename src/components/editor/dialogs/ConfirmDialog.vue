@@ -1,9 +1,9 @@
 <template>
   <dialog>
-    <p class="confirm-dialog__title">Do you want to delete "{{project.title}}" ?</p>
+    <p class="confirm-dialog__title">Do you want to clear all electrodes?</p>
     <div class="confirm-dialog__content">
       <p>
-        If you do, all local changes will be lost!<br />
+        If you do, all changes will be lost!<br />
         ... although in reality you can undo it
       </p>
     </div>
@@ -16,8 +16,9 @@
 
 <script>
 import { mapState, mapActions } from 'vuex'
-import { clearProject } from '@/store/types'
+import { resetProject } from '@/store/types'
 import dialogPolyfill from 'dialog-polyfill/dialog-polyfill'
+import { mapFields } from 'vuex-map-fields'
 
 export default {
   name: 'confirm-dialog',
@@ -28,6 +29,11 @@ export default {
     this.$root.$off('open-confirm-dialog', this.openDialog)
   },
   computed: {
+    ...mapFields([
+      'app.gridUnit',
+      'app.chip'
+    ]),
+
     ...mapState({
       project: state => state.project
     })
@@ -41,7 +47,7 @@ export default {
     },
 
     onConfirm () {
-      this.clearProject()
+      this.resetProject()
       this.closeDialog()
     },
 
@@ -49,7 +55,7 @@ export default {
       this.$el.close()
     },
 
-    ...mapActions([clearProject])
+    ...mapActions([resetProject])
   }
 }
 </script>

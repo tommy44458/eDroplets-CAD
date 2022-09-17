@@ -299,6 +299,15 @@ const projectActions = {
       if (origin === 'github') localforage.setItem('gh-repo-name', repoName)
 
       await dispatch(types.checkAuth)
+    } else {
+        store.replaceState(newState(
+            parseInt(state.app.chip.height),
+            parseInt(state.app.chip.width),
+            parseInt(2000),
+            3,
+            null
+        ))
+        await dispatch(types.checkAuth)
     }
     commit(types._toggleBlockLoadingStatus, false)
   },
@@ -307,14 +316,13 @@ const projectActions = {
    * Clears the editing project from vuegg and replaces it with a plain one.
    * (or better to say, resets vuegg to initial state)
    */
-  [types.clearProject]: async function ({ dispatch, commit }) {
-    commit(types._toggleBlockLoadingStatus, true)
-
-    store.replaceState(newState(1000, 3))
-    commit(types.deleteProject)
-
-    await dispatch(types.checkAuth)
-    commit(types._toggleBlockLoadingStatus, false)
+  [types.resetProject]: async function ({ state, dispatch }) {
+    await dispatch(types.newProject, {
+        height: state.app.chip.height,
+        width: state.app.chip.width,
+        gridUnit: state.app.gridUnit ? state.app.gridUnit.origin : 2000,
+        cornerSize: 3
+    })
   },
 
   /**

@@ -22,14 +22,14 @@
       </button>
     </router-link> -->
 
-    <button v-tooltip="'Preview'" class="action-btn" @click="$root.$emit('preview-svg')" >
+    <button v-tooltip="'Preview routing result'" class="action-btn" @click="$root.$emit('preview-svg')" >
       <svgicon icon="system/actions/preview" width="24" height="24" color="#2b6a73"></svgicon>
     </button>
 
     <div class="separator"></div>
 
     <button
-      v-tooltip="'Move chip'"
+      v-tooltip="'Move canvas'"
       class="action-btn"
       :disabled="isLoading"
       @click="() => {
@@ -61,21 +61,21 @@
       </div>
     </button>
 
-    <button v-tooltip="'Combine Electrodes'" class="action-btn" :disabled="isLoading" @click="$root.$emit('combine-electrodes')">
+    <!-- <button v-tooltip="'Combine Electrodes'" class="action-btn" :disabled="isLoading" @click="$root.$emit('combine-electrodes')">
       <svgicon icon="system/actions/combine" width="20" height="20"
         :color="'#2b6a73'">
       </svgicon>
-    </button>
+    </button> -->
 
     <div class="separator"></div>
 
-    <!-- <button v-tooltip="'Project setting'" class="action-btn"
+    <button v-tooltip="'New canvas'" class="action-btn"
       :disabled="isLoading" @click="$root.$emit('open-setting-dialog')">
-      <svgicon icon="system/settings" width="24" height="24" color="#2b6a73"></svgicon>
-    </button> -->
+      <svgicon icon="system/page" width="24" height="24" color="#2b6a73"></svgicon>
+    </button>
 
-    <button v-tooltip="'Clear project'" class="action-btn"
-      :disabled="isLoading" @click="$root.$emit('open-setting-dialog')">
+    <button v-tooltip="'Clear canvas'" class="action-btn"
+      :disabled="isLoading" @click="$root.$emit('open-confirm-dialog')">
       <svgicon icon="system/actions/delete" width="24" height="24" color="#2b6a73"></svgicon>
     </button>
 
@@ -130,7 +130,7 @@
 
 <script>
 import { mapState, mapActions } from 'vuex'
-import { downloadProjectEWD, downloadProjectEDP, downloadProjectECC, downloadProjectDXF, downloadVueSources, loadVueggProject } from '@/store/types'
+import { resetProject, downloadProjectEWD, downloadProjectEDP, downloadProjectECC, downloadProjectDXF, downloadVueSources, loadVueggProject } from '@/store/types'
 import { mapFields } from 'vuex-map-fields'
 
 import '@/assets/icons/system/actions'
@@ -145,6 +145,9 @@ export default {
 
   computed: {
     ...mapFields([
+      'project',
+      'app.gridUnit',
+      'app.chip',
       'app.edit.paint',
       'app.edit.moveStage'
     ]),
@@ -219,10 +222,26 @@ export default {
       reader.readAsText(file)
     },
 
-    ...mapActions([downloadProjectEWD, downloadProjectEDP, downloadProjectECC, downloadProjectDXF, downloadVueSources, loadVueggProject])
+    ...mapActions([resetProject, downloadProjectEWD, downloadProjectEDP, downloadProjectECC, downloadProjectDXF, downloadVueSources, loadVueggProject])
   },
   mounted () {
-    this.$root.$emit('open-setting-dialog')
+    console.log(this.project)
+    setTimeout(() => {
+        console.log(this.gridUnit)
+    }, 1000)
+    // console.log(this.gridUnit)
+    // if (!this.project.gridUnit) {
+    //     this.gridUnit = {
+    //         current: 2000,
+    //         origin: 2000
+    //     }
+    //     this.resetProject()
+    //     console.log('resetProject')
+    // }
+    // console.log(this.project)
+    // if (!this.project.gridUnit) {
+    //     this.$root.$emit('open-setting-dialog')
+    // }
   },
   watch: {
     apiStatus: function (val) {
