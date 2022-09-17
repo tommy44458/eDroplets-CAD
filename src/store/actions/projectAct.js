@@ -311,6 +311,7 @@ const projectActions = {
             3,
             null
         ))
+        commit(types.addProject)
         await dispatch(types.checkAuth)
     }
     commit(types._toggleBlockLoadingStatus, false)
