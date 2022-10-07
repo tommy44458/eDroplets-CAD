@@ -1,6 +1,6 @@
 import newProject from './projectFactory'
 
-function newState (height, width, gridUnit, cornerSize, project) {
+function newState (height, width, gridUnit, cornerSize, gapSize, project) {
   const h = height / gridUnit
   const w = width / gridUnit
   const _matrix = []
@@ -41,6 +41,7 @@ function newState (height, width, gridUnit, cornerSize, project) {
         current: gridUnit
       },
       cornerSize: cornerSize,
+      gapSize: gapSize,
       chip: {
         matrix: _matrix,
         height: 40000,
@@ -57,7 +58,7 @@ function newState (height, width, gridUnit, cornerSize, project) {
       isAuthorized: false,
       authenticatedUser: null
     },
-    project: project || newProject('Digital Microfluidics Chip Design Tool', gridUnit, height, width)
+    project: project || newProject('Digital Microfluidics Chip Design Tool', gridUnit, cornerSize, gapSize, height, width)
   }
 }
 

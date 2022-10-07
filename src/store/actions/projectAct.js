@@ -290,12 +290,13 @@ const projectActions = {
             parseInt(state.app.chip.height),
             parseInt(state.app.chip.width),
             parseInt(2000),
-            3,
+            parseInt(3),
+            parseInt(3),
             null
         ))
         commit(types.addProject)
       } else {
-        store.replaceState(newState(parseInt(_project.chip.height), parseInt(_project.chip.width), parseInt(_project.gridUnit), 3, _project))
+        store.replaceState(newState(parseInt(_project.chip.height), parseInt(_project.chip.width), parseInt(_project.gridUnit), parseInt(_project.cornerSize), parseInt(_project.gapSize), _project))
         commit(types.addProject)
         await dispatch(types.checkAuth)
       }
@@ -304,7 +305,8 @@ const projectActions = {
             parseInt(state.app.chip.height),
             parseInt(state.app.chip.width),
             parseInt(2000),
-            3,
+            parseInt(3),
+            parseInt(3),
             null
         ))
         commit(types.addProject)
@@ -322,7 +324,8 @@ const projectActions = {
         height: state.app.chip.height,
         width: state.app.chip.width,
         gridUnit: state.app.gridUnit ? state.app.gridUnit.origin : 2000,
-        cornerSize: 3
+        cornerSize: state.app.cornerSize,
+        gapSize: state.app.gapSize
     })
   },
 
@@ -331,10 +334,10 @@ const projectActions = {
    * (or better to say, resets vuegg to initial state)
    */
   [types.newProject]: async function ({ dispatch, commit }, payload) {
-    const { height, width, gridUnit, cornerSize } = payload
+    const { height, width, gridUnit, cornerSize, gapSize } = payload
     commit(types._toggleBlockLoadingStatus, true)
 
-    store.replaceState(newState(height, width, gridUnit, cornerSize))
+    store.replaceState(newState(height, width, gridUnit, cornerSize, gapSize))
     commit(types.deleteProject)
 
     await dispatch(types.checkAuth)

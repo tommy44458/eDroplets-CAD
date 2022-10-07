@@ -269,6 +269,7 @@ const elementActions = {
 
     const unit = state.app.gridUnit.origin / 10
     const cornerSize = state.app.cornerSize
+    const gapSize = state.app.gapSize
     commit(types.sortSelectedElement)
 
     let topMax = -1
@@ -505,22 +506,22 @@ const elementActions = {
       //    |
       if ((v[0] == vArray[(index + 1 + vArray.length) % vArray.length][0] && v[1] < vArray[(index + 1 + vArray.length) % vArray.length][1]) &&
            (v[0] > vArray[(index - 1 + vArray.length) % vArray.length][0]) && v[1] == vArray[(index - 1 + vArray.length) % vArray.length][1]) {
-        dArray.push([v[0] - cornerSize - cornerSize, v[1] + 0])
-        dArray.push([v[0] + 0 - cornerSize, v[1] + cornerSize])
+        dArray.push([v[0] - gapSize - cornerSize, v[1] + 0])
+        dArray.push([v[0] + 0 - gapSize, v[1] + cornerSize])
       }
       //    |
       //  --.
       if ((v[0] > vArray[(index + 1 + vArray.length) % vArray.length][0] && v[1] == vArray[(index + 1 + vArray.length) % vArray.length][1]) &&
            (v[0] == vArray[(index - 1 + vArray.length) % vArray.length][0]) && v[1] > vArray[(index - 1 + vArray.length) % vArray.length][1]) {
-        dArray.push([v[0] + 0 - cornerSize, v[1] - cornerSize - cornerSize])
-        dArray.push([v[0] - cornerSize - cornerSize, v[1] + 0 - cornerSize])
+        dArray.push([v[0] + 0 - gapSize, v[1] - gapSize - cornerSize])
+        dArray.push([v[0] - gapSize - cornerSize, v[1] + 0 - gapSize])
       }
       //  |
       //  .--
       if ((v[0] == vArray[(index + 1 + vArray.length) % vArray.length][0] && v[1] > vArray[(index + 1 + vArray.length) % vArray.length][1]) &&
            (v[0] < vArray[(index - 1 + vArray.length) % vArray.length][0]) && v[1] == vArray[(index - 1 + vArray.length) % vArray.length][1]) {
-        dArray.push([v[0] + cornerSize, v[1] + 0 - cornerSize])
-        dArray.push([v[0] + 0, v[1] - cornerSize - cornerSize])
+        dArray.push([v[0] + cornerSize, v[1] + 0 - gapSize])
+        dArray.push([v[0] + 0, v[1] - gapSize - cornerSize])
       }
 
       // internal
@@ -528,15 +529,16 @@ const elementActions = {
       // |
       if ((v[0] == vArray[(index + 1 + vArray.length) % vArray.length][0] && v[1] < vArray[(index + 1 + vArray.length) % vArray.length][1]) &&
            (v[0] < vArray[(index - 1 + vArray.length) % vArray.length][0]) && v[1] == vArray[(index - 1 + vArray.length) % vArray.length][1]) {
-        dArray.push([v[0] + cornerSize - cornerSize, v[1] + 0 - cornerSize])
-        dArray.push([v[0] + 0 - cornerSize, v[1] + cornerSize - cornerSize])
+        dArray.push([v[0] - gapSize + cornerSize, v[1] + 0 - gapSize])
+        dArray.push([v[0] + 0 - gapSize, v[1] - gapSize + cornerSize])
       }
       //  __.
       //    |
       if ((v[0] > vArray[(index + 1 + vArray.length) % vArray.length][0] && v[1] == vArray[(index + 1 + vArray.length) % vArray.length][1]) &&
            (v[0] == vArray[(index - 1 + vArray.length) % vArray.length][0]) && v[1] < vArray[(index - 1 + vArray.length) % vArray.length][1]) {
-        dArray.push([v[0] + 0, v[1] + cornerSize - cornerSize])
-        dArray.push([v[0] - cornerSize, v[1] + 0 - cornerSize])
+        console.log('6', [v[0] + 0, v[1] - gapSize + cornerSize], [v[0] - gapSize, v[1] + 0 - gapSize])
+        dArray.push([v[0] + 0, v[1] - gapSize + cornerSize])
+        dArray.push([v[0] - cornerSize, v[1] + 0 - gapSize])
       }
       //    |
       //  --.
@@ -549,13 +551,13 @@ const elementActions = {
       //  .--
       if ((v[0] < vArray[(index + 1 + vArray.length) % vArray.length][0] && v[1] == vArray[(index + 1 + vArray.length) % vArray.length][1]) &&
            (v[0] == vArray[(index - 1 + vArray.length) % vArray.length][0]) && v[1] > vArray[(index - 1 + vArray.length) % vArray.length][1]) {
-        dArray.push([v[0] + 0 - cornerSize, v[1] - cornerSize])
-        dArray.push([v[0] + cornerSize - cornerSize, v[1] + 0])
+        dArray.push([v[0] + 0 - gapSize, v[1] - cornerSize])
+        dArray.push([v[0] - gapSize + cornerSize, v[1] + 0])
       }
     })
 
     let path = 'M ' + dArray[0][0] + ' ' + dArray[0][1] + ' '
-    dArray.forEach((v, index) => {
+    dArray.forEach(v => {
         path += 'L ' + v[0] + ' ' + v[1] + ' '
     })
 
@@ -572,8 +574,8 @@ const elementActions = {
       name: el.id.split('.')[1],
       top: topMin,
       left: leftMin,
-      height: (unit * colNumber) - cornerSize,
-      width: (unit * rowNumber) - cornerSize,
+      height: (unit * colNumber) - gapSize,
+      width: (unit * rowNumber) - gapSize,
       path: path,
       classes: {
         'matrix': matrix
@@ -589,6 +591,7 @@ const elementActions = {
     }
     const unit = state.app.gridUnit.origin / 10
     const cornerSize = state.app.cornerSize
+    const gapSize = state.app.gapSize
     const elementCount = state.app.selectedElements.length
     const selectedElements = state.app.selectedElements
 
@@ -613,12 +616,12 @@ const elementActions = {
       for (let i = 0; i < rowNumber; i++) {
         for (let j = 0; j < colNumber; j++) {
           if (matrix[i][j] === -1) {
-            const height = unit - cornerSize
-            const width = unit - cornerSize
+            const height = unit - gapSize
+            const width = unit - gapSize
             const top = topMax + unit * i
             const left = leftMax + unit * j
 
-            let element = newElectrodeUnit('base', unit, cornerSize, top, left)
+            let element = newElectrodeUnit('base', unit, cornerSize, gapSize, top, left)
 
             const fixedElement = fixElementToParentBounds({top, left, height, width}, page)
             element = {...element, ...fixedElement}

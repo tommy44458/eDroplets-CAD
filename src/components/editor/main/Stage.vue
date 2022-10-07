@@ -116,6 +116,7 @@ export default {
       'app.squareSize',
       'app.gridUnit',
       'app.cornerSize',
+      'app.gapSize',
       'app.stagePosTop',
       'app.stagePosLeft',
       'app.editorZoom',
@@ -206,6 +207,7 @@ export default {
       const unit = this.squareSize / 10
       const originUnit = this.gridUnit.origin / 10
       const cornerSize = this.cornerSize
+      const gapSize = this.gapSize
       const posX = e.x
       const posY = e.y
 
@@ -234,7 +236,7 @@ export default {
       if (canAdd) {
         const elementType = (unit !== originUnit) ? 'merged' : 'base'
 
-        let element = newElectrodeUnit(elementType, unit, cornerSize, top, left)
+        let element = newElectrodeUnit(elementType, unit, cornerSize, gapSize, top, left)
 
         const height = getComputedProp('height', element, this.page)
         const width = getComputedProp('width', element, this.page)
@@ -247,8 +249,8 @@ export default {
 
         if (elementType !== 'base') {
           const matrix = []
-          const rowNumber = (width + cornerSize) / originUnit
-          const colNumber = (height + cornerSize) / originUnit
+          const rowNumber = (width + gapSize) / originUnit
+          const colNumber = (height + gapSize) / originUnit
           for (let i = 0; i < rowNumber; i++) {
             const row = []
             for (let j = 0; j < colNumber; j++) {

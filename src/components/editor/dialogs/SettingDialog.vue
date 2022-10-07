@@ -26,12 +26,24 @@
             um
           </span>
         </span>
+        <span class="invalid-message" v-if="invalidInput">
+          <p>  
+            Invalid grid size input!
+          </p>
+        </span>
       </p>
-      <span class="invalid-message" v-if="invalidInput">
-        <p>  
-          Invalid grid size input!
-        </p>
-      </span>
+      <p>
+        gap size: 
+        <span :key="keyInput">
+          <select v-model="gapSize">
+            <option value="5"> 5 </option>
+            <option value="30"> 30 </option>
+          </select>
+          <span>
+            um
+          </span>
+        </span>
+      </p>
     </div>
     <div class="confirm-dialog__actions">
       <mdc-button @click="onConfirm" class="confirm-dialog__delete-btn" unelevated>Apply</mdc-button>
@@ -57,6 +69,7 @@ export default {
   data () {
     return {
       keyInput: 0,
+      gapSize: 5,
       invalidInput: false
     }
   },
@@ -79,7 +92,14 @@ export default {
     },
 
     onConfirm () {
-      this.newProject({height: this.chip.height, width: this.chip.width, gridUnit: this.gridUnit.current, cornerSize: 3})
+      const cornerSize = this.gapSize === 5 ? this.gridUnit.current / 200 : 3
+      this.newProject({
+        height: this.chip.height,
+        width: this.chip.width,
+        gridUnit: this.gridUnit.current,
+        cornerSize: cornerSize,
+        gapSize: this.gapSize / 10
+      })
       this.closeDialog()
     },
 
