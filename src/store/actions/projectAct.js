@@ -10,6 +10,7 @@ import api from '@/api'
 
 const generateEWD = function (state) {
   const scale = (80000 / 8000)
+  const gapSize = state.project.gapSize * scale
   let electrods = state.project.pages[0].children
 
   let dataElectrode = ''
@@ -59,7 +60,7 @@ const generateEWD = function (state) {
     electrods.forEach(getPos)
 
     function getPos (item, index) {
-      dataElectrode = dataElectrode + item.name + ' ' + (parseFloat(item.left) * scale + 1000 - 1630 + 15) + ' ' + (parseFloat(item.top) * scale + 12258 + 15) + '\n'
+      dataElectrode = dataElectrode + item.name + ' ' + (parseFloat(item.left) * scale + 1000 - 1630 + gapSize / 2) + ' ' + (parseFloat(item.top) * scale + 12258 + (gapSize / 2)) + '\n'
     }
 
     dataElectrode = dataElectrode + '#ENDOFLAYOUT#\n'
