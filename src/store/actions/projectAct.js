@@ -296,7 +296,7 @@ const projectActions = {
         ))
         commit(types.addProject)
       } else {
-        store.replaceState(newState(parseInt(_project.chip.height), parseInt(_project.chip.width), parseInt(_project.gridUnit), parseInt(_project.cornerSize), parseInt(_project.gapSize), _project))
+        store.replaceState(newState(parseInt(_project.chip.height), parseInt(_project.chip.width), parseInt(_project.gridUnit), _project.cornerSize, _project.gapSize, _project))
         commit(types.addProject)
         await dispatch(types.checkAuth)
       }
