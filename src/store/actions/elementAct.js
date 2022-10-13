@@ -529,30 +529,29 @@ const elementActions = {
       // |
       if ((v[0] == vArray[(index + 1 + vArray.length) % vArray.length][0] && v[1] < vArray[(index + 1 + vArray.length) % vArray.length][1]) &&
            (v[0] < vArray[(index - 1 + vArray.length) % vArray.length][0]) && v[1] == vArray[(index - 1 + vArray.length) % vArray.length][1]) {
-        dArray.push([v[0] - gapSize + cornerSize, v[1] + 0 - gapSize])
-        dArray.push([v[0] + 0 - gapSize, v[1] - gapSize + cornerSize])
+        dArray.push([v[0] + cornerSize, v[1] + 0 - gapSize])
+        dArray.push([v[0] + 0 - gapSize, v[1] + cornerSize])
       }
       //  __.
       //    |
       if ((v[0] > vArray[(index + 1 + vArray.length) % vArray.length][0] && v[1] == vArray[(index + 1 + vArray.length) % vArray.length][1]) &&
            (v[0] == vArray[(index - 1 + vArray.length) % vArray.length][0]) && v[1] < vArray[(index - 1 + vArray.length) % vArray.length][1]) {
-        console.log('6', [v[0] + 0, v[1] - gapSize + cornerSize], [v[0] - gapSize, v[1] + 0 - gapSize])
-        dArray.push([v[0] + 0, v[1] - gapSize + cornerSize])
-        dArray.push([v[0] - cornerSize, v[1] + 0 - gapSize])
+        dArray.push([v[0] + 0, v[1] + cornerSize])
+        dArray.push([v[0] - cornerSize - gapSize, v[1] + 0 - gapSize])
       }
       //    |
       //  --.
       if ((v[0] == vArray[(index + 1 + vArray.length) % vArray.length][0] && v[1] > vArray[(index + 1 + vArray.length) % vArray.length][1]) &&
            (v[0] > vArray[(index - 1 + vArray.length) % vArray.length][0]) && v[1] == vArray[(index - 1 + vArray.length) % vArray.length][1]) {
-        dArray.push([v[0] - cornerSize, v[1] + 0])
-        dArray.push([v[0] + 0, v[1] - cornerSize])
+        dArray.push([v[0] - gapSize - cornerSize, v[1] + 0])
+        dArray.push([v[0] + 0, v[1] - gapSize - cornerSize])
       }
       //  |
       //  .--
       if ((v[0] < vArray[(index + 1 + vArray.length) % vArray.length][0] && v[1] == vArray[(index + 1 + vArray.length) % vArray.length][1]) &&
            (v[0] == vArray[(index - 1 + vArray.length) % vArray.length][0]) && v[1] > vArray[(index - 1 + vArray.length) % vArray.length][1]) {
-        dArray.push([v[0] + 0 - gapSize, v[1] - cornerSize])
-        dArray.push([v[0] - gapSize + cornerSize, v[1] + 0])
+        dArray.push([v[0] + 0 - gapSize, v[1] - gapSize - cornerSize])
+        dArray.push([v[0] + cornerSize, v[1] + 0])
       }
     })
 
