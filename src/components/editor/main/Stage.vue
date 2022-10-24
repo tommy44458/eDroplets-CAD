@@ -165,7 +165,9 @@ export default {
           for (let i = 0; i < acEl.classes.matrix.length; i++) {
             for (let j = 0; j < acEl.classes.matrix[i].length; j++) {
               if (acEl.classes.matrix[i][j] !== 0) {
-                if (this.chip.matrix[acEl.top / unit + i][acEl.left / unit + j]) {
+                const y = acEl.top / unit + i
+                const x = acEl.left / unit + j
+                if (y < 0 || x < 0 || y > this.chip.matrix.length || x > this.chip.matrix[0].length || this.chip.matrix[y][x]) {
                   collision = true
                 }
               }
