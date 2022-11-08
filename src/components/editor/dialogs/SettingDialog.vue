@@ -91,8 +91,16 @@ export default {
       this.$el.showModal()
     },
 
+    getCornerSize(gapSize) {
+      const cornerSizeTable = {
+        5: this.gridUnit.current / 100,
+        30: this.gridUnit.current / 200
+      }
+      return cornerSizeTable[gapSize]
+    },
+
     onConfirm () {
-      const cornerSize = this.gapSize === 5 ? this.gridUnit.current / 100 : 3
+      const cornerSize = this.getCornerSize(this.gapSize)
       this.newProject({
         height: this.chip.height,
         width: this.chip.width,
