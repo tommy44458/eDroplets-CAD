@@ -185,7 +185,7 @@ const projectActions = {
     const dataElectrode = generateEWD(state)
 
     const ewd = {
-      electrode_size: state.app.originalGridUnit,
+      electrode_size: state.app.gridUnit.origin,
       unit: 4,
       output_format: 'ecc_pattern',
       ewd_content: dataElectrode
@@ -216,7 +216,7 @@ const projectActions = {
     const dataElectrode = generateEWD(state)
 
     const ewd = {
-      electrode_size: state.app.originalGridUnit,
+      electrode_size: state.app.gridUnit.origin,
       unit: 4,
       output_format: 'dxf',
       ewd_content: dataElectrode
@@ -247,7 +247,7 @@ const projectActions = {
     const dataElectrode = generateEWD(state)
 
     const ewd = {
-      electrode_size: state.app.originalGridUnit,
+      electrode_size: state.app.gridUnit.origin,
       unit: 4,
       output_format: 'svg',
       ewd_content: dataElectrode
