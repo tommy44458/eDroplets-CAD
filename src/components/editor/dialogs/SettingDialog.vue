@@ -33,15 +33,12 @@
         </span>
       </p>
       <p>
-        gap size: 
-        <span :key="keyInput">
-          <select v-model="gapSize">
-            <option value="5"> 5 </option>
-            <option value="30"> 30 </option>
+        substrate type: 
+        <span :key="key">
+          <select v-model="substrate">
+            <option value="glass"> Glass </option>
+            <option value="paper"> Paper </option>
           </select>
-          <span>
-            um
-          </span>
         </span>
       </p>
     </div>
@@ -68,8 +65,9 @@ export default {
   },
   data () {
     return {
+      key: 0,
       keyInput: 0,
-      gapSize: 5,
+      substrate: 'glass',
       invalidInput: false
     }
   },
@@ -91,22 +89,13 @@ export default {
       this.$el.showModal()
     },
 
-    getCornerSize(gapSize) {
-      const cornerSizeTable = {
-        5: this.gridUnit.current / 100,
-        30: this.gridUnit.current / 200
-      }
-      return cornerSizeTable[gapSize]
-    },
-
     onConfirm () {
-      const cornerSize = this.getCornerSize(this.gapSize)
       this.newProject({
         height: this.chip.height,
         width: this.chip.width,
         gridUnit: this.gridUnit.current,
-        cornerSize: cornerSize,
-        gapSize: this.gapSize / 10
+        cornerSize: 5,
+        gapSize: 0.5
       })
       this.closeDialog()
     },
