@@ -9,6 +9,15 @@
         existing canvas will not be saved!<br />
       </p>
       <p>
+        Substrate Type: 
+        <span :key="key">
+          <select v-model="substrate">
+            <option value="glass"> Glass </option>
+            <option value="paper"> Paper </option>
+          </select>
+        </span>
+      </p>
+      <p v-if="substrate == 'glass'">
         Canvas Grid:
         <span :key="keyInput">
           <input
@@ -32,18 +41,15 @@
           </p>
         </span>
       </p>
-      <p>
-        substrate type: 
-        <span :key="key">
-          <select v-model="substrate">
-            <option value="glass"> Glass </option>
-            <option value="paper"> Paper </option>
-          </select>
+      <p v-else>
+        <span>
+          Currently not supported
         </span>
       </p>
     </div>
     <div class="confirm-dialog__actions">
-      <mdc-button @click="onConfirm" class="confirm-dialog__delete-btn" unelevated>Apply</mdc-button>
+      <mdc-button v-if="substrate == 'glass'" @click="onConfirm" class="confirm-dialog__delete-btn" unelevated>Apply</mdc-button>
+      <mdc-button v-else disabled unelevated>Apply</mdc-button>
       <mdc-button @click="closeDialog" v-if="parseInt(gridUnit.current) > 0">Cancel</mdc-button>
     </div>
   </dialog>
