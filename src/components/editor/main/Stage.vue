@@ -213,10 +213,6 @@ export default {
       const posX = e.x
       const posY = e.y
 
-      if (Math.floor((posX / this.zoom) / originUnit) === Math.floor((this.currentRelPosPoint.x / this.zoom) / originUnit) && Math.floor((posX / this.zoom) / originUnit) === Math.floor((this.currentRelPosPoint.y / this.zoom) / originUnit)) {
-        return false
-      }
-
       let canAdd = true
 
       const unitX = parseInt((posX / this.zoom) / originUnit)
