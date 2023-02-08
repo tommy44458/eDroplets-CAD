@@ -89,7 +89,7 @@ const elementActions = {
           commit(types._updateComponentRef, {compIndex, newCount})
         }
       } else if (el.external) {
-          // In case the componegg is from a external library...
+        // In case the componegg is from a external library...
         if (!getters.componentExist(el.name)) {
           let componentRef = componentFactory.compRef(payload.el)
           commit(types._saveComponentRef, setElId(componentRef))

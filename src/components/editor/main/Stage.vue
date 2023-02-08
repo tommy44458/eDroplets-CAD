@@ -334,13 +334,17 @@ export default {
       }
     },
 
-    pasteHandler (e) {
+    async pasteHandler (e) {
       if (this.clipboard.length > 0) {
         const unit = this.gridUnit.origin / 10
         const unitX = parseInt((e.x / this.zoom) / unit)
         const unitY = parseInt((e.y / this.zoom) / unit)
         const top = unit * unitY
         const left = unit * unitX
+        const cornerSize = this.cornerSize
+        const gapSize = this.gapSize
+        const posX = e.x
+        const posY = e.y
 
         let canAdd = true
         const pasteTop = this.clipboard[0].top
@@ -355,14 +359,34 @@ export default {
         })
 
         if (canAdd) {
-          this.clipboard.map(el => {
+          this.clipboard.map(async el => {
             el.top = top + el.top - pasteTop
             el.left = left + el.left - pasteLeft
-            this.registerElement({pageId: this.page.id, el, global: el.global})
-            this._updateChipMatrix({
-              egglement: el,
-              add: true
+            let element = newElectrodeUnit(el.name, unit, cornerSize, gapSize, el.top, el.left)
+            const fixedElement = {
+              top: el.top,
+              left: el.left,
+              height: el.height,
+              width: el.width
+            }
+            element = {...element, ...fixedElement}
+            element = await this.registerElement({pageId: this.page.id, el: element, global: el.global})
+            this.currentRelPosPoint.x = posX
+            this.currentRelPosPoint.y = posY
+            if (element.name !== 'base') {
+              this.updateElement({
+                egglement: element,
+                name: element.id.split('.')[1],
+                path: el.children[0].attrs.d,
+                classes: {
+                  'matrix': el.classes.matrix
+                }
+              })
+              this._updateChipMatrix({
+                egglement: element,
+                add: true
             })
+            }
           })
         } else {
           this.$toasted.show(
