@@ -186,7 +186,7 @@ const projectActions = {
 
     const ewd = {
       electrode_size: state.app.gridUnit.origin,
-      unit: 4,
+      unit: state.app.routingUnit,
       output_format: 'ecc_pattern',
       ewd_content: dataElectrode
     }
@@ -217,7 +217,7 @@ const projectActions = {
 
     const ewd = {
       electrode_size: state.app.gridUnit.origin,
-      unit: 4,
+      unit: state.app.routingUnit,
       output_format: 'dxf',
       ewd_content: dataElectrode
     }
@@ -248,7 +248,7 @@ const projectActions = {
 
     const ewd = {
       electrode_size: state.app.gridUnit.origin,
-      unit: 4,
+      unit: state.app.routingUnit,
       output_format: 'svg',
       ewd_content: dataElectrode
     }

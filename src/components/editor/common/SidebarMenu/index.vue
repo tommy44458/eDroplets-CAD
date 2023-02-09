@@ -14,6 +14,14 @@
               <span>grids</span>
             </span>   
         </div>
+        <div class="sidebar-content">
+            <p>Routing resolution:</p>
+            <span>
+              <input style="width: 65%;" type="range" id="res" name="res" min="0" max="1" step="0.01" :value="routingResolution" @change="changeRoutingResolution"/>
+              <input style="width: 25%;" type="number" min="0" max="1" step="0.01" :value="routingResolution" @change="changeRoutingResolution"/>
+              <span>Higher resolution takes more time routing</span>
+            </span>
+        </div>
     </div>
 </template>
 
@@ -22,10 +30,16 @@ import { mapFields } from 'vuex-map-fields'
 
 export default {
   name: 'sidebar-menu',
+  data () {
+    return {
+      routingResolution: 0.2
+    }
+  },
   computed: {
     ...mapFields([
       'app.gridUnit',
-      'app.squareSize'
+      'app.squareSize',
+      'app.routingUnit'
     ]),
     snappingDistance () {
       return this.gridUnit.current / this.gridUnit.origin
@@ -34,6 +48,13 @@ export default {
   methods: {
     changeSnappingDistance (e) {
       this.gridUnit.current = e.target.value * this.gridUnit.origin
+    },
+    changeRoutingResolution (e) {
+      this.routingResolution = e.target.value
+      this.routingUnit = this.gridUnit.origin / 100 * this.routingResolution
+      if (this.routingUnit === 0) {
+        this.routingUnit = 1
+      }
     }
   }
 }
