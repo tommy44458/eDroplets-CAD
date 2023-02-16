@@ -185,9 +185,7 @@ export default {
             this.downloadProjectEWDS()
             break
         case 2:
-            if (!this.downloadProjectDXF()) {
-                this.$root.$emit('open-api-fail-dialog')
-            }
+            this.$root.$emit('open-routing-resolution')
             break
         default:
             break
