@@ -1,6 +1,32 @@
 <template>
-  <div data-mr-el="true"
+  <div
+    v-if="paint || moveStage"
+    data-mr-el="true"
     class="mr-el"
+    :style="style"
+  >
+    <!-- IMPORTANT! KEEP SLOT AS FIRST CHILD -->
+    <slot></slot>
+    <!-- IMPORTANT! KEEP SLOT AS FIRST CHILD -->
+
+    <div v-if="resizable">
+      <div 
+        data-mr-handle="true"
+        v-for="handle in handles"
+        :key="handle"
+        class="handle" :class="handle"
+        :style="{ display: active ? 'block' : 'none'}">
+      </div>
+    </div>
+    <div v-if="!resizable"
+      class="selection-box"
+      :style="{ display: active ? 'block' : 'none'}">
+    </div>
+  </div>
+  <div
+    v-else
+    data-mr-el="true"
+    class="mr-el mr-el-no-stage"
     :style="style"
     @mousedown.exact="e => $emit('activated', e)"
     @mousedown.meta.capture="e => $emit('activated', e)"
@@ -28,6 +54,8 @@
 </template>
 
 <script>
+import { mapFields } from 'vuex-map-fields'
+
 export default {
   name: 'mr-el',
   props: {
@@ -123,7 +151,12 @@ export default {
         width: (typeof this.width === 'number') ? (this.width + 'px') : this.width,
         height: (typeof this.height === 'number') ? (this.height + 'px') : this.height
       }
-    }
+    },
+
+    ...mapFields([
+      'app.edit.moveStage',
+      'app.edit.paint'
+    ])
   }
 }
 </script>
@@ -134,7 +167,7 @@ export default {
   position: absolute;
   box-sizing: border-box;
 }
-.mr-el:hover {
+.mr-el-no-stage:hover {
   cursor: move;
 }
 .mr-el > * {

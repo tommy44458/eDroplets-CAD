@@ -1,6 +1,7 @@
 <script>
 import { mapState, mapMutations } from 'vuex'
 import { _clearSelectedElements, _addSelectedElement } from '@/store/types'
+import { mapFields } from 'vuex-map-fields'
 
 import MrEl from '@/components/editor/common/mr-vue/MrEl'
 import StageEl from './StageEl'
@@ -91,6 +92,10 @@ export default {
       return this.projectComponents[this.projectComponents.findIndex(comp => comp.name === this.elem.name)]
     },
 
+    ...mapFields([
+      'app.edit.paint'
+    ]),
+
     ...mapState({
       selectedElements: state => state.app.selectedElements,
       projectComponents: state => state.project.components
@@ -98,16 +103,18 @@ export default {
   },
   methods: {
     activatedHandler (e) {
-      e.stopPropagation()
-      e.preventDefault()
-      // ###
-      console.log(e)
+      if (!this.paint) {
+        e.stopPropagation()
+        e.preventDefault()
+        // ###
+        console.log(e)
 
-      if (e.shiftKey && !this.isActive) {
-        this._addSelectedElement(this.elem)
-      } else if (!e.shiftKey && !this.isActive) {
-        this._clearSelectedElements()
-        this._addSelectedElement(this.elem)
+        if (e.shiftKey && !this.isActive) {
+          this._addSelectedElement(this.elem)
+        } else if (!e.shiftKey && !this.isActive) {
+          this._clearSelectedElements()
+          this._addSelectedElement(this.elem)
+        }
       }
     },
 

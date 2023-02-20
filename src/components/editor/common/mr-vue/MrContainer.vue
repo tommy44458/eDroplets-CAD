@@ -89,7 +89,7 @@ export default {
       this.initialAbsPos = this.currentAbsPos = this.getMouseAbsPoint(e)
       this.initialRelPos = this.currentRelPos = this.getMouseRelPoint(e)
 
-      if (e.target.dataset.mrContainer) {
+      if (this.paint || e.target.dataset.mrContainer) {
         if (!e.shiftKey) {
           this.$emit('clearselection')
         }
