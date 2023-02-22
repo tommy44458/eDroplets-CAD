@@ -4,8 +4,8 @@
     <div class="confirm-dialog__content">
       <p>Routing resolution:</p>
       <span>
-        <input style="width: 72%;" type="range" id="res" name="res" min="0" max="1" step="0.01" :value="routingResolution" @change="changeRoutingResolution"/>
-        <input style="width: 18%;" type="number" min="0" max="1" step="0.01" :value="routingResolution" @change="changeRoutingResolution"/>
+        <input style="width: 72%;" type="range" id="res" name="res" min="0" max="1" step="0.01" :value="routingUnit" @change="changeRoutingResolution"/>
+        <input style="width: 18%;" type="number" min="0" max="1" step="0.01" :value="routingUnit" @change="changeRoutingResolution"/>
       </span>
       <p>Higher resolution takes more time routing.</p>
     </div>
@@ -30,11 +30,6 @@ export default {
   beforeDestroy: function () {
     this.$root.$off('open-routing-resolution', this.openDialog)
   },
-  data () {
-    return {
-      routingResolution: 0.2
-    }
-  },
   computed: {
     ...mapFields([
       'app.gridUnit',
@@ -46,22 +41,13 @@ export default {
   },
   methods: {
     openDialog () {
-      if (this.routingUnit === 1) {
-        this.routingResolution = 0
-      } else {
-        this.routingResolution = this.routingUnit / this.gridUnit.origin * 100
-      }
       if (!this.$el.showModal) {
         dialogPolyfill.registerDialog(this.$el)
       }
       this.$el.showModal()
     },
     changeRoutingResolution (e) {
-      this.routingResolution = e.target.value
-      this.routingUnit = this.gridUnit.origin / 100 * this.routingResolution
-      if (this.routingUnit === 0) {
-        this.routingUnit = 1
-      }
+      this.routingUnit = e.target.value
     },
     onConfirm () {
       if (!this.downloadProjectDXF()) {

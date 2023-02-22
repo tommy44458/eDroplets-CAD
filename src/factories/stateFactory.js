@@ -40,7 +40,7 @@ function newState (height, width, gridUnit, cornerSize, gapSize, project) {
         origin: gridUnit,
         current: gridUnit
       },
-      routingUnit: 4,
+      routingUnit: 0.2,
       cornerSize: cornerSize,
       gapSize: gapSize,
       chip: {
