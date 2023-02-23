@@ -16,12 +16,14 @@
       </button>
       <div class="home-btn" style="display: flex; align-items: center;" >
         <!-- <svgicon icon="product/vuegg" width="40" height="40" :original="true"></svgicon> -->
-        <p style="font-size:24px; font-weight: bold; color: #005587; text-align: center;">
-          eDrops
-        <!-- <img src="/static/edrop_logo.png" height="40"/> -->
-        </p>
-        <img src="/static/edrop_logo.png" height="40"/>
+        <!-- <p style="font-size:24px; font-weight: bold; color: #005587; text-align: center;">
+            eDroplets
+        </p> -->
+        <img src="/static/eDroplets_logo.png" height="40"/>
       </div>
+      <p class="title-prefix">
+        Project Title:
+      </p>
       <input
         class="title-input"
         v-model="tmpProjectTitle"
@@ -140,6 +142,12 @@ export default {
 
 .spacer {
   width: 12px;
+}
+
+.title-prefix {
+    font-size: 16px;
+    font-weight: 500;
+    margin-right: 10px;
 }
 
 .title-input {
