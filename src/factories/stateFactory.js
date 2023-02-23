@@ -59,7 +59,7 @@ function newState (height, width, gridUnit, cornerSize, gapSize, project) {
       isAuthorized: false,
       authenticatedUser: null
     },
-    project: project || newProject('Digital Microfluidics Chip Project', gridUnit, cornerSize, gapSize, height, width)
+    project: project || newProject('My Project', gridUnit, cornerSize, gapSize, height, width)
   }
 }
 
