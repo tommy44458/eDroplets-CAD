@@ -86,8 +86,8 @@ export default {
 
     mouseDownHandler (e) {
       let isMrs = false
-      this.initialAbsPos = this.currentAbsPos = this.getMouseAbsPoint(e)
-      this.initialRelPos = this.currentRelPos = this.getMouseRelPoint(e)
+      this.initialAbsPos = this.getMouseAbsPoint(e)
+      this.initialRelPos = this.getMouseRelPoint(e)
 
       if (this.paint || e.target.dataset.mrContainer) {
         if (!e.shiftKey) {
@@ -106,15 +106,6 @@ export default {
       }
 
       if (isMrs) {
-        if (this.activeElements.length > 0 && this.offsetX === null && this.offsetY === null) {
-          const unit = this.gridUnit.current / 10
-          const posX = this.currentRelPos.x
-          const posY = this.currentRelPos.y
-          const unitX = parseInt((posX / this.zoom) / unit)
-          const unitY = parseInt((posY / this.zoom) / unit)
-          this.offsetX = parseInt(this.activeElements[0].left / unit) - unitX
-          this.offsetY = parseInt(this.activeElements[0].top / unit) - unitY
-        }
         document.documentElement.addEventListener('mousemove', this.mouseMoveHandler, true)
         document.documentElement.addEventListener('mouseup', this.mouseUpHandler, true)
       }
@@ -153,22 +144,15 @@ export default {
     mouseMoveHandler (e) {
       const lastAbsX = this.currentAbsPos.x
       const lastAbsY = this.currentAbsPos.y
-      let offX = 0
-      let offY = 0
-      let posX = 0
-      let posY = 0
 
       // const elCompStyle = window.getComputedStyle(mrEl)
-
-      offX = this.getMouseAbsPoint(e).x - lastAbsX
+      const offX = this.getMouseAbsPoint(e).x - lastAbsX
       this.currentAbsPos.x = this.getMouseAbsPoint(e).x
-      this.currentRelPos.x = this.getMouseRelPoint(e).x
-      posX = this.currentRelPos.x
+      const posX = this.currentRelPos.x = this.getMouseRelPoint(e).x
 
-      offY = this.getMouseAbsPoint(e).y - lastAbsY
+      const offY = this.getMouseAbsPoint(e).y - lastAbsY
       this.currentAbsPos.y = this.getMouseAbsPoint(e).y
-      this.currentRelPos.y = this.getMouseRelPoint(e).y
-      posY = this.currentRelPos.y
+      const posY = this.currentRelPos.y = this.getMouseRelPoint(e).y
 
       if (this.resizing) {
         this.mrElements.map(mrEl => {
@@ -329,9 +313,9 @@ export default {
         lastElPos.push([acEl.left, acEl.top])
         offsetEl.push([parseInt(this.activeElements[0].left / unit) - acElX, parseInt(this.activeElements[0].top / unit) - acElY])
       })
-      const offsetX = this.offsetX
-      const offsetY = this.offsetY
-      this.$emit('mousemove', {offsetEl, unitX, unitY, lastElPos, offsetX, offsetY})
+      const initMousePosX = this.initialRelPos.x
+      const initMousePosY = this.initialRelPos.y
+      this.$emit('mousemove', {offsetEl, unitX, unitY, lastElPos, initMousePosX, initMousePosY})
     },
 
     fixPosition (el, val, prop) {

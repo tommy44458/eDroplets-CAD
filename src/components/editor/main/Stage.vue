@@ -183,8 +183,8 @@ export default {
       const offset = e.offsetEl
       const unitX = e.unitX
       const unitY = e.unitY
-      const offsetX = e.offsetX
-      const offsetY = e.offsetY
+      const offsetX = parseInt(this.selectedElements[0].initialPos.left / unit) - parseInt((e.initMousePosX / this.zoom) / unit)
+      const offsetY = parseInt(this.selectedElements[0].initialPos.top / unit) - parseInt((e.initMousePosY / this.zoom) / unit)
 
       this.selectedElements.forEach((acEl, index) => {
         let top = unit * (unitY - offset[index][1] + offsetY)
