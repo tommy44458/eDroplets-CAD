@@ -37,7 +37,10 @@
         :axis="rightClickPoint"
         :zoom="zoom" 
         :specialState="paint || moveStage"
+        :clipboardLength="clipboard.length"
+        :selectedElementsLength="selectedElements.length"
         @clearState="clearState"
+        @draw="drawState"
         @delete="deleteHandler"
         @copy="copyHandler"
         @cut="cutHandler"
@@ -154,6 +157,11 @@ export default {
 
     clearState () {
       this.paint = false
+      this.moveStage = false
+    },
+
+    drawState () {
+      this.paint = true
       this.moveStage = false
     },
 
