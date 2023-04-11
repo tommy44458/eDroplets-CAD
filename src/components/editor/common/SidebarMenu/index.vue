@@ -1,13 +1,13 @@
 <template>
     <div class="sidebar">
-        <div class="sidebar-content">
+        <div v-if="substrate === 'glass'" class="sidebar-content">
             <p>Square electrode size:</p>
             <span>
               <input type="number" :min="gridUnit.current" :step="gridUnit.current" onkeydown="return false" v-model.number="squareSize"/>
               <span>um</span>
             </span>
         </div>
-        <div class="sidebar-content">
+        <div v-if="substrate === 'glass'" class="sidebar-content">
             <p>Snapping grids distance:</p>
             <span>
               <input type="number" min="1" step="1" onkeydown="return false" :value="snappingDistance" @change="changeSnappingDistance"/>
@@ -34,7 +34,8 @@ export default {
     ...mapFields([
       'app.gridUnit',
       'app.squareSize',
-      'app.routingUnit'
+      'app.routingUnit',
+      'app.substrate'
     ]),
     snappingDistance () {
       return this.gridUnit.current / this.gridUnit.origin
