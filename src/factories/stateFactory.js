@@ -1,6 +1,6 @@
 import newProject from './projectFactory'
 
-function newState (height, width, gridUnit, cornerSize, gapSize, project) {
+function newState (substrate, height, width, gridUnit, cornerSize, gapSize, project) {
   const h = height / gridUnit
   const w = width / gridUnit
   const _matrix = []
@@ -18,6 +18,7 @@ function newState (height, width, gridUnit, cornerSize, gapSize, project) {
   }
   return {
     app: {
+      substrate: substrate,
       svgContent: '',
       apiStatus: false,
       isLoading: false,
@@ -59,7 +60,7 @@ function newState (height, width, gridUnit, cornerSize, gapSize, project) {
       isAuthorized: false,
       authenticatedUser: null
     },
-    project: project || newProject('My Project', gridUnit, cornerSize, gapSize, height, width)
+    project: project || newProject('My Project', substrate, gridUnit, cornerSize, gapSize, height, width)
   }
 }
 

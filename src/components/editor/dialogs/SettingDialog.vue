@@ -11,13 +11,13 @@
       <p>
         Substrate Type: 
         <span :key="key">
-          <select v-model="substrate">
+          <select v-model="substrateType" @change="onSwitchSubstrate">
             <option value="glass"> Glass </option>
             <option value="paper"> Paper </option>
           </select>
         </span>
       </p>
-      <p v-if="substrate == 'glass'">
+      <p v-if="substrateType == 'glass'">
         Canvas Grid:
         <span :key="keyInput">
           <input
@@ -26,7 +26,7 @@
             min="500"
             max="5000"
             step="500"
-            :value="gridUnit.current"
+            :value="grid"
             @change="autoAdjust"
             @blur="onGridBlur"
             title="grid scale"
@@ -42,22 +42,27 @@
         </span>
       </p>
       <p v-else>
+        Canvas Grid:
+        <span :key="key">
+          <select :value=1300>
+            <option value=1300> 1300 </option>
+          </select>
+        </span>
         <span>
-          Currently not supported
+            um
         </span>
       </p>
     </div>
     <div class="confirm-dialog__actions">
-      <mdc-button v-if="substrate == 'glass'" @click="onConfirm" class="confirm-dialog__delete-btn" unelevated>Apply</mdc-button>
-      <mdc-button v-else disabled unelevated>Apply</mdc-button>
-      <mdc-button @click="closeDialog" v-if="parseInt(gridUnit.current) > 0">Cancel</mdc-button>
+      <mdc-button @click="onConfirm" class="confirm-dialog__delete-btn" unelevated>Apply</mdc-button>
+      <mdc-button @click="closeDialog">Cancel</mdc-button>
     </div>
   </dialog>
 </template>
 
 <script>
-import { mapState, mapActions, mapMutations } from 'vuex'
-import { newProject, _updateGridUnit } from '@/store/types'
+import { mapState, mapActions } from 'vuex'
+import { newProject } from '@/store/types'
 import dialogPolyfill from 'dialog-polyfill/dialog-polyfill'
 import { mapFields } from 'vuex-map-fields'
 
@@ -73,11 +78,25 @@ export default {
     return {
       key: 0,
       keyInput: 0,
-      substrate: 'glass',
-      invalidInput: false
+      substrateType: 'glass',
+      invalidInput: false,
+      grid: 0
     }
   },
   computed: {
+    parameterTable() {
+      return {
+        'glass': {
+          'cornerSize': 5,
+          'gapSize': 0.5
+        },
+        'paper': {
+          'cornerSize': 0,
+          'gapSize': 30
+        }
+      }
+    },
+
     ...mapFields([
       'app.gridUnit',
       'app.chip'
@@ -89,6 +108,8 @@ export default {
   },
   methods: {
     openDialog () {
+      this.substrateType = this.project.substrate
+      this.grid = this.gridUnit.current
       if (!this.$el.showModal) {
         dialogPolyfill.registerDialog(this.$el)
       }
@@ -96,12 +117,16 @@ export default {
     },
 
     onConfirm () {
+      if (this.invalidInput) {
+        return
+      }
       this.newProject({
+        substrate: this.substrateType,
         height: this.chip.height,
         width: this.chip.width,
-        gridUnit: this.gridUnit.current,
-        cornerSize: 5,
-        gapSize: 0.5
+        gridUnit: this.grid,
+        cornerSize: this.parameterTable[this.substrateType].cornerSize,
+        gapSize: this.parameterTable[this.substrateType].gapSize
       })
       this.closeDialog()
     },
@@ -134,13 +159,21 @@ export default {
         newVal = 500
         this.invalidInput = true
       }
-      this._updateGridUnit(newVal)
+      this.grid = newVal
       if (this.invalidInput) {
         this.keyInput++
       }
     },
-    ...mapActions([newProject]),
-    ...mapMutations([_updateGridUnit])
+
+    onSwitchSubstrate (e) {
+      if (e.target.value === 'paper') {
+        this.grid = 1300
+      } else {
+        this.grid = 2000
+      }
+    },
+
+    ...mapActions([newProject])
   }
 }
 </script>

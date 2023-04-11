@@ -288,6 +288,7 @@ const projectActions = {
       const _project = JSON.parse(atob(project))
       if (!_project.gridUnit || !_project.chip) {
         store.replaceState(newState(
+            state.app.substrate,
             parseInt(state.app.chip.height),
             parseInt(state.app.chip.width),
             parseInt(2000),
@@ -297,12 +298,13 @@ const projectActions = {
         ))
         commit(types.addProject)
       } else {
-        store.replaceState(newState(parseInt(_project.chip.height), parseInt(_project.chip.width), parseInt(_project.gridUnit), _project.cornerSize, _project.gapSize, _project))
+        store.replaceState(newState(state.app.substrate, parseInt(_project.chip.height), parseInt(_project.chip.width), parseInt(_project.gridUnit), _project.cornerSize, _project.gapSize, _project))
         commit(types.addProject)
         await dispatch(types.checkAuth)
       }
     } else {
         store.replaceState(newState(
+            state.app.substrate,
             parseInt(state.app.chip.height),
             parseInt(state.app.chip.width),
             parseInt(2000),
@@ -322,6 +324,7 @@ const projectActions = {
    */
   [types.resetProject]: async function ({ state, dispatch }) {
     await dispatch(types.newProject, {
+        substrate: state.app.substrate,
         height: state.app.chip.height,
         width: state.app.chip.width,
         gridUnit: state.app.gridUnit ? state.app.gridUnit.origin : 2000,
@@ -335,10 +338,10 @@ const projectActions = {
    * (or better to say, resets vuegg to initial state)
    */
   [types.newProject]: async function ({ dispatch, commit }, payload) {
-    const { height, width, gridUnit, cornerSize, gapSize } = payload
+    const { substrate, height, width, gridUnit, cornerSize, gapSize } = payload
     commit(types._toggleBlockLoadingStatus, true)
 
-    store.replaceState(newState(height, width, gridUnit, cornerSize, gapSize))
+    store.replaceState(newState(substrate, height, width, gridUnit, cornerSize, gapSize))
     commit(types.deleteProject)
 
     await dispatch(types.checkAuth)
