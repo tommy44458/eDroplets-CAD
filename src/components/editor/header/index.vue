@@ -19,7 +19,8 @@
         <!-- <p style="font-size:24px; font-weight: bold; color: #005587; text-align: center;">
             eDroplets
         </p> -->
-        <img src="/static/eDroplets_logo.png" height="40"/>
+        <!-- <img src="/static/eDroplets_logo.png" height="40"/> -->
+        <svgicon icon="system/edroplets_logo" height="40" wight="40" />
       </div>
       <p class="title-prefix">
         Project Title:
@@ -46,6 +47,7 @@ import UserMenu from './UserMenu'
 import ActionBar from './ActionBar'
 
 import '@/assets/icons/product/vuegg'
+import '@/assets/icons/system/edroplets_logo'
 // import '@/assets/icons/system/elements/electrod/standard'
 
 export default {
