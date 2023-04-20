@@ -103,8 +103,8 @@
         <mdc-menu-divider></mdc-menu-divider>
         <mdc-menu-item>Ewds file (.ewds)</mdc-menu-item>
         <!-- <mdc-menu-item>EDrop Project (.edp)</mdc-menu-item> -->
-        <!-- <mdc-menu-item>EDrop Control Config (.ecc)</mdc-menu-item> -->
         <mdc-menu-item>Dxf file (.dxf)</mdc-menu-item>
+        <mdc-menu-item>EDrop Control Config (.ecc)</mdc-menu-item>
         <!-- <mdc-menu-item>Vue sources (.zip)</mdc-menu-item> -->
       </mdc-menu>
     </mdc-menu-anchor>
@@ -186,6 +186,9 @@ export default {
             break
         case 2:
             this.$root.$emit('open-routing-resolution')
+            break
+        case 3:
+            this.downloadProjectECC()
             break
         default:
             break
