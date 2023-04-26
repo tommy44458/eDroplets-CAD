@@ -24,6 +24,7 @@
     @setStageLastPos="setChipLastPos()"
     @moveStage="moveChip($event)"
     @mousemove="mouseMoveElements($event)"
+    @closeContextMenu="closeContextMenu"
   >
 
     <stage-el
@@ -93,6 +94,7 @@ export default {
 
   data: function () {
     return {
+      openContextMenu: false,
       keyContextMenu: 0,
       rightClickPoint: {x: 0, y: 0},
       clipboard: [],
@@ -115,7 +117,6 @@ export default {
   },
   computed: {
     ...mapFields([
-      'app.openContextMenu',
       'app.squareSize',
       'app.gridUnit',
       'app.cornerSize',
@@ -153,6 +154,10 @@ export default {
       this.rightClickPoint = mousePoint
       this.openContextMenu = true
       this.keyContextMenu++
+    },
+
+    closeContextMenu () {
+      this.openContextMenu = false
     },
 
     clearState () {

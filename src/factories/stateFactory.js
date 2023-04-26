@@ -27,7 +27,6 @@ function newState (substrate, height, width, gridUnit, cornerSize, gapSize, proj
       isSyncing: false,
       canUndo: false,
       canRedo: false,
-      openContextMenu: false,
       openSidebar: false,
       squareSize: gridUnit,
       pageDialog: {

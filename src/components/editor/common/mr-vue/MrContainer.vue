@@ -2,7 +2,7 @@
   <div data-mr-container="true"
     class="mr-container"
     tabindex="0"
-    @click="openContextMenu = false"
+    @click="$emit('closeContextMenu')"
     @click.right.stop.prevent="mouseRightClickHandler"
     @mousedown.capture="mouseDownHandler"
     @mouseup.capture="$root.$emit('paint-electrodes-disable')"
@@ -67,7 +67,6 @@ export default {
   },
   computed: {
     ...mapFields([
-      'app.openContextMenu',
       'app.gridUnit',
       'app.edit.paint',
       'app.edit.moveStage',
