@@ -158,15 +158,15 @@ const projectActions = {
   /**
    * Downloads the current vuegg project definition as a .gg (base64 json) file
    *
-   * @return {download} : [project-name].gg file containing the vuegg project definition
+   * @return {download} : [project-name].ecc file containing the vuegg project definition
    */
-  [types.downloadProjectEWDS]: async function ({ state, dispatch, commit }) {
+  [types.downloadProjectECC]: async function ({ state, dispatch, commit }) {
     commit(types._toggleLoadingStatus, true)
 
     const parsedRepoName = state.project.title.replace(/[^a-zA-Z0-9-_]+/g, '-')
 
     const projectB64 = btoa(JSON.stringify(state.project))
-    download(projectB64, parsedRepoName + '.ewds', 'appliction/json')
+    download(projectB64, parsedRepoName + '.ecc', 'appliction/json')
     commit(types._toggleLoadingStatus, false)
   },
 
@@ -174,9 +174,9 @@ const projectActions = {
    * Downloads the current project routing result and electrode position
    * Used for GUI
    *
-   * @return {download} : [project-name].ecc file containing routing result and electrode position
+   * @return {download} : [project-name].ewds file containing routing result and electrode position
    */
-  [types.downloadProjectECC]: async function ({ state, dispatch, commit }) {
+  [types.downloadProjectEWDS]: async function ({ state, dispatch, commit }) {
     commit(types._toggleLoadingStatus, true)
     commit(types._toggleApiStatus, true)
 
@@ -187,14 +187,14 @@ const projectActions = {
     const ewd = {
       electrode_size: state.app.gridUnit.origin,
       unit: state.app.routingUnit === 0 ? 1 : state.app.gridUnit.origin / 100 * state.app.routingUnit,
-      output_format: 'ecc_pattern',
+      output_format: 'ewds',
       ewd_content: dataElectrode
     }
 
     const resp = await api.nrrouter(ewd)
 
     if (resp.status === 200) {
-      download(resp.data, parsedRepoName + '.ecc')
+      download(resp.data, parsedRepoName + '.ewds')
       commit(types._toggleLoadingStatus, false)
     } else {
       commit(types._toggleLoadingStatus, false)
