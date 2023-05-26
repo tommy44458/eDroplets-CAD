@@ -110,6 +110,9 @@ export default {
     openDialog () {
       this.substrateType = this.project.substrate
       this.grid = this.gridUnit.current
+      if (!this.substrateType) {
+        this.substrateType = this.grid === 1300 ? 'paper' : 'glass'
+      }
       if (!this.$el.showModal) {
         dialogPolyfill.registerDialog(this.$el)
       }
