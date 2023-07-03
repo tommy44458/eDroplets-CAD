@@ -144,8 +144,8 @@ export default {
         zIndex: this.zIndex,
         minWidth: this.minWidth + 'px',
         minHeight: this.minHeight + 'px',
-        top: (typeof this.top === 'number') ? (this.top + 'px') : this.top,
-        left: (typeof this.left === 'number') ? (this.left + 'px') : this.left,
+        top: (typeof this.top === 'number') ? (Math.round(this.top / (this.gridUnit.current / 10)) * (this.gridUnit.current / 10) + 'px') : this.top,
+        left: (typeof this.left === 'number') ? (Math.round(this.left / (this.gridUnit.current / 10)) * (this.gridUnit.current / 10) + 'px') : this.left,
         bottom: (typeof this.bottom === 'number') ? (this.bottom + 'px') : this.bottom,
         right: (typeof this.right === 'number') ? (this.right + 'px') : this.right,
         width: (typeof this.width === 'number') ? (this.width + 'px') : this.width,
@@ -155,7 +155,8 @@ export default {
 
     ...mapFields([
       'app.edit.moveStage',
-      'app.edit.paint'
+      'app.edit.paint',
+      'app.gridUnit'
     ])
   }
 }
