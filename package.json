@@ -6,20 +6,8 @@
   "private": false,
   "scripts": {
     "dev": "node --no-warnings build/dev-server.js",
-    "start": "node build/dev-server.js",
     "build": "node --no-warnings build/build.js",
-    "unit": "cross-env BABEL_ENV=test karma start test/unit/karma.conf.js --single-run",
-    "e2e": "node test/e2e/runner.js",
-    "test": "npm run unit && npm run e2e",
-    "lint": "eslint --ext .js,.vue src test/unit/specs test/e2e/specs",
-    "clean-svg:prod": "svgo -p 2 -f src/assets/svgs/raw/product/ -o src/assets/svgs/clean/product/",
-    "clean-svg:sys": "svgo -p 2 -f src/assets/svgs/raw/system/ -o src/assets/svgs/clean/system/",
-    "clean-svg:sys-act": "svgo -p 2 -f src/assets/svgs/raw/system/actions/ -o src/assets/svgs/clean/system/actions/",
-    "clean-svg:sys-els": "svgo -p 2 -f src/assets/svgs/raw/system/elements/ -o src/assets/svgs/clean/system/elements/",
-    "clean-svg:sys-edit": "svgo -p 2 -f src/assets/svgs/raw/system/editor/ -o src/assets/svgs/clean/system/editor/",
-    "clean-svg:all": "npm run clean-svg:prod  && npm run clean-svg:sys && npm run clean-svg:sys-act  && npm run clean-svg:sys-els && npm run clean-svg:sys-edit",
-    "svg2icon": "vsvg -s src/assets/svgs/clean -t src/assets/icons",
-    "optimicons": "npm run clean-svg:all && npm run svg2icon"
+    "lint": "eslint --ext .js,.vue src test/unit/specs test/e2e/specs"
   },
   "dependencies": {
     "axios": "^0.21.0",
@@ -121,13 +109,5 @@
     "> 1%",
     "last 2 versions",
     "not ie <= 8"
-  ],
-  "repository": {
-    "type": "git",
-    "url": "git+ssh://git@github.com/vuegg/vuegg.git"
-  },
-  "bugs": {
-    "url": "https://github.com/vuegg/vuegg/issues"
-  },
-  "homepage": "https://github.com/vuegg/vuegg#README"
+  ]
 }
