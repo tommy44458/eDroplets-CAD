@@ -10,6 +10,7 @@ import api from '@/api'
 
 const generateEWD = function (state) {
   const scale = (80000 / 8000)
+  const gapSize = state.project.gapSize * scale
   let electrods = state.project.pages[0].children
 
   let dataElectrode = ''
@@ -59,7 +60,7 @@ const generateEWD = function (state) {
     electrods.forEach(getPos)
 
     function getPos (item, index) {
-      dataElectrode = dataElectrode + item.name + ' ' + (parseFloat(item.left) * scale + 1000 - 1630 + 15) + ' ' + (parseFloat(item.top) * scale + 12258 + 15) + '\n'
+      dataElectrode = dataElectrode + item.name + ' ' + (parseFloat(item.left) * scale + 1000 - 1630 + gapSize / 2) + ' ' + (parseFloat(item.top) * scale + 12258 + (gapSize / 2)) + '\n'
     }
 
     dataElectrode = dataElectrode + '#ENDOFLAYOUT#\n'
@@ -157,15 +158,15 @@ const projectActions = {
   /**
    * Downloads the current vuegg project definition as a .gg (base64 json) file
    *
-   * @return {download} : [project-name].gg file containing the vuegg project definition
+   * @return {download} : [project-name].ecc file containing the vuegg project definition
    */
-  [types.downloadProjectEWDS]: async function ({ state, dispatch, commit }) {
+  [types.downloadProjectECC]: async function ({ state, dispatch, commit }) {
     commit(types._toggleLoadingStatus, true)
 
     const parsedRepoName = state.project.title.replace(/[^a-zA-Z0-9-_]+/g, '-')
 
     const projectB64 = btoa(JSON.stringify(state.project))
-    download(projectB64, parsedRepoName + '.ewds', 'appliction/json')
+    download(projectB64, parsedRepoName + '.ecc', 'appliction/json')
     commit(types._toggleLoadingStatus, false)
   },
 
@@ -173,9 +174,9 @@ const projectActions = {
    * Downloads the current project routing result and electrode position
    * Used for GUI
    *
-   * @return {download} : [project-name].ecc file containing routing result and electrode position
+   * @return {download} : [project-name].ewds file containing routing result and electrode position
    */
-  [types.downloadProjectECC]: async function ({ state, dispatch, commit }) {
+  [types.downloadProjectEWDS]: async function ({ state, dispatch, commit }) {
     commit(types._toggleLoadingStatus, true)
     commit(types._toggleApiStatus, true)
 
@@ -184,16 +185,16 @@ const projectActions = {
     const dataElectrode = generateEWD(state)
 
     const ewd = {
-      electrode_size: state.app.originalGridUnit,
-      unit: 4,
-      output_format: 'ecc_pattern',
+      electrode_size: state.app.gridUnit.origin,
+      unit: state.app.routingUnit === 0 ? 1 : state.app.gridUnit.origin / 100 * state.app.routingUnit,
+      output_format: 'ewds',
       ewd_content: dataElectrode
     }
 
     const resp = await api.nrrouter(ewd)
 
     if (resp.status === 200) {
-      download(resp.data, parsedRepoName + '.ecc')
+      download(resp.data, parsedRepoName + '.ewds')
       commit(types._toggleLoadingStatus, false)
     } else {
       commit(types._toggleLoadingStatus, false)
@@ -215,8 +216,8 @@ const projectActions = {
     const dataElectrode = generateEWD(state)
 
     const ewd = {
-      electrode_size: state.app.originalGridUnit,
-      unit: 4,
+      electrode_size: state.app.gridUnit.origin,
+      unit: state.app.routingUnit === 0 ? 1 : state.app.gridUnit.origin / 100 * state.app.routingUnit,
       output_format: 'dxf',
       ewd_content: dataElectrode
     }
@@ -246,8 +247,8 @@ const projectActions = {
     const dataElectrode = generateEWD(state)
 
     const ewd = {
-      electrode_size: state.app.originalGridUnit,
-      unit: 4,
+      electrode_size: state.app.gridUnit.origin,
+      unit: state.app.routingUnit === 0 ? 1 : state.app.gridUnit.origin / 100 * state.app.routingUnit,
       output_format: 'svg',
       ewd_content: dataElectrode
     }
@@ -287,24 +288,28 @@ const projectActions = {
       const _project = JSON.parse(atob(project))
       if (!_project.gridUnit || !_project.chip) {
         store.replaceState(newState(
+            state.app.substrate,
             parseInt(state.app.chip.height),
             parseInt(state.app.chip.width),
             parseInt(2000),
-            3,
+            parseInt(3),
+            parseInt(3),
             null
         ))
         commit(types.addProject)
       } else {
-        store.replaceState(newState(parseInt(_project.chip.height), parseInt(_project.chip.width), parseInt(_project.gridUnit), 3, _project))
+        store.replaceState(newState(state.app.substrate, parseInt(_project.chip.height), parseInt(_project.chip.width), parseInt(_project.gridUnit), _project.cornerSize, _project.gapSize, _project))
         commit(types.addProject)
         await dispatch(types.checkAuth)
       }
     } else {
         store.replaceState(newState(
+            state.app.substrate,
             parseInt(state.app.chip.height),
             parseInt(state.app.chip.width),
             parseInt(2000),
-            3,
+            parseInt(3),
+            parseInt(3),
             null
         ))
         commit(types.addProject)
@@ -319,10 +324,12 @@ const projectActions = {
    */
   [types.resetProject]: async function ({ state, dispatch }) {
     await dispatch(types.newProject, {
+        substrate: state.app.substrate,
         height: state.app.chip.height,
         width: state.app.chip.width,
         gridUnit: state.app.gridUnit ? state.app.gridUnit.origin : 2000,
-        cornerSize: 3
+        cornerSize: state.app.cornerSize,
+        gapSize: state.app.gapSize
     })
   },
 
@@ -331,10 +338,10 @@ const projectActions = {
    * (or better to say, resets vuegg to initial state)
    */
   [types.newProject]: async function ({ dispatch, commit }, payload) {
-    const { height, width, gridUnit, cornerSize } = payload
+    const { substrate, height, width, gridUnit, cornerSize, gapSize } = payload
     commit(types._toggleBlockLoadingStatus, true)
 
-    store.replaceState(newState(height, width, gridUnit, cornerSize))
+    store.replaceState(newState(substrate, height, width, gridUnit, cornerSize, gapSize))
     commit(types.deleteProject)
 
     await dispatch(types.checkAuth)

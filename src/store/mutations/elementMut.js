@@ -131,9 +131,9 @@ const internalElementMutations = {
       for (let j = 0; j < payload.egglement.classes.matrix[i].length; j++) {
         if (payload.egglement.classes.matrix[i][j] !== 0) {
           if (payload.add) {
-            state.app.chip.matrix[payload.egglement.top * 10 / state.app.gridUnit.origin + i][payload.egglement.left * 10 / state.app.gridUnit.origin + j] = 1
+            state.app.chip.matrix[Math.ceil(payload.egglement.top * 10 / state.app.gridUnit.origin) + i][Math.ceil(payload.egglement.left * 10 / state.app.gridUnit.origin) + j] = 1
           } else {
-            state.app.chip.matrix[payload.egglement.top * 10 / state.app.gridUnit.origin + i][payload.egglement.left * 10 / state.app.gridUnit.origin + j] = 0
+            state.app.chip.matrix[Math.ceil(payload.egglement.top * 10 / state.app.gridUnit.origin) + i][Math.ceil(payload.egglement.left * 10 / state.app.gridUnit.origin) + j] = 0
           }
         }
       }

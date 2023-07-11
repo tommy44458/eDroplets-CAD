@@ -1,18 +1,26 @@
 <template>
     <div class="sidebar">
-        <div class="sidebar-content">
+        <div v-if="substrate === 'glass'" class="sidebar-content">
             <p>Square electrode size:</p>
             <span>
               <input type="number" :min="gridUnit.current" :step="gridUnit.current" onkeydown="return false" v-model.number="squareSize"/>
               <span>um</span>
             </span>
         </div>
-        <div class="sidebar-content">
+        <div v-if="substrate === 'glass'" class="sidebar-content">
             <p>Snapping grids distance:</p>
             <span>
               <input type="number" min="1" step="1" onkeydown="return false" :value="snappingDistance" @change="changeSnappingDistance"/>
               <span>grids</span>
             </span>   
+        </div>
+        <div class="sidebar-content">
+            <p>Routing resolution:</p>
+            <span>
+              <input style="width: 65%;" type="range" id="res" name="res" min="0" max="1" step="0.01" :value="routingUnit" @change="changeRoutingResolution"/>
+              <input style="width: 25%;" type="number" min="0" max="1" step="0.01" :value="routingUnit" @change="changeRoutingResolution"/>
+              <span>Higher resolution takes more time routing</span>
+            </span>
         </div>
     </div>
 </template>
@@ -25,7 +33,9 @@ export default {
   computed: {
     ...mapFields([
       'app.gridUnit',
-      'app.squareSize'
+      'app.squareSize',
+      'app.routingUnit',
+      'app.substrate'
     ]),
     snappingDistance () {
       return this.gridUnit.current / this.gridUnit.origin
@@ -34,6 +44,9 @@ export default {
   methods: {
     changeSnappingDistance (e) {
       this.gridUnit.current = e.target.value * this.gridUnit.origin
+    },
+    changeRoutingResolution (e) {
+      this.routingUnit = e.target.value
     }
   }
 }

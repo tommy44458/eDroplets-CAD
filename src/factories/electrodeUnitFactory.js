@@ -1,9 +1,9 @@
 
-function newElectrodeUnit (name, gridUnit, cornerSize, top, left) {
+function newElectrodeUnit (name, gridUnit, cornerSize, gapSize, top, left) {
   const _matrix = [
     [1]
   ]
-  const elecSize = gridUnit - cornerSize
+  const elecSize = gridUnit - gapSize
   const _vertax = [
     [0, cornerSize],
     [cornerSize, 0],

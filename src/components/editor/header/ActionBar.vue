@@ -103,8 +103,8 @@
         <mdc-menu-divider></mdc-menu-divider>
         <mdc-menu-item>Ewds file (.ewds)</mdc-menu-item>
         <!-- <mdc-menu-item>EDrop Project (.edp)</mdc-menu-item> -->
-        <!-- <mdc-menu-item>EDrop Control Config (.ecc)</mdc-menu-item> -->
         <mdc-menu-item>Dxf file (.dxf)</mdc-menu-item>
+        <mdc-menu-item>EDrop Control Config (.ecc)</mdc-menu-item>
         <!-- <mdc-menu-item>Vue sources (.zip)</mdc-menu-item> -->
       </mdc-menu>
     </mdc-menu-anchor>
@@ -185,9 +185,10 @@ export default {
             this.downloadProjectEWDS()
             break
         case 2:
-            if (!this.downloadProjectDXF()) {
-                this.$root.$emit('open-api-fail-dialog')
-            }
+            this.$root.$emit('open-routing-resolution')
+            break
+        case 3:
+            this.downloadProjectECC()
             break
         default:
             break

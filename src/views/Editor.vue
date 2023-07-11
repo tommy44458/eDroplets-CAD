@@ -14,6 +14,7 @@
       <load-dialog></load-dialog>
       <upload-dialog></upload-dialog>
       <setting-dialog></setting-dialog>
+      <routing-resolution-dialog></routing-resolution-dialog>
       <confirm-dialog></confirm-dialog>
       <api-fail-dialog></api-fail-dialog>
       <preview-svg></preview-svg>
@@ -39,10 +40,11 @@ import SettingDialog from '@/components/editor/dialogs/SettingDialog'
 import ConfirmDialog from '@/components/editor/dialogs/ConfirmDialog'
 import ApiFailDialog from '@/components/editor/dialogs/ApiFailDialog'
 import PreviewSvg from '@/components/editor/dialogs/PreviewSvg'
+import RoutingResolutionDialog from '@/components/editor/dialogs/RoutingResolutionDialog.vue'
 
 export default {
   name: 'editor',
-  components: { Headegg, Drawegg, Mainegg, BlockLoader, PageDialog, LoadDialog, UploadDialog, SettingDialog, ConfirmDialog, ApiFailDialog, PreviewSvg },
+  components: { Headegg, Drawegg, Mainegg, BlockLoader, PageDialog, LoadDialog, UploadDialog, SettingDialog, RoutingResolutionDialog, ConfirmDialog, ApiFailDialog, PreviewSvg },
   data: function () {
     return {
       notScrolled: true

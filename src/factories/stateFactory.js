@@ -1,6 +1,6 @@
 import newProject from './projectFactory'
 
-function newState (height, width, gridUnit, cornerSize, project) {
+function newState (substrate, height, width, gridUnit, cornerSize, gapSize, project) {
   const h = height / gridUnit
   const w = width / gridUnit
   const _matrix = []
@@ -18,6 +18,7 @@ function newState (height, width, gridUnit, cornerSize, project) {
   }
   return {
     app: {
+      substrate: substrate,
       svgContent: '',
       apiStatus: false,
       isLoading: false,
@@ -26,7 +27,6 @@ function newState (height, width, gridUnit, cornerSize, project) {
       isSyncing: false,
       canUndo: false,
       canRedo: false,
-      openContextMenu: false,
       openSidebar: false,
       squareSize: gridUnit,
       pageDialog: {
@@ -40,7 +40,9 @@ function newState (height, width, gridUnit, cornerSize, project) {
         origin: gridUnit,
         current: gridUnit
       },
+      routingUnit: 0.2,
       cornerSize: cornerSize,
+      gapSize: gapSize,
       chip: {
         matrix: _matrix,
         height: 40000,
@@ -57,7 +59,7 @@ function newState (height, width, gridUnit, cornerSize, project) {
       isAuthorized: false,
       authenticatedUser: null
     },
-    project: project || newProject('Digital Microfluidics Chip Design Tool', gridUnit, height, width)
+    project: project || newProject('My Project', substrate, gridUnit, cornerSize, gapSize, height, width)
   }
 }
 

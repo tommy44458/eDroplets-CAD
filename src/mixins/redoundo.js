@@ -1,8 +1,22 @@
 import cloneDeep from 'clone-deep'
-import { checkLastSaved, _toggleCanUndo, _toggleCanRedo } from '@/store/types'
+import { isEqual } from 'lodash'
+import types from '@/store/types'
 
 const MAX_HISTORY = 250
+const DEBOUNCE_DELAY = 300
+const IGNORED_MUTATIONS = Object.values(types).filter(type => type.startsWith('_'))
 
+const debounce = (func, wait) => {
+  let timeout
+
+  return function () {
+    const context = this
+    const args = arguments
+
+    clearTimeout(timeout)
+    timeout = setTimeout(() => func.apply(context, args), wait)
+  }
+}
 /**
  * Vue Mixin to control the State history and undo/redo functionality
  *
@@ -18,19 +32,16 @@ const redoundo = {
   },
 
   created: function () {
+    this.saveState = debounce(this.saveState, DEBOUNCE_DELAY)
+
     this.$store.subscribe((mutation, state) => {
-      // If the history size is reached, the eldest state will be removed
-      if (this.done.length === MAX_HISTORY) this.done.shift()
-
-      // It won't save the state of mutations leaded by '_'
-      if (mutation.type.charAt(0) !== '_') {
-        this.done.push(cloneDeep(state))
-        this.undone = []
-
-        // To display if changes had happened to the project
-        this.updateCanRedoUndo()
-        this.$store.dispatch(checkLastSaved)
+      // Ignore mutations that should not be saved
+      if (IGNORED_MUTATIONS.includes(mutation.type)) {
+        return
       }
+
+      // Save the state with debounce
+      this.saveState(state)
     })
 
     this.$root.$on('undo', this.undo)
@@ -53,6 +64,22 @@ const redoundo = {
   },
 
   methods: {
+    saveState(state) {
+      // If the history size is reached, the eldest state will be removed
+      if (this.done.length === MAX_HISTORY) this.done.shift()
+
+      // Check if the new state is different from the previous state
+      const previousState = this.done[this.done.length - 1]
+      if (!isEqual(state, previousState)) {
+        this.done.push(cloneDeep(state))
+        this.undone = []
+
+        // To display if changes had happened to the project
+        this.updateCanRedoUndo()
+        this.$store.dispatch(types.checkLastSaved)
+      }
+    },
+
     undo () {
       if (this.canUndo) {
         this.undone.push(this.done.pop())
@@ -74,8 +101,8 @@ const redoundo = {
     },
 
     updateCanRedoUndo () {
-      this.$store.commit(_toggleCanUndo, this.canUndo)
-      this.$store.commit(_toggleCanRedo, this.canRedo)
+      this.$store.commit(types._toggleCanUndo, this.canUndo)
+      this.$store.commit(types._toggleCanRedo, this.canRedo)
     }
   }
 }

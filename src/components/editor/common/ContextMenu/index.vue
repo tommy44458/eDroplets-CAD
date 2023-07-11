@@ -33,6 +33,12 @@ export default {
     },
     zoom: {
       type: Number
+    },
+    clipboardLength: {
+      type: Number
+    },
+    selectedElementsLength: {
+      type: Number
     }
   },
   data: function () {
@@ -67,9 +73,18 @@ export default {
     menu () {
       if (this.specialState) {
         return [ { name: 'select', action: 'select' } ]
+      } else if (this.selectedElementsLength === 0) {
+        if (this.clipboardLength > 0) {
+          return [
+            { name: 'draw', action: 'draw' },
+            { name: 'paste', action: 'paste' }
+          ]
+        }
+        return [
+          { name: 'draw', action: 'draw' }
+        ]
       }
       return [
-          { name: 'select', action: 'select' },
           { name: 'copy', action: 'copy' },
           { name: 'paste', action: 'paste' },
           { name: 'cut', action: 'cut' },
@@ -84,6 +99,9 @@ export default {
         switch (action) {
           case 'select':
             this.$emit('clearState')
+            break
+          case 'draw':
+            this.$emit('draw')
             break
           case 'copy':
             this.$emit('copy')

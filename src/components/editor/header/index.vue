@@ -16,12 +16,15 @@
       </button>
       <div class="home-btn" style="display: flex; align-items: center;" >
         <!-- <svgicon icon="product/vuegg" width="40" height="40" :original="true"></svgicon> -->
-        <p style="font-size:24px; font-weight: bold; color: #005587; text-align: center;">
-          eDrops
-        <!-- <img src="/static/edrop_logo.png" height="40"/> -->
-        </p>
-        <img src="/static/edrop_logo.png" height="40"/>
+        <!-- <p style="font-size:24px; font-weight: bold; color: #005587; text-align: center;">
+            eDroplets
+        </p> -->
+        <!-- <img src="/static/eDroplets_logo.png" height="40"/> -->
+        <svgicon icon="system/edroplets_logo" height="40" wight="40" />
       </div>
+      <p class="title-prefix">
+        Project Title:
+      </p>
       <input
         class="title-input"
         v-model="tmpProjectTitle"
@@ -44,6 +47,7 @@ import UserMenu from './UserMenu'
 import ActionBar from './ActionBar'
 
 import '@/assets/icons/product/vuegg'
+import '@/assets/icons/system/edroplets_logo'
 // import '@/assets/icons/system/elements/electrod/standard'
 
 export default {
@@ -140,6 +144,12 @@ export default {
 
 .spacer {
   width: 12px;
+}
+
+.title-prefix {
+    font-size: 16px;
+    font-weight: 500;
+    margin-right: 10px;
 }
 
 .title-input {
