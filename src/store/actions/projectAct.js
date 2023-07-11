@@ -5,22 +5,28 @@ import newState from '@/factories/stateFactory'
 import types from '@/store/types'
 import store from '@/store'
 import api from '@/api'
+import newElectrodeUnit from '@/factories/electrodeUnitFactory'
 
 // import DxfParser from 'dxf-parser'
 
 const generateEWD = function (state) {
-  const scale = (80000 / 8000)
-  const gapSize = state.project.gapSize * scale
-  let electrods = state.project.pages[0].children
+    const scale = (80000 / 8000)
+    const gapSize = state.project.gapSize * scale
+    const unit = state.app.gridUnit.origin / 10
+    let electrodes = state.project.pages[0].children
 
-  let dataElectrode = ''
+    let dataElectrode = ''
     dataElectrode = dataElectrode + 'contactpad circle r 750\n'
 
-    const electrodsShape = {}
-    electrods.forEach(el => {
+    const baseEl = newElectrodeUnit('base', unit, state.app.cornerSize, state.app.gapSize, 0, 0)
+
+    electrodes.push(baseEl)
+
+    const electrodesShape = {}
+    electrodes.forEach(el => {
       // console.log(el)
-      if (!(el.name in electrodsShape)) {
-        electrodsShape[el.name] = []
+      if (!(el.name in electrodesShape)) {
+        electrodesShape[el.name] = []
         let path = ''
         const pathlist = el.children[0].attrs.d.split(' ')
         pathlist.forEach(p => {
@@ -34,12 +40,15 @@ const generateEWD = function (state) {
         })
         for (let i = 0; i < pathlist.length - 1; i = i + 3) {
           if (pathlist[i] !== '') {
-            electrodsShape[el.name].push([parseInt(pathlist[i] * scale), parseInt(pathlist[i + 1] * scale)])
+            electrodesShape[el.name].push([parseInt(pathlist[i] * scale), parseInt(pathlist[i + 1] * scale)])
           }
         }
         dataElectrode = dataElectrode + el.name + ' path ' + path
       }
     })
+
+    electrodes.pop()
+
     // dataElectrode = dataElectrode + "square path M0 100 L0 1900 L100 2000 L1900 2000 L2000 1900 L2000 100 L1900 0 L100 0 Z\n";
     dataElectrode = dataElectrode + '#ENDOFDEFINITION#\n'
     let tx = 0
@@ -57,7 +66,7 @@ const generateEWD = function (state) {
       }
     }
 
-    electrods.forEach(getPos)
+    electrodes.forEach(getPos)
 
     function getPos (item, index) {
       dataElectrode = dataElectrode + item.name + ' ' + (parseFloat(item.left) * scale + 1000 - 1630 + gapSize / 2) + ' ' + (parseFloat(item.top) * scale + 12258 + (gapSize / 2)) + '\n'
@@ -185,20 +194,21 @@ const projectActions = {
     const dataElectrode = generateEWD(state)
 
     const ewd = {
-      electrode_size: state.app.gridUnit.origin,
-      unit: state.app.routingUnit === 0 ? 1 : state.app.gridUnit.origin / 100 * state.app.routingUnit,
-      output_format: 'ewds',
-      ewd_content: dataElectrode
+        chip_base: state.app.substrate,
+        electrode_size: state.app.gridUnit.origin,
+        unit: state.app.routingUnit === 0 ? 1 : state.app.gridUnit.origin / 100 * state.app.routingUnit,
+        output_format: 'ewds',
+        ewd_content: dataElectrode
     }
 
     const resp = await api.nrrouter(ewd)
 
     if (resp.status === 200) {
-      download(resp.data, parsedRepoName + '.ewds')
-      commit(types._toggleLoadingStatus, false)
+        download(resp.data, parsedRepoName + '.ewds')
+        commit(types._toggleLoadingStatus, false)
     } else {
-      commit(types._toggleLoadingStatus, false)
-      commit(types._toggleApiStatus, false)
+        commit(types._toggleLoadingStatus, false)
+        commit(types._toggleApiStatus, false)
     }
   },
 
@@ -216,22 +226,23 @@ const projectActions = {
     const dataElectrode = generateEWD(state)
 
     const ewd = {
-      electrode_size: state.app.gridUnit.origin,
-      unit: state.app.routingUnit === 0 ? 1 : state.app.gridUnit.origin / 100 * state.app.routingUnit,
-      output_format: 'dxf',
-      ewd_content: dataElectrode
+        chip_base: state.app.substrate,
+        electrode_size: state.app.gridUnit.origin,
+        unit: state.app.routingUnit === 0 ? 1 : state.app.gridUnit.origin / 100 * state.app.routingUnit,
+        output_format: 'dxf',
+        ewd_content: dataElectrode
     }
 
     const resp = await api.nrrouter(ewd)
 
     if (resp.status === 200) {
-      download(resp.data, parsedRepoName + '.dxf')
-      commit(types._toggleLoadingStatus, false)
-      return true
+        download(resp.data, parsedRepoName + '.dxf')
+        commit(types._toggleLoadingStatus, false)
+        return true
     } else {
-      commit(types._toggleLoadingStatus, false)
-      commit(types._toggleApiStatus, false)
-      return false
+        commit(types._toggleLoadingStatus, false)
+        commit(types._toggleApiStatus, false)
+        return false
     }
   },
 
@@ -247,21 +258,22 @@ const projectActions = {
     const dataElectrode = generateEWD(state)
 
     const ewd = {
-      electrode_size: state.app.gridUnit.origin,
-      unit: state.app.routingUnit === 0 ? 1 : state.app.gridUnit.origin / 100 * state.app.routingUnit,
-      output_format: 'svg',
-      ewd_content: dataElectrode
+        chip_base: state.app.substrate,
+        electrode_size: state.app.gridUnit.origin,
+        unit: state.app.routingUnit === 0 ? 1 : state.app.gridUnit.origin / 100 * state.app.routingUnit,
+        output_format: 'svg',
+        ewd_content: dataElectrode
     }
 
     const resp = await api.nrrouter(ewd)
     if (resp.status === 200) {
-      commit(types._toggleSvg, resp.data)
-      commit(types._toggleLoadingStatus, false)
-      return true
+        commit(types._toggleSvg, resp.data)
+        commit(types._toggleLoadingStatus, false)
+        return true
     } else {
-      commit(types._toggleLoadingStatus, false)
-      commit(types._toggleApiStatus, false)
-      return false
+        commit(types._toggleLoadingStatus, false)
+        commit(types._toggleApiStatus, false)
+        return false
     }
   },
 
