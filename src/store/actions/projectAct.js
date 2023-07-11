@@ -214,7 +214,7 @@ const projectActions = {
     const dataElectrode = generateEWD(state)
 
     const ewd = {
-        chip_base: state.app.substrate,
+        chip_base: state.project.substrate,
         electrode_size: state.app.gridUnit.origin,
         unit: state.app.routingUnit === 0 ? 1 : state.app.gridUnit.origin / 100 * state.app.routingUnit,
         output_format: 'ewds',
@@ -246,7 +246,7 @@ const projectActions = {
     const dataElectrode = generateEWD(state)
 
     const ewd = {
-        chip_base: state.app.substrate,
+        chip_base: state.project.substrate,
         electrode_size: state.app.gridUnit.origin,
         unit: state.app.routingUnit === 0 ? 1 : state.app.gridUnit.origin / 100 * state.app.routingUnit,
         output_format: 'dxf',
@@ -278,7 +278,7 @@ const projectActions = {
     const dataElectrode = generateEWD(state)
 
     const ewd = {
-        chip_base: state.app.substrate,
+        chip_base: state.project.substrate,
         electrode_size: state.app.gridUnit.origin,
         unit: state.app.routingUnit === 0 ? 1 : state.app.gridUnit.origin / 100 * state.app.routingUnit,
         output_format: 'svg',
