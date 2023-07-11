@@ -14,13 +14,13 @@ var versionRequirements = [
   }
 ]
 
-if (shell.which('npm')) {
-  versionRequirements.push({
-    name: 'npm',
-    currentVersion: exec('npm --version'),
-    versionRequirement: packageConfig.engines.npm
-  })
-}
+// if (shell.which('npm')) {
+//   versionRequirements.push({
+//     name: 'npm',
+//     currentVersion: exec('npm --version'),
+//     versionRequirement: packageConfig.engines.npm
+//   })
+// }
 
 module.exports = function () {
   var warnings = []
