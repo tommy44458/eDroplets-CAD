@@ -18,11 +18,33 @@ const generateEWD = function (state) {
     let dataElectrode = ''
     dataElectrode = dataElectrode + 'contactpad circle r 750\n'
 
-    const baseEl = newElectrodeUnit('base', unit, state.app.cornerSize, state.app.gapSize, 0, 0)
+    const cornerSize = state.app.cornerSize
+    const gapSizeTmp = state.app.gapSize
 
-    electrodes.push(baseEl)
+    const baseEl = newElectrodeUnit('base', unit, cornerSize, gapSizeTmp, 0, 0)
 
     const electrodesShape = {}
+
+    // base electrode
+    electrodesShape[baseEl.name] = []
+    let path = ''
+    const pathlist = baseEl.children[0].attrs.d.split(' ')
+    pathlist.forEach(p => {
+        if (p === 'M' || p === 'L') {
+        path += p
+        } else if (p !== '' && p !== 'Z') {
+        path += parseInt(p * scale) + ' '
+        } else {
+        path += 'Z\n'
+        }
+    })
+    for (let i = 0; i < pathlist.length - 1; i = i + 3) {
+        if (pathlist[i] !== '') {
+          electrodesShape[baseEl.name].push([parseInt(pathlist[i] * scale), parseInt(pathlist[i + 1] * scale)])
+        }
+    }
+    dataElectrode = dataElectrode + baseEl.name + ' path ' + path
+
     electrodes.forEach(el => {
       // console.log(el)
       if (!(el.name in electrodesShape)) {
@@ -46,8 +68,6 @@ const generateEWD = function (state) {
         dataElectrode = dataElectrode + el.name + ' path ' + path
       }
     })
-
-    electrodes.pop()
 
     // dataElectrode = dataElectrode + "square path M0 100 L0 1900 L100 2000 L1900 2000 L2000 1900 L2000 100 L1900 0 L100 0 Z\n";
     dataElectrode = dataElectrode + '#ENDOFDEFINITION#\n'
