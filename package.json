@@ -1,7 +1,7 @@
 {
-  "name": "edrops-cad-client",
-  "description": "Edrops-CAD UI",
-  "author": "alxpez",
+  "name": "dmf-web-cad",
+  "description": "DMF EWD online CAD",
+  "author": "tommy.xin",
   "license": "MIT",
   "private": false,
   "scripts": {
