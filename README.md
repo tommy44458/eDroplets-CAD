@@ -1,6 +1,6 @@
 # DMF-Web-CAD
 
-This is a website-based design tool for EWOD chips. Users can free to draw electrodes with various shapes and get the routing result via the cloud-based algorithm.
+This website provides a design tool for EWOD chips, allowing users to freely draw electrodes of different shapes and obtain routing results using the cloud-based algorithm.
 
 ## Actions
 
