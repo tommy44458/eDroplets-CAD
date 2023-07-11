@@ -1,6 +1,14 @@
-# DMF-Web-CAD
+
+
+<p align="center">
+  <img width="160px" src="https://github.com/tommy44458/eDroplets-CAD/blob/master/static/edrop_logo.png">
+</p>
+
+<h2 align="center">eDroplets CAD</h2>
 
 This website provides a design tool for EWOD chips, allowing users to freely draw electrodes of different shapes and obtain routing results using the cloud-based algorithm.
+
+Experience our cutting-edge CAD service for online digital microfluidic EWOD (Electrowetting on Dielectric) chips optimization: http://cad.edroplets.org/
 
 ## Actions
 
@@ -31,7 +39,7 @@ This website provides a design tool for EWOD chips, allowing users to freely dra
 * **click icon**: Start/Stop electrode painting mode (add base electrode in mouse point) 
 
 ### Combine
-* **click icon**: Combine the selected electrodes
+* **right-click menu**: Combine the selected electrodes
 
 ### Download
 * **click icon**: Download .ewds, .dxf(routing result), .ecc
