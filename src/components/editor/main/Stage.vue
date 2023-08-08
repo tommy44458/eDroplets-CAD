@@ -139,7 +139,8 @@ export default {
         'background-image': 'linear-gradient(rgba(0,0,0,.1) ' + gridLineWidth + 'px, transparent 0),' +
         'linear-gradient(90deg, rgba(0,0,0,.1) ' + gridLineWidth + 'px, transparent 0),' +
         'linear-gradient(rgba(0,0,0,.15) ' + gridLineWidth + 'px, transparent 0),' +
-        'linear-gradient(90deg, rgba(0,0,0,.15) ' + gridLineWidth + 'px, transparent 0)'
+        'linear-gradient(90deg, rgba(0,0,0,.15) ' + gridLineWidth + 'px, transparent 0)',
+        overflow: 'hidden'
       }
     },
 
