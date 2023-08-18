@@ -87,7 +87,7 @@
         <mdc-menu-item disabled>Open project:</mdc-menu-item>
         <mdc-menu-divider></mdc-menu-divider>
         <mdc-menu-item>
-          <input type="file" ref="inputOpenLocal" @change="openLocalFile" :value="fileValue" accept=".ewds"/>
+          <input type="file" ref="inputOpenLocal" @change="openLocalFile" :value="fileValue" accept=".ecc"/>
           Computer
         </mdc-menu-item>
         <!-- <mdc-menu-item>GitHub</mdc-menu-item> -->
