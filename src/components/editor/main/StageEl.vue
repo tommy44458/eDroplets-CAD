@@ -93,7 +93,8 @@ export default {
     },
 
     ...mapFields([
-      'app.edit.paint'
+      'app.edit.paint',
+      'app.edit.erase'
     ]),
 
     ...mapState({

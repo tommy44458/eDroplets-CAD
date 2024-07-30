@@ -52,6 +52,7 @@ function newState (substrate, height, width, gridUnit, cornerSize, gapSize, proj
       stagePosLeft: 0,
       edit: {
         paint: false,
+        erase: false,
         moveStage: false
       }
     },

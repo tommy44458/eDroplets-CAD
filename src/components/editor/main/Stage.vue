@@ -21,6 +21,7 @@
     @undo="$root.$emit('undo')"
     @redo="$root.$emit('redo')"
     @add="addElement($event)"
+    @erase="eraseElement($event)"
     @setStageLastPos="setChipLastPos()"
     @moveStage="moveChip($event)"
     @mousemove="mouseMoveElements($event)"
@@ -37,7 +38,7 @@
       <context-menu
         :axis="rightClickPoint"
         :zoom="zoom" 
-        :specialState="paint || moveStage"
+        :specialState="paint || moveStage || erase"
         :clipboardLength="clipboard.length"
         :selectedElementsLength="selectedElements.length"
         @clearState="clearState"
@@ -126,6 +127,7 @@ export default {
       'app.editorZoom',
       'app.edit.moveStage',
       'app.edit.paint',
+      'app.edit.erase',
       'app.chip'
     ]),
 
@@ -163,6 +165,7 @@ export default {
 
     clearState () {
       this.paint = false
+      this.erase = false
       this.moveStage = false
     },
 
@@ -282,6 +285,48 @@ export default {
           egglement: element,
           add: true
         })
+      }
+    },
+
+    async eraseElement(e) {
+      // const unit = this.squareSize / 10
+      const originUnit = this.gridUnit.origin / 10
+      // const cornerSize = this.cornerSize
+      // const gapSize = this.gapSize
+      const posX = e.x
+      const posY = e.y
+      const unitX = parseInt((posX / this.zoom) / originUnit)
+      const unitY = parseInt((posY / this.zoom) / originUnit)
+      const top = originUnit * unitY
+      const left = originUnit * unitX
+
+      const chipX = Math.floor((posX / this.zoom) / originUnit)
+      const chipY = Math.floor((posY / this.zoom) / originUnit)
+      console.log(chipX + ' ' + chipY)
+      console.log(this.chip.matrix[chipY][chipX])
+
+      let canErase = false
+      let el = null
+      for (let childEl of this.page.children) {
+        const child = (childEl.global) ? {...childEl, ...this.getComponentRef(childEl), id: childEl.id} : childEl
+
+        let childTop = getComputedProp('top', child)
+        let childLeft = getComputedProp('left', child)
+        if (top === childTop && left === childLeft) {
+          canErase = true
+          el = childEl
+        }
+      }
+      console.log(canErase)
+
+      if (canErase) {
+        console.log('trying to erase')
+        console.log(el)
+        this._updateChipMatrix({
+          egglement: el,
+          add: false
+        })
+        this.removeElement({page: this.page, elId: el.id})
       }
     },
 

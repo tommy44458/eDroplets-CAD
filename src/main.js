@@ -15,7 +15,7 @@ import './theme.scss'
 
 import 'normalize.css'
 import 'dialog-polyfill/dialog-polyfill.css'
-import 'vue-directive-tooltip/css/index.css'
+// import 'vue-directive-tooltip/css/index.css'
 
 import global_ from './global'
 
