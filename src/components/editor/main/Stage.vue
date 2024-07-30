@@ -289,7 +289,7 @@ export default {
     },
 
     async eraseElement(e) {
-      // const unit = this.squareSize / 10
+      const unit = this.squareSize / 10
       const originUnit = this.gridUnit.origin / 10
       // const cornerSize = this.cornerSize
       // const gapSize = this.gapSize
@@ -300,28 +300,33 @@ export default {
       const top = originUnit * unitY
       const left = originUnit * unitX
 
-      const chipX = Math.floor((posX / this.zoom) / originUnit)
-      const chipY = Math.floor((posY / this.zoom) / originUnit)
-      console.log(chipX + ' ' + chipY)
-      console.log(this.chip.matrix[chipY][chipX])
-
       let canErase = false
       let el = null
+      // console.log(this.page.children.length)
       for (let childEl of this.page.children) {
         const child = (childEl.global) ? {...childEl, ...this.getComponentRef(childEl), id: childEl.id} : childEl
-
+        // console.log(child.classes.matrix)
         let childTop = getComputedProp('top', child)
         let childLeft = getComputedProp('left', child)
-        if (top === childTop && left === childLeft) {
-          canErase = true
-          el = childEl
+        let childBottom = getComputedProp('height', child, this.page) + childTop
+        let childRight = getComputedProp('width', child, this.page) + childLeft
+
+        // console.log(childTop + ' ' + childLeft + ' ' + childBottom + ' ' + childRight)
+        // console.log(top + ' ' + left)
+        if (top >= childTop && left >= childLeft && top < childBottom && left < childRight) {
+          const xCoor = (top - childTop) / unit
+          const yCoor = (left - childLeft) / unit
+          // console.log(xCoor + ' ' + yCoor)
+          if (child.classes.matrix[xCoor][yCoor] !== 0) {
+            canErase = true
+            el = childEl
+            break
+          }
         }
       }
-      console.log(canErase)
+      // console.log(canErase)
 
       if (canErase) {
-        console.log('trying to erase')
-        console.log(el)
         this._updateChipMatrix({
           egglement: el,
           add: false
