@@ -1,6 +1,6 @@
 <template>
   <div
-    v-if="paint || moveStage"
+    v-if="paint || moveStage || erase"
     data-mr-el="true"
     class="mr-el"
     :style="style"
@@ -156,6 +156,7 @@ export default {
     ...mapFields([
       'app.edit.moveStage',
       'app.edit.paint',
+      'app.edit.erase',
       'app.gridUnit'
     ])
   }

@@ -69,6 +69,7 @@ export default {
     ...mapFields([
       'app.gridUnit',
       'app.edit.paint',
+      'app.edit.erase',
       'app.edit.moveStage',
       'app.chip'
     ]),
@@ -88,7 +89,7 @@ export default {
       this.initialAbsPos = this.getMouseAbsPoint(e)
       this.initialRelPos = this.getMouseRelPoint(e)
 
-      if (this.paint || e.target.dataset.mrContainer) {
+      if (this.paint || this.erase || e.target.dataset.mrContainer) {
         if (!e.shiftKey) {
           this.$emit('clearselection')
         }
@@ -167,6 +168,8 @@ export default {
         this.currentRelPos = this.getMouseRelPoint(e)
         if (this.paint) {
           this.$emit('add', this.currentRelPos)
+        } else if (this.erase) {
+          this.$emit('erase', this.currentRelPos)
         } else if (this.moveStage) {
           this.$emit('moveStage', [this.initialAbsPos, this.currentAbsPos])
         } else {

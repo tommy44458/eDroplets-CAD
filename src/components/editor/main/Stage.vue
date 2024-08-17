@@ -21,6 +21,7 @@
     @undo="$root.$emit('undo')"
     @redo="$root.$emit('redo')"
     @add="addElement($event)"
+    @erase="eraseElement($event)"
     @setStageLastPos="setChipLastPos()"
     @moveStage="moveChip($event)"
     @mousemove="mouseMoveElements($event)"
@@ -37,7 +38,7 @@
       <context-menu
         :axis="rightClickPoint"
         :zoom="zoom" 
-        :specialState="paint || moveStage"
+        :specialState="paint || moveStage || erase"
         :clipboardLength="clipboard.length"
         :selectedElementsLength="selectedElements.length"
         @clearState="clearState"
@@ -126,6 +127,7 @@ export default {
       'app.editorZoom',
       'app.edit.moveStage',
       'app.edit.paint',
+      'app.edit.erase',
       'app.chip'
     ]),
 
@@ -163,6 +165,7 @@ export default {
 
     clearState () {
       this.paint = false
+      this.erase = false
       this.moveStage = false
     },
 
@@ -282,6 +285,53 @@ export default {
           egglement: element,
           add: true
         })
+      }
+    },
+
+    async eraseElement(e) {
+      const unit = this.squareSize / 10
+      const originUnit = this.gridUnit.origin / 10
+      // const cornerSize = this.cornerSize
+      // const gapSize = this.gapSize
+      const posX = e.x
+      const posY = e.y
+      const unitX = parseInt((posX / this.zoom) / originUnit)
+      const unitY = parseInt((posY / this.zoom) / originUnit)
+      const top = originUnit * unitY
+      const left = originUnit * unitX
+
+      let canErase = false
+      let el = null
+      // console.log(this.page.children.length)
+      for (let childEl of this.page.children) {
+        const child = (childEl.global) ? {...childEl, ...this.getComponentRef(childEl), id: childEl.id} : childEl
+        // console.log(child.classes.matrix)
+        let childTop = getComputedProp('top', child)
+        let childLeft = getComputedProp('left', child)
+        let childBottom = getComputedProp('height', child, this.page) + childTop
+        let childRight = getComputedProp('width', child, this.page) + childLeft
+
+        // console.log(childTop + ' ' + childLeft + ' ' + childBottom + ' ' + childRight)
+        // console.log(top + ' ' + left)
+        if (top >= childTop && left >= childLeft && top < childBottom && left < childRight) {
+          const xCoor = (top - childTop) / unit
+          const yCoor = (left - childLeft) / unit
+          // console.log(xCoor + ' ' + yCoor)
+          if (child.classes.matrix[xCoor][yCoor] !== 0) {
+            canErase = true
+            el = childEl
+            break
+          }
+        }
+      }
+      // console.log(canErase)
+
+      if (canErase) {
+        this._updateChipMatrix({
+          egglement: el,
+          add: false
+        })
+        this.removeElement({page: this.page, elId: el.id})
       }
     },
 

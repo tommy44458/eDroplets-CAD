@@ -35,6 +35,7 @@
       @click="() => {
        moveStage = !moveStage 
        paint = false
+       erase = false
       }"
     >
       <div>
@@ -51,12 +52,30 @@
       :disabled="isLoading"
       @click="() => {
        paint = !paint
+       erase = false
        moveStage = false 
       }"
     >
       <div>
         <svgicon icon="system/actions/pencil" width="20" height="20"
           :color="paint ? 'red' : '#2b6a73'">
+        </svgicon>
+      </div>
+    </button>
+
+    <button
+      v-tooltip="'Erase Electrodes'"
+      class="action-btn"
+      :disabled="isLoading"
+      @click="() => {
+       erase = !erase
+       paint = false
+       moveStage = false 
+      }"
+    >
+      <div>
+        <svgicon icon="system/actions/eraser" width="20" height="20"
+          :color="erase ? 'red' : '#2b6a73'">
         </svgicon>
       </div>
     </button>
@@ -149,6 +168,7 @@ export default {
       'app.gridUnit',
       'app.chip',
       'app.edit.paint',
+      'app.edit.erase',
       'app.edit.moveStage'
     ]),
 
