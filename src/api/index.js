@@ -70,7 +70,7 @@ async function cad (ewd) {
 
 async function nrrouter (ewd) {
   try {
-    return await axios.post('http://140.114.75.22/public/eda/nr_router', ewd)
+    return await axios.post('https://jpoekhy671.execute-api.us-west-1.amazonaws.com/prod/public/eda/nr_router', ewd)
   } catch (e) {
     console.error(e)
     return false
