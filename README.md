@@ -8,7 +8,7 @@
 
 This website provides a design tool for EWOD chips, allowing users to freely draw electrodes of different shapes and obtain routing results using the cloud-based algorithm.
 
-Experience our cutting-edge CAD service for online digital microfluidic EWOD (Electrowetting on Dielectric) chips optimization: http://cad.edroplets.org/
+Experience our cutting-edge CAD service for online digital microfluidic EWOD (Electrowetting on Dielectric) chips optimization: https://dmf-web-cad-git-master-tommy44458s-projects.vercel.app/
 
 ## Actions
 
